@@ -11,12 +11,12 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (userId, done) => {
     try {
-        if (!userId) {
-            return done(new Error('O ID do utilizador não foi fornecido!'));
+        if (!userId || isNaN(userId)) {
+            return done(new Error('O ID do utilizador não foi fornecido ou é inválido!'));
         }
 
         const user = await User.findOne({
-            where: { userId }
+            where: { userId: parseInt(userId) } // Parse userId to an integer
         });
 
         if (!user) {
@@ -28,6 +28,7 @@ passport.deserializeUser(async (userId, done) => {
         done(error);
     }
 });
+
 
 passport.use(
     new GoogleStrategy(
