@@ -12,22 +12,15 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (userId, done) => {
     try {
         if (!userId) {
-            return done(new Error('User ID is not provided'));
-        }
-
-        // Convert the userId to an integer
-        const parsedUserId = parseInt(userId);
-
-        if (isNaN(parsedUserId)) {
-            return done(new Error(`Invalid User ID: ${userId}`));
+            return done(new Error('O ID do utilizador não foi fornecido!'));
         }
 
         const user = await User.findOne({
-            where: { userId: parsedUserId }
+            where: { userId }
         });
 
         if (!user) {
-            return done(new Error('User not found'));
+            return done(new Error(`O utilizador com o ID ${userId} não foi encontrado`));
         } else {
             done(null, user);
         }
@@ -47,11 +40,10 @@ passport.use(
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
-                // Generate a hash value from the profile.id using a hash function
-                const hash = crypto.createHash('sha256').update(profile.id).digest('hex');
-
-                // Extract the first 8 characters of the hash as the modified userId
-                const userId = parseInt(hash.substr(0, 8), 16); // Convert the hexadecimal string to an integer
+                const hash = crypto.createHash('sha256').update(profile.id).digest();
+                const byteArray = Array.from(hash); // Convert the buffer to an array of bytes
+                const truncatedArray = byteArray.slice(0, 4); // Take the first 4 bytes
+                const userId = truncatedArray.reduce((acc, byte) => (acc << 8) + byte, 0); // Convert bytes to an integer
 
                 const existingUser = await User.findOne({ where: { email: profile.emails[0].value } });
 
