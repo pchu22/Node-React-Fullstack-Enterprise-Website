@@ -197,7 +197,11 @@ const LoginForm = () => {
                       navigate('/homepage')
                     }}
                     onError={() => {
-                      console.log('Login Failed');
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Erro ao efetuar o login com a sua conta Google',
+                        text: 'Tente novamente mais tarde!',
+                      });
                       navigate('/login')
                     }}
                   />
