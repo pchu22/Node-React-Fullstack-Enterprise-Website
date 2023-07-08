@@ -5,8 +5,11 @@ const User = require('../models/user');
 const crypto = require('crypto');
 
 passport.serializeUser((user, done) => {
-    // Serialize user ID and any other necessary information into the session
-    done(null, user.userId);
+    if (user.userId) {
+        done(null, user.userId);
+    } else {
+        done(new Error('O ID do utilizador não foi fornecido!'));
+    }
 });
 
 passport.deserializeUser(async (userId, done) => {
