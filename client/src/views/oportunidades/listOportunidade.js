@@ -6,9 +6,10 @@ import Footer from "../../components/footer";
 const ListOportunidade = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <Navbar />
-      <ListOportunidadeForm style={{ flex: 1 }} />
-      <Footer />
+      <Navbar style={{ flex: 1 }} />
+      <div style={{ flex: 1 }}>
+        <ListOportunidadeForm />
+      </div>
     </div>
   );
 };

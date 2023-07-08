@@ -40,21 +40,24 @@ passport.use(
                 const existingUser = await User.findOne({ where: { email: profile.emails[0].value } });
 
                 if (existingUser) {
-                    console.log('User already exists:', existingUser);
+                    console.log('O utilizador já existe! A efetuar login: ', existingUser);
                     return done(null, existingUser);
                 } else {
                     // If the user doesn't exist, create a new one
                     const newUser = await User.create({
                         primeiroNome: profile.name.givenName,
                         ultimoNome: profile.name.familyName,
-                        email: profile.emails[0].value // Save the email
+                        email: profile.emails[0].value, // Save the email
+                        isAtivo: true,
+                        isPrimeiroLogin: false,
+                        cargoId: 5,
                     });
 
-                    console.log('New user created:', newUser);
+                    console.log('Foi criado um novo utilizador, utilizando google oAuth2: ', newUser);
                     done(null, newUser);
                 }
             } catch (error) {
-                console.error('Error during authentication:', error);
+                console.error('Erro ao tentar efetuar a autenticação: ', error);
                 done(error, null);
             }
         }

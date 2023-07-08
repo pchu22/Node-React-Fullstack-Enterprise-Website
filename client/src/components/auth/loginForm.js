@@ -8,6 +8,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Swal from "sweetalert2"
 import logo from '../../assets/logo.png';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 function goBack() {
   window.history.back();
@@ -88,8 +89,8 @@ const LoginForm = () => {
           } else {
             localStorage.removeItem("rememberedEmail");
           }
-          
-          localStorage.setItem("userId", res.data.userId); 
+
+          localStorage.setItem("userId", res.data.userId);
           setPrimeiroLogin(res.data.isPrimeiroLogin);
           if (res.data.isPrimeiroLogin) {
             navigate(`/primeiro-login/${res.data.userId}`, { replace: true });
@@ -172,13 +173,13 @@ const LoginForm = () => {
 
                     <div className="d-flex align-items-center">
                       <div className="form-check">
-                        <input 
-                          type="checkbox" 
-                          name="remember" 
-                          id="remember" 
-                          className="form-check-input shadow-none" 
+                        <input
+                          type="checkbox"
+                          name="remember"
+                          id="remember"
+                          className="form-check-input shadow-none"
                           checked={rememberMe}
-                          onChange={handleRememberMeChange}  
+                          onChange={handleRememberMeChange}
                         />
                         <label htmlFor="remember" className="form-check-label">Lembrar-me</label>
                       </div>
@@ -188,11 +189,19 @@ const LoginForm = () => {
                     </div>
                   </form>
                 </div>
-                <div className="px-5 mb-3 d-flex flex-column">
-                  {/* TO-DO: Implementar login c/ facebook e google! */}
-                  <a href="#" className="btn btn-facebook mb-2" ><i className="bi bi-facebook"></i>&nbsp; Login com Facebook</a>
-                  <a href="/auth/google" className="btn btn-google mt-2"><i className="bi bi-google"></i>&nbsp;Login com Google</a>
-                </div>
+                <GoogleOAuthProvider clientId="602987663849-1f1jaccl2mmqhppbo3p7c92l0i255cd5.apps.googleusercontent.com">
+                  <GoogleLogin
+                    onSuccess={credentialResponse => {
+                      console.log(credentialResponse);
+                      window.open('https://softinsa-web-app-carreiras01.onrender.com/auth/google')
+                      navigate('/homepage')
+                    }}
+                    onError={() => {
+                      console.log('Login Failed');
+                      navigate('/login')
+                    }}
+                  />
+                </GoogleOAuthProvider>;
                 <div className="card-footer py-3 border-0">
                   <div className="text-center">
                     Não tenho conta! <a href="/signup" className="text-primary small"> Criar uma</a>
