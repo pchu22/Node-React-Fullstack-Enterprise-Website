@@ -7,6 +7,7 @@ import Swal from "sweetalert2"
 import logo from '../../assets/logo.png';
 import axios from 'axios';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
+import { useNavigate } from 'react-router-dom';
 
 const baseURL = "https://softinsa-web-app-carreiras01.onrender.com/auth";
 
@@ -14,6 +15,8 @@ const PrimeiroLoginForm = () => {
 
     const [passwordEye, setPasswordEye] = useState(false);
     const [confirmPasswordEye, setConfirmPasswordEye] = useState(false);
+    const [passwordSelected, setPasswordSelected] = useState(false);
+    const navigate = useNavigate();
     
     const isPasswordValid = (password) => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#?%-_])[A-Za-z\d!@#?%-_]{8,24}$/;
@@ -45,116 +48,108 @@ const PrimeiroLoginForm = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        
-        const {password, confirmPassword} = formData;
-      
+
+        const { password, confirmPassword } = formData;
+
         if (!password) {
             Swal.fire({
-            icon: 'error',
-            text: 'Introduza uma password',
+                icon: 'error',
+                text: 'Introduza uma password',
             });
         } else if (password !== confirmPassword) {
             Swal.fire({
-            icon: 'error',
-            text: 'As passwords não coincidem.',
+                icon: 'error',
+                text: 'As passwords não coincidem.',
             });
         } else if (!isPasswordValid(password)) {
             Swal.fire({
-            icon: 'error',
-            text: 'A password deve ter entre 8 e 24 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial (!@#?%-_).',
+                icon: 'error',
+                text: 'A password deve ter entre 8 e 24 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial (!@#?%-_).',
             });
         } else {
             try {
                 const userId = localStorage.getItem('userId');
                 const url = baseURL + '/primeiroLogin/' + userId;
                 console.log(userId)
-                const response = await axios.post(url, { password });  
+                const response = await axios.post(url, { password });
 
                 if (response.status === 200) {
-                  Swal.fire({
-                    icon: 'success',
-                    text: response.data.message,
-                  });
+                    Swal.fire({
+                        icon: 'success',
+                        text: response.data.message,
+                    });
+                    navigate ('/homepage');
                 } else {
-                  Swal.fire({
-                    icon: 'error',
-                    text: response.data.message,
-                  });
+                    Swal.fire({
+                        icon: 'error',
+                        text: response.data.message,
+                    });
                 }
-              } catch (error) {
+            } catch (error) {
                 Swal.fire({
-                  icon: 'error',
-                  text: 'Erro ao atualizar a password',
+                    icon: 'error',
+                    text: 'Erro ao atualizar a password',
                 });
-              }
+            }
         }
     }
-    
-    return (
-        <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', backgroundColor: '#D9D9D9' }}>
-            <section className="h-100">
-                <div className="container h-100">
-                    <div className="row justify-content-sm-center h-100">
-                        <div className="col-md-8 col-sm-9">
-                            <div className="card shadow-lg">
-                                <div className="card-body py-4 px-5">
-                                    <div className="text-center mb-4">
-                                        <img src={logo} alt="Logo Softinsa" style={{ maxWidth: '100%', height: 'auto' }} />
-                                    </div>
-                                    <form className="needs-validation" noValidate autoComplete="off" onSubmit={handleSubmit}>
-                                        <div className="mb-3">
-                                            <div className="mb-2 w-100">
-                                                <label className="text-muted" htmlFor="password">Nova Password</label>
-                                            </div>
-                                            <input
-                                                id="password"
-                                                type={passwordEye ? "text" : "password"}
-                                                className="form-control shadow-none"
-                                                name="password"
-                                                required
-                                                value={formData.password}
-                                                onChange={handleInputChange}
-                                            />
-                                            <div className="invalid-feedback">
-                                                A password é um campo de preenchimento obrigatório!
-                                            </div>
-                                            <span className='password-toggle-icon'>
-                                                {passwordEye === false ? (<AiFillEyeInvisible onClick={handlePasswordClick} />) : (<AiFillEye onClick={handlePasswordClick} />)}
-                                            </span>
-                                        </div>
 
-                                        <div className="mb-3">
-                                            <div className="mb-2 w-100">
-                                                <label className="text-muted" htmlFor="confirmPassword">Confirmar Password</label>
-                                            </div>
-                                            <input
-                                                id="confirmPassword"
-                                                type={confirmPasswordEye ? "text" : "password"}
-                                                className="form-control shadow-none"
-                                                name="confirmPassword"
-                                                required
-                                                value={formData.confirmPassword}
-                                                onChange={handleInputChange}
-                                            />
-                                            <div className="invalid-feedback">
-                                                A password é um campo de preenchimento obrigatório!
-                                            </div>
-                                            <span className='password-toggle-icon'>
-                                                {confirmPasswordEye === false ? (<AiFillEyeInvisible onClick={handleConfirmPasswordClick} />) : (<AiFillEye onClick={handleConfirmPasswordClick} />)}
-                                            </span>
-                                        </div>
-                                        <div className="align-items-center">
-                                            <button type="submit" className="btn btn-primary w-100">
-                                                Alterar password
-                                            </button>
-                                        </div>
-                                    </form>
+    const isPasswordInvalid = passwordSelected && !formData.password;
+
+    return (
+        <div className="wrapper">
+            <div className="d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
+                <div className="card">
+                    <div className="header-image">
+                        <img src={logo} alt="Logo-Softinsa" />
+                    </div>
+                    <div className="card-body">
+                        <form onSubmit={handleSubmit}>
+                            <div className={`textarea-container ${isPasswordInvalid ? 'has-error' : ''}`}>
+                                <label htmlFor="password">Password</label>
+                                <div className="password-input">
+                                    <input
+                                        id="password"
+                                        type={passwordEye ? 'text' : 'password'}
+                                        className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleInputChange}
+                                    />
+                                    <div className="invalid-feedback">Password inválida</div>
+                                </div>
+                                <span className={`password-toggle-icon ${isPasswordInvalid ? 'hidden' : ''}`} onClick={handlePasswordClick}>
+                                    {passwordEye === false ? <AiFillEyeInvisible /> : <AiFillEye />}
+                                </span>
+                            </div>
+                            <div className={`textarea-container ${isPasswordInvalid ? 'has-error' : ''}`}>
+                                <label htmlFor="confirmPassword">Confirmar Password</label>
+                                <div className="password-input">
+                                    <input
+                                        id="password"
+                                        type={confirmPasswordEye ? 'text' : 'password'}
+                                        className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
+                                        name="confirmPassword"
+                                        value={formData.confirmPassword}
+                                        onChange={handleInputChange}
+                                    />
+                                    <div className="invalid-feedback">Password inválida</div>
+                                </div>
+                                <span className={`password-toggle-icon ${isPasswordInvalid ? 'hidden' : ''}`} onClick={handleConfirmPasswordClick}>
+                                    {confirmPasswordEye === false ? <AiFillEyeInvisible /> : <AiFillEye />}
+                                </span>
+                            </div>
+                            <div className="btn-wrapper">
+                                <div className="btn-group">
+                                    <button type="submit" className="btn btn-outline-success">
+                                        <span className="bi bi-check-lg"> Alterar Password</span>
+                                    </button>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </section>
+            </div>
         </div>
     );
 };

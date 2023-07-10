@@ -5,8 +5,10 @@ import SignupForm from '../components/auth/signupForm';
 
 export default function Signup() {
     return (
-        <div>
-            <SignupForm/>
+        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+            <div style={{ flex: 1 }}>
+                <SignupForm />
+            </div>
         </div>
     );
 }

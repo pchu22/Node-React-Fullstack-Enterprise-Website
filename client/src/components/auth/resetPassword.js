@@ -7,16 +7,20 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import logo from '../../assets/logo.png';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './auth.css'
 
 const baseURL = 'https://softinsa-web-app-carreiras01.onrender.com/auth';
 
 const PasswordResetForm = () => {
   const [passwordEye, setPasswordEye] = useState(false);
   const [confirmPasswordEye, setConfirmPasswordEye] = useState(false);
+  const [passwordSelected, setPasswordSelected] = useState(false);
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: '',
   });
+  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -31,96 +35,109 @@ const PasswordResetForm = () => {
     setConfirmPasswordEye((prevValue) => !prevValue);
   };
 
+  const isPasswordValid = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#?%-_])[A-Za-z\d!@#?%-_]{8,24}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      Swal.fire({
-        title: 'Error',
-        text: 'As passwords não correspondem!',
-        icon: 'error',
-      });
-      return;
-    }
+    const { password, confirmPassword } = formData;
 
-    const recoverToken = window.location.pathname.split('/').pop();
-    const url = `${baseURL}/reset-password/${recoverToken}`;
-
-    try {
-      const response = await axios.post(url, { password: formData.password });
+    if (password !== confirmPassword) {
       Swal.fire({
-        title: 'Success',
-        text: 'Password alterada com sucesso!',
-        icon: 'success',
-      });
-    } catch (error) {
-      Swal.fire({
-        title: 'Error',
-        text: error.response?.data?.message || 'Ocorreu um erro ao alterar a sua password!',
         icon: 'error',
+        text: 'As senhas não coincidem.',
       });
+    } else if (!isPasswordValid(password)) {
+      Swal.fire({
+        icon: 'error',
+        text:
+          'A password deve ter entre 8 e 24 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caracter especial (!, @, #, ?, %, - ou _).',
+      });
+    } else {
+      const recoverToken = window.location.pathname.split('/').pop();
+      const url = `${baseURL}/reset-password/${recoverToken}`;
+
+      try {
+        const response = await axios.post(url, { password: formData.password });
+        Swal.fire({
+          icon: 'success',
+          title: 'Sucesso!',
+          text: 'Password alterada com sucesso!',
+          timer: 3000,
+          timerProgressBar: true,
+          showConfirmButton: false
+        }).then(() => {
+          navigate('/login');
+        });
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro',
+          text: 'Erro ao alterar o email da sua Conta Softinsa.',
+        });
+        console.error(error);
+      }
     }
   };
 
+  const isPasswordInvalid = passwordSelected && !formData.password;
+
   return (
-    <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', backgroundColor: '#D9D9D9' }}>
-      <section className="h-100">
-        <div className="container h-100">
-          <div className="row justify-content-sm-center h-100">
-            <div className="col-md-8 col-sm-9">
-              <div className="card shadow-lg">
-                <div className="text-center mb-4">
-                  <img src={logo} alt="Logo Softinsa" style={{ maxWidth: '100%', height: 'auto' }} />
+    <div className="wrapper">
+      <div className="d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
+        <div className="card">
+          <div className="header-image">
+            <img src={logo} alt="Logo-Softinsa" />
+          </div>
+          <div className="card-body">
+            <form onSubmit={handleSubmit}>
+              <div className={`textarea-container ${isPasswordInvalid ? 'has-error' : ''}`}>
+                <label htmlFor="password">Password</label>
+                <div className="password-input">
+                  <input
+                    id="password"
+                    type={passwordEye ? 'text' : 'password'}
+                    className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                  />
+                  <div className="invalid-feedback">Password inválida</div>
                 </div>
-                <form className="needs-validation" noValidate autoComplete="off" onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <div className="mb-2 w-100">
-                      <label className="text-muted" htmlFor="password">
-                        Password
-                      </label>
-                    </div>
-                    <input
-                      id="password"
-                      type={passwordEye ? 'text' : 'password'}
-                      className="form-control shadow-none"
-                      name="password"
-                      required
-                      value={formData.password}
-                      onChange={handleInputChange}
-                    />
-                    <div className="invalid-feedback">Password is required</div>
-                    <span className="password-toggle-icon" onClick={handlePasswordClick}>
-                      {passwordEye ? <AiFillEyeInvisible /> : <AiFillEye />}
-                    </span>
-                  </div>
-                  <div className="mb-3">
-                    <div className="mb-2 w-100">
-                      <label className="text-muted" htmlFor="confirmPassword">
-                        Confirmar Password
-                      </label>
-                    </div>
-                    <input
-                      id="confirmPassword"
-                      type={confirmPasswordEye ? 'text' : 'password'}
-                      className="form-control shadow-none"
-                      name="confirmPassword"
-                      required
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                    />
-                    <div className="invalid-feedback">Password is required</div>
-                    <span className="password-toggle-icon" onClick={handleConfirmPasswordClick}>
-                      {confirmPasswordEye ? <AiFillEyeInvisible /> : <AiFillEye />}
-                    </span>
-                  </div>
-                  <button type="submit" className="btn btn-primary">
-                    Reset Password
-                  </button>
-                </form>
+                <span className={`password-toggle-icon ${isPasswordInvalid ? 'hidden' : ''}`} onClick={handlePasswordClick}>
+                  {passwordEye === false ? <AiFillEyeInvisible /> : <AiFillEye />}
+                </span>
               </div>
-            </div>
+              <div className={`textarea-container ${isPasswordInvalid ? 'has-error' : ''}`}>
+                <label htmlFor="confirmPassword">Confirmar Password</label>
+                <div className="password-input">
+                  <input
+                    id="password"
+                    type={confirmPasswordEye ? 'text' : 'password'}
+                    className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                  />
+                  <div className="invalid-feedback">Password inválida</div>
+                </div>
+                <span className={`password-toggle-icon ${isPasswordInvalid ? 'hidden' : ''}`} onClick={handleConfirmPasswordClick}>
+                  {confirmPasswordEye === false ? <AiFillEyeInvisible /> : <AiFillEye />}
+                </span>
+              </div>
+              <div className="btn-wrapper">
+                <div className="btn-group">
+                  <button type="submit" className="btn btn-outline-success">
+                    <span className="bi bi-check-lg"> Alterar Password</span>
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

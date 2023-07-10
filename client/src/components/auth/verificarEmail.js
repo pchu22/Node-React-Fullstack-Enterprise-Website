@@ -10,7 +10,7 @@ const VerificacaoEmail = () => {
 
   useEffect(() => {
     const url = `${baseURL}/ativacao/${verificationToken}`;
-  
+
     axios.post(url)
       .then((response) => {
         setMessage(response.data.message);
@@ -22,9 +22,11 @@ const VerificacaoEmail = () => {
   }, [verificationToken]);
 
   return (
-    <div>
-      <h1>Verificação de E-mail</h1>
-      <p>{message}</p>
+    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "100vh"}}>
+      <div className='card' style={{ color: "#000", textAlign: "center" }}>
+        <h1>Verificação de E-mail</h1>
+        <p>{message}</p>
+      </div>
     </div>
   );
 };

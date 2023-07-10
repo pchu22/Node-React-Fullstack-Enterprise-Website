@@ -5,11 +5,11 @@ import LoginForm from '../components/auth/loginForm';
 
 
 export default function Login() {
-
-
     return (
-        <div>
-            <LoginForm/>
+        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+            <div style={{ flex: 1 }}>
+                <LoginForm />
+            </div>
         </div>
     );
 

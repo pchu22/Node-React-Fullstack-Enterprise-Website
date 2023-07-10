@@ -182,11 +182,9 @@ controllers.updatePasswordPrimeiroLogin = async (req, res) => {
     user.isPrimeiroLogin = false;
     await user.save();
 
-    console.log('Password updated successfully');
-
     res.status(200).json({
       success: true,
-      message: 'A password do utilizador foi atualizada com sucesso!',
+      message: 'A sua password foi atualizada com sucesso!',
     });
   } catch (err) {
     console.log('Error updating password:', err);

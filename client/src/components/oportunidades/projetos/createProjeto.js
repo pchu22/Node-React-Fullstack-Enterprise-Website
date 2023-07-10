@@ -88,7 +88,7 @@ export default function CreateVaga() {
           </div>
           <div className="card-body">
             <form onSubmit={SendSave}>
-            <div class="textarea-container">
+              <div class="textarea-container">
                 <label htmlFor="inputNome">Nome</label>
                 <input
                   type="text"
@@ -148,21 +148,21 @@ export default function CreateVaga() {
                 </select>
               </div>
               <div className="btn-wrapper">
-                                <div className="btn-group">
-                                    <button
-                                        type="submit"
-                                        className="btn btn-outline-success">
-                                        <span className="bi bi-check" />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-danger cancel-btn"
-                                        onClick={() => navigate('/oportunidade')}
-                                        style={{ marginLeft: '10px' }}>
-                                        <span className="bi bi-x-octagon-fill" />
-                                    </button>
-                                </div>
-                            </div>
+                <div className="btn-group">
+                  <button
+                    type="submit"
+                    className="btn btn-outline-success">
+                    <span className="bi bi-check" />
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger cancel-btn"
+                    onClick={() => navigate('/oportunidade')}
+                    style={{ marginLeft: '10px' }}>
+                    <span className="bi bi-x-octagon-fill" />
+                  </button>
+                </div>
+              </div>
             </form>
           </div>
         </div>
