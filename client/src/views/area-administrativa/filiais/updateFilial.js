@@ -1,16 +1,15 @@
 import React from "react";
-import UpdateProjetoForm from "../../../components/oportunidades/projetos/updateProjeto";
+import FormEditFiliais from "../../../components/area-administrativa/filiais/updateFilial";
 import Navbar from "../../../components/sidebar/sidebar";
-import Footer from "../../../components/footer";
 
-const UpdateProjeto = () => {
+const EditFiliais = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <div style={{ flex: 1 }}>
-        <UpdateProjetoForm />
+        <FormEditFiliais />
       </div>
     </div>
   );
 };
 
-export default UpdateProjeto;
+export default EditFiliais;

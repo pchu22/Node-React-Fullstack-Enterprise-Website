@@ -21,7 +21,7 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [passwordSelected, setPasswordSelected] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(localStorage.getItem("rememberedEmail") ? true : false);
   const [loggedIn, setLoggedIn] = useState(false);
 
   const navigate = useNavigate();
@@ -34,11 +34,10 @@ const LoginForm = () => {
 
   useEffect(() => {
     const rememberedEmail = localStorage.getItem("rememberedEmail");
-    if (rememberedEmail) {
+    if (rememberedEmail && rememberMe) {
       setEmail(rememberedEmail);
-      setRememberMe(true);
     }
-  }, []);
+  }, [rememberMe]);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -145,6 +144,7 @@ const LoginForm = () => {
                     type={passwordEye ? 'text' : 'password'}
                     className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
                     name="password"
+                    autoComplete="off"
                     value={password}
                     onChange={handlePasswordChange}
                   />
@@ -153,15 +153,36 @@ const LoginForm = () => {
                   {passwordEye === false ? <AiFillEyeInvisible /> : <AiFillEye />}
                 </span>
               </div>
-              <div className="forgotPW-container" style={{ textAlign: 'right' }}>
-                <Link className="forgotPW" to={"/recover"}>
-                  Esqueceu-se da password?
-                </Link>
+              <div className="content-container" style={{ display: "flex", justifyContent: "space-between" }}>
+                <div style={{ alignSelf: "center" }}>
+                  <input
+                    type="checkbox"
+                    id="rememberMe"
+                    checked={rememberMe}
+                    onChange={(event) => setRememberMe(event.target.checked)}
+                  />
+                  <label htmlFor="rememberMe" style={{ marginLeft: "0.5rem" }}>Lembrar-me</label>
+                </div>
+                <div style={{ alignSelf: "center" }}>
+                  <Link className="forgotPW" to={"/recover"}>
+                    Esqueceu-se da password?
+                  </Link>
+                </div>
               </div>
               <div className="btn-wrapper">
                 <div className="btn-group">
                   <button type="submit" className="btn btn-outline-success">
                     <span className="bi bi-check-lg"> Login</span>
+                  </button>
+                </div>
+                <div className="btn-group">
+                  <button type="submit" className="btn btn-outline-warning">
+                    <span className="bi bi-google"> Login com o Google</span>
+                  </button>
+                </div>
+                <div className="btn-group">
+                  <button type="submit" className="btn btn-outline-primary" style={{ width: "48%" }}>
+                    <span className="bi bi-facebook"> Login com o Facebook</span>
                   </button>
                 </div>
               </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
-import logo from '../../assets/logo.png'
+import logo from '../../../assets/logo.png'
 
 const baseURL = "https://softinsa-web-app-carreiras01.onrender.com/";
 

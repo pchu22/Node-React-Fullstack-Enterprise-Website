@@ -1,19 +1,26 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import Navbar from '../components/navbar';
-import Footer from '../components/footer';
-import BemVindo from '../components/bemVindo';
-import Menu from '../components/menuPrincipal';
-import React from "react";
+import React, { useState } from "react";
+import Homepage from '../components/homepage/homepage';
+import Sidebar from '../components/sidebar/sidebar';
+import Navbar from '../components/navbar/navbar';
 
+export default function Homepage_() {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
-export default function HomePage() {
+    const openSidebar = () => {
+        setSidebarOpen(true);
+    };
+
+    const closeSidebar = () => {
+        setSidebarOpen(false);
+    };
+
     return (
-        <div>
-            <Navbar/>
-            <BemVindo />
-            <Menu />
-            <Footer/>
+        <div className="container-sidebar">
+            <Navbar sidebarOpen={sidebarOpen} openSidebar={openSidebar} />
+            <Sidebar sidebarOpen={sidebarOpen} closeSidebar={closeSidebar} />
+            <Homepage />
         </div>
     );
 }

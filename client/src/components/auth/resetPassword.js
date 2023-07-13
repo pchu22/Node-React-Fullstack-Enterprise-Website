@@ -101,6 +101,7 @@ const PasswordResetForm = () => {
                     type={passwordEye ? 'text' : 'password'}
                     className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
                     name="password"
+                    autoComplete="off"
                     value={formData.password}
                     onChange={handleInputChange}
                   />
@@ -118,6 +119,7 @@ const PasswordResetForm = () => {
                     type={confirmPasswordEye ? 'text' : 'password'}
                     className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
                     name="confirmPassword"
+                    autoComplete="off"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                   />

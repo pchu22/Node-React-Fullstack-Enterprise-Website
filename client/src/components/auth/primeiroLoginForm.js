@@ -114,6 +114,7 @@ const PrimeiroLoginForm = () => {
                                         className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
                                         name="password"
                                         value={formData.password}
+                                        autoComplete="off"
                                         onChange={handleInputChange}
                                     />
                                     <div className="invalid-feedback">Password inválida</div>
@@ -130,6 +131,7 @@ const PrimeiroLoginForm = () => {
                                         type={confirmPasswordEye ? 'text' : 'password'}
                                         className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
                                         name="confirmPassword"
+                                        autoComplete="off"
                                         value={formData.confirmPassword}
                                         onChange={handleInputChange}
                                     />

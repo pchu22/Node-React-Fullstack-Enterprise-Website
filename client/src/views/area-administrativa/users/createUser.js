@@ -1,16 +1,15 @@
 import React from "react";
-import UpdateProjetoForm from "../../../components/oportunidades/projetos/updateProjeto";
+import FormCreateUser from "../../../components/area-administrativa/users/createUser";
 import Navbar from "../../../components/sidebar/sidebar";
-import Footer from "../../../components/footer";
 
-const UpdateProjeto = () => {
+const CreateUser = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <div style={{ flex: 1 }}>
-        <UpdateProjetoForm />
+        <FormCreateUser />
       </div>
     </div>
   );
 };
 
-export default UpdateProjeto;
+export default CreateUser;

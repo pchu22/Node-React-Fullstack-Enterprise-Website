@@ -176,6 +176,7 @@ const SignupForm = () => {
                     type={passwordEye ? 'text' : 'password'}
                     className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
                     name="password"
+                    autoComplete="off"
                     value={formData.password}
                     onChange={handleInputChange}
                   />
@@ -193,6 +194,7 @@ const SignupForm = () => {
                     type={confirmPasswordEye ? 'text' : 'password'}
                     className={`form-control shadow-none ${isPasswordInvalid ? 'is-invalid' : ''}`}
                     name="confirmPassword"
+                    autoComplete="off"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                   />

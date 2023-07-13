@@ -264,7 +264,7 @@ export default function ListOportunidades() {
       .post(url, { parceriaIds })
       .then((res) => {
         if (res.data.success) {
-          Swal.fire('Ação executada com sucesso!', 'as parcerias foram apagados com sucesso!', 'success');
+          Swal.fire('Ação executada com sucesso!', 'As parcerias foram apagados com sucesso!', 'success');
           loadParcerias();
         }
       })
@@ -443,7 +443,7 @@ export default function ListOportunidades() {
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                                   {canEditInvestimentos ? (
                                     <Link to={`/oportunidade/investimento/update/${investimento.investimentoId}`} className="btn btn-outline-warning">
-                                      <span className="bi bi-pen-fill" style={{ marginRight: '10px' }} />
+                                      <span className="bi bi-pen-fill"/>
                                     </Link>
                                   ) : null}
                                   {cargo === 1 || cargo === 2 ? (
@@ -737,4 +737,3 @@ export default function ListOportunidades() {
     </div>
   );
 }
-
