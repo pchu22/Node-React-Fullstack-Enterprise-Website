@@ -81,7 +81,7 @@ export default function CreateInvestimento() {
                   <button
                     type="submit"
                     className="btn btn-outline-success">
-                    <span className="bi bi-check" />
+                    <span className="bi bi-check-lg" />
                   </button>
                   <button
                     type="button"

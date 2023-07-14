@@ -51,7 +51,7 @@ const UpdateParceria = () => {
 
       if (response.data.success) {
         Swal.fire({
-          title: "Parceria alterado com sucesso!"
+          title: "Parceria alterada com sucesso!"
         }).then(() => {
           navigate("/oportunidade");
         });

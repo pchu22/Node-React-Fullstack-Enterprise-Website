@@ -17,10 +17,15 @@ export default function CreateVaga() {
   const [user, setUser] = useState(null);
   const [tipo, setTipo] = useState(null);
   const [dataTipo, setDataTipo] = useState([]);
+  const [newTipo, setNewTipo] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    loadTipos();
+  }, []);
+
+  function loadTipos() {
     const userId = localStorage.getItem('userId')
     setUser(userId);
 
@@ -33,15 +38,13 @@ export default function CreateVaga() {
         } else {
           alert("Error Web Service");
         }
-      })
-      .catch((err) => {
+      }).catch((err) => {
         console.error(err);
         alert("Error: " + err);
       });
+  }
 
-  }, []);
-
-  function LoadTipos() {
+  function FillTipos() {
     return dataTipo.map((data, index) => {
       return <option key={index} value={data.tipoProjetoId}>{data.tipoProjetoNome}</option>;
     });
@@ -66,7 +69,7 @@ export default function CreateVaga() {
       axios.post(url, datapost)
         .then(res => {
           if (res.data.success === true) {
-            alert(res.data.message);
+            Swal.fire(res.data.message);
             navigate('/oportunidade');
           } else {
             Swal.fire(res.data.message);
@@ -144,7 +147,7 @@ export default function CreateVaga() {
                   onChange={(event) => setTipo(event.target.value)}
                 >
                   <option defaultValue>Selecione o Tipo</option>
-                  {LoadTipos()}
+                  {FillTipos()}
                 </select>
               </div>
               <div className="btn-wrapper">

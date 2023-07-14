@@ -7,6 +7,7 @@
     transition: padding 0.5s, background 0.5s;
     min-height: 100vh;
     width: 335px;
+    z-index: 2;
 }
 
 .sidebar-title {

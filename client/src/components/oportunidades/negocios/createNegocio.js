@@ -68,10 +68,10 @@ export default function CreateVaga() {
       axios.post(url, datapost)
         .then(res => {
           if (res.data.success === true) {
-            alert(res.data.message);
+            Swal.fire(res.data.message);
             navigate('/oportunidade');
           } else {
-            alert(res.data.message);
+            Swal.fire(res.data.message);
           }
         })
         .catch(err => {

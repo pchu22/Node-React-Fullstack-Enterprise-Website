@@ -43,6 +43,16 @@ html {
         "sidebar main main main";
 }
 
+th:first-child,
+td:first-child {
+    width: 30px;
+}
+
+th:last-child,
+td:last-child {
+    width: 200px;
+}
+
 @media only screen and (max-width: 978px) {
     .container-sidebar {
         grid-template-columns: 1fr;

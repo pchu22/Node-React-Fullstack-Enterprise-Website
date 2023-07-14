@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import bg from '../../assets/bg-login.png'
+import bg from '../../assets/homepage-img.png'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './homepage.css'

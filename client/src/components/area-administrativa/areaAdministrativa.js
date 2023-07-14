@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom';
+
 import './style.css'
 
 const baseURL = 'https://softinsa-web-app-carreiras01.onrender.com';
@@ -31,7 +33,16 @@ export default function AreaAdministrativa() {
         loadFiliais();
         loadDepartamentos();
         loadUserCargo();
-    }, []);
+        startingTable();
+    }, [cargo]);
+
+    function startingTable() {
+        if (cargo === 1) {
+            setCurrentTable(0);
+        } else {
+            setCurrentTable(1);
+        }
+    }
 
     function loadUsers() {
         const url = baseURL + '/user/list';
@@ -271,75 +282,164 @@ export default function AreaAdministrativa() {
     }
 
     return (
-        <div className="container container-adm">
-            <h1 className="mt-5 mb-5"><br /></h1>
-            <div className="row">
-                <div className="col-md-12">
-                    <nav>
-                        <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                            {cargo === 1 ? (
-                                <button
-                                    className={`nav-link adm-nav-link ${currentTable === 0 ? 'active' : ''}`}
-                                    id="nav-investimentos-tab"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#nav-users"
-                                    type="button"
-                                    role="tab"
-                                    aria-controls="nav-users"
-                                    aria-selected={currentTable === 0}
-                                >
-                                    Utilizadores
-                                </button>
-                            ) : null}
-                            <button
-                                className={`nav-link adm-nav-link ${currentTable === 1 ? 'active' : ''}`}
-                                id="nav-negocios-tab"
-                                data-bs-toggle="tab"
-                                data-bs-target="#nav-filiais"
-                                type="button"
-                                role="tab"
-                                aria-controls="nav-filiais"
-                                aria-selected={currentTable === 1}
-                            >
-                                Filiais
-                            </button>
-                            <button
-                                className={`nav-link adm-nav-link ${currentTable === 2 ? 'active' : ''}`}
-                                id="nav-parcerias-tab"
-                                data-bs-toggle="tab"
-                                data-bs-target="#nav-departamentos"
-                                type="button"
-                                role="tab"
-                                aria-controls="nav-departamentos"
-                                aria-selected={currentTable === 2}
-                            >
-                                Departamentos
-                            </button>
-                        </div>
-                    </nav>
-                    <div className="tab-content" id="nav-tabContent">
-                        <div
-                            className={`tab-pane fade show ${currentTable === 0 ? 'active' : ''}`}
-                            id="nav-users"
-                            role="tabpanel"
-                            aria-labelledby="nav-users-tab"
-                        >
-                            <div className="mb-3 mt-3">
+        <main className='main-adm'>
+            <div className="container container-adm">
+                <div className="row">
+                    <div className="col-md-12">
+                        <nav className='nav'>
+                            <div className="nav nav-tabs" id="nav-tab" role="tablist">
                                 {cargo === 1 ? (
                                     <button
-                                        className="btn btn-outline-danger me-2"
-                                        onClick={() => deleteSelectedUsers()}
+                                        className={`nav-link adm-nav-link ${currentTable === 0 ? 'active' : ''}`}
+                                        id="nav-investimentos-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#nav-users"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="nav-users"
+                                        aria-selected={currentTable === 0}
                                     >
-                                        <span className='bi bi-trash-fill' />
+                                        Utilizadores
                                     </button>
                                 ) : null}
-                                {cargo === 1 ? (
-                                    <Link to="/user/create" className="btn btn-outline-success">
-                                        <span className='bi bi-plus-circle' />
-                                    </Link>
-                                ) : null}
+                                <button
+                                    className={`nav-link adm-nav-link ${currentTable === 1 ? 'active' : ''}`}
+                                    id="nav-negocios-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#nav-filiais"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="nav-filiais"
+                                    aria-selected={currentTable === 1}
+                                >
+                                    Filiais
+                                </button>
+                                <button
+                                    className={`nav-link adm-nav-link ${currentTable === 2 ? 'active' : ''}`}
+                                    id="nav-parcerias-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#nav-departamentos"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="nav-departamentos"
+                                    aria-selected={currentTable === 2}
+                                >
+                                    Departamentos
+                                </button>
                             </div>
+                        </nav>
+                        <div className="tab-content w-100" id="nav-tabContent">
                             {cargo === 1 ? (
+                                <div
+                                    className={`tab-pane fade show ${currentTable === 0 ? 'active' : ''}`}
+                                    id="nav-users"
+                                    role="tabpanel"
+                                    aria-labelledby="nav-users-tab"
+                                    style={{ minHeight: "calc(100vh - 150px)" }}
+                                >
+                                    <div className="mb-3 mt-3">
+                                        {cargo === 1 ? (
+                                            <button
+                                                className="btn btn-outline-danger me-2 del-btn"
+                                                onClick={() => deleteSelectedUsers()}
+                                            >
+                                                <span className='bi bi-trash-fill' />
+                                            </button>
+                                        ) : null}
+                                        {cargo === 1 ? (
+                                            <Link to="/user/create" className="btn btn-outline-success add-btn">
+                                                <span className='bi bi-plus-circle' />
+                                            </Link>
+                                        ) : null}
+                                    </div>
+                                    {cargo === 1 ? (
+                                        <table className="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" className='th-adm'>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectAllUser}
+                                                            onChange={() => handleSelectAll('Utilizador')}
+                                                        />
+                                                    </th>
+                                                    <th scope='col' className='th-adm'>Nome</th>
+                                                    {/*<th scope='col' className='th-adm'>Nº Funcionário</th>*/}
+                                                    <th scope='col' className='th-adm'>Cargo</th>
+                                                    <th scope='col' className='th-adm'>Email</th>
+                                                    {/*<th scope='col' className='th-adm'>Nº Telemóvel</th>*/}
+                                                    <th scope='col' className='th-adm'>Estado</th>
+                                                    <th scope='col' className='th-adm'>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {users.map((user) => {
+                                                    const canEditUsers = cargo === 1 || Number(user.userId) === Number(loggedInUserId);
+                                                    return (
+                                                        <tr key={user.userId}>
+                                                            {cargo === 1 ? (
+                                                                <td className='td-adm'>
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={selectedUser.includes(user)}
+                                                                        onChange={() => handleItemSelect('Utilizador', user)}
+                                                                    />
+                                                                </td>
+                                                            ) : null}
+                                                            <td className='td-adm'>{user.primeiroNome + ' ' + user.ultimoNome}</td>
+                                                            {/*<td className='td-adm'>{user.numeroFuncionario ? user.numeroFuncionario : 'N/A'}</td>*/}
+                                                            <td className='td-adm'>{getCargoIcon(user.cargoId)}</td>
+                                                            <td className='td-adm'>{user.email}</td>
+                                                            {/*<td className='td-adm'>{user.telemovel ? user.telemovel : 'N/A'}</td>*/}
+                                                            <td className='td-adm'>
+                                                                <div
+                                                                    className={`status-bar ${user.isAtivo ? 'active' : 'inactive'}`}
+                                                                    onClick={() => toggleUserStatus(user)}
+                                                                >
+                                                                    <div className="status-ball"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td className='td-adm'>
+                                                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                                                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                                                        {canEditUsers ? (
+                                                                            <Link to={`/user/update/${user.userId}`} className="btn btn-outline-warning">
+                                                                                <span className="bi bi-pen-fill" />
+                                                                            </Link>
+                                                                        ) : null}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    ) : null}
+                                </div>
+                            ) : null}
+                            <div
+                                className={`tab-pane fade show ${currentTable === 1 ? 'active' : ''}`}
+                                id="nav-filiais"
+                                role="tabpanel"
+                                aria-labelledby="nav-filiais-tab"
+                                style={{ minHeight: "calc(100vh - 150px)" }}
+                            >
+                                <div className="mb-3 mt-3">
+                                    {cargo === 1 ? (
+                                        <button
+                                            className="btn btn-outline-danger me-2 del-btn"
+                                            onClick={() => deleteSelectedFiliais()}
+                                        >
+                                            <span className='bi bi-trash-fill' />
+                                        </button>
+                                    ) : null}
+                                    {cargo === 1 ? (
+                                        <Link to="/filial/create" className="btn btn-outline-success add-btn">
+                                            <span className='bi bi-plus-circle' />
+                                        </Link>
+                                    ) : null}
+                                </div>
                                 <table className="table table-hover">
                                     <thead>
                                         <tr>
@@ -347,220 +447,135 @@ export default function AreaAdministrativa() {
                                                 <th scope="col">
                                                     <input
                                                         type="checkbox"
-                                                        checked={selectAllUser}
-                                                        onChange={() => handleSelectAll('Utilizador')}
+                                                        checked={selectAllFilial}
+                                                        onChange={() => handleSelectAll('Filial')}
                                                     />
                                                 </th>
                                             ) : null}
-                                            <th scope="col">Nome</th>
-                                            <th scope="col">Nº Funcionário</th>
-                                            <th scope="col">Cargo</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Nº Telemóvel</th>
-                                            <th scope="col">Estado</th>
-                                            <th scope="col">Ações</th>
+                                            <th scope="col" className='th-adm'>Nome</th>
+                                            <th scope="col" className='th-adm'>Morada</th>
+                                            <th scope="col" className='th-adm'>Email</th>
+                                            <th scope="col" className='th-adm'>Telemóvel</th>
+                                            {cargo === 1 ? (
+                                                <th scope="col" className='th-adm'>Ações</th>
+                                            ) : null}
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {users.map((user) => {
-                                            const canEditUsers = cargo === 1 || Number(user.userId) === Number(loggedInUserId);
+                                        {filiais.map((filial) => {
                                             return (
-                                                <tr key={user.userId}>
+                                                <tr key={filial.filialId}>
                                                     {cargo === 1 ? (
-                                                        <td>
+                                                        <td className='td-adm'>
                                                             <input
                                                                 type="checkbox"
-                                                                checked={selectedUser.includes(user)}
-                                                                onChange={() => handleItemSelect('Utilizador', user)}
+                                                                checked={selectedFilial.includes(filial)}
+                                                                onChange={() => handleItemSelect('Filial', filial)}
                                                             />
                                                         </td>
                                                     ) : null}
-                                                    <td>{user.primeiroNome + ' ' + user.ultimoNome}</td>
-                                                    <td>{user.numeroFuncionario ? user.numeroFuncionario : 'N/A'}</td>
-                                                    <td>{getCargoIcon(user.cargoId)}</td>
-                                                    <td>{user.email}</td>
-                                                    <td>{user.telemovel ? user.telemovel : 'N/A'}</td>
-                                                    <td>
-                                                        <div
-                                                            className={`status-bar ${user.isAtivo ? 'active' : 'inactive'}`}
-                                                            onClick={() => toggleUserStatus(user)}
-                                                        >
-                                                            <div className="status-ball"></div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                                                {canEditUsers ? (
-                                                                    <Link to={`/user/update/${user.userId}`} className="btn btn-outline-warning">
-                                                                        <span className="bi bi-pen-fill" />
-                                                                    </Link>
-                                                                ) : null}
+                                                    <td className='td-adm'>{filial.filialNome}</td>
+                                                    <td className='td-adm'>{filial.morada}</td>
+                                                    <td className='td-adm'>{filial.email}</td>
+                                                    <td className='td-adm'>{filial.telemovel}</td>
+                                                    {cargo === 1 ? (
+                                                        <td className='td-adm'>
+                                                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                                                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                                                    {cargo === 1 ? (
+                                                                        <Link to={`/filial/update/${filial.filialId}`} className="btn btn-outline-warning">
+                                                                            <span className="bi bi-pen-fill" />
+                                                                        </Link>
+                                                                    ) : null}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
+                                                        </td>
+                                                    ) : null}
                                                 </tr>
                                             );
                                         })}
                                     </tbody>
                                 </table>
-                            ) : null}
-                        </div>
-                        <div
-                            className={`tab-pane fade show ${currentTable === 1 ? 'active' : ''}`}
-                            id="nav-filiais"
-                            role="tabpanel"
-                            aria-labelledby="nav-filiais-tab"
-                        >
-                            <div className="mb-3 mt-3">
-                                {cargo === 1 ? (
-                                    <button
-                                        className="btn btn-outline-danger me-2"
-                                        onClick={() => deleteSelectedFiliais()}
-                                    >
-                                        <span className='bi bi-trash-fill' />
-                                    </button>
-                                ) : null}
-                                {cargo === 1 ? (
-                                    <Link to="/filial/create" className="btn btn-outline-success">
-                                        <span className='bi bi-plus-circle' />
-                                    </Link>
-                                ) : null}
                             </div>
-                            <table className="table table-hover">
-                                <thead>
-                                    <tr>
-                                        {cargo === 1 ? (
-                                            <th scope="col">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectAllFilial}
-                                                    onChange={() => handleSelectAll('Filial')}
-                                                />
-                                            </th>
-                                        ) : null}
-                                        <th scope="col">Nome</th>
-                                        <th scope="col">Morada</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Telemóvel</th>
-                                        {cargo === 1 ? (
-                                            <th scope="col">Ações</th>
-                                        ) : null}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filiais.map((filial) => {
-                                        return (
-                                            <tr key={filial.filialId}>
-                                                {cargo === 1 ? (
-                                                    <td>
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedFilial.includes(filial)}
-                                                            onChange={() => handleItemSelect('Filial', filial)}
-                                                        />
-                                                    </td>
-                                                ) : null}
-                                                <td>{filial.filialNome}</td>
-                                                <td>{filial.morada}</td>
-                                                <td>{filial.email}</td>
-                                                <td>{filial.telemovel}</td>
-                                                {cargo === 1 ? (
-                                                    <td>
-                                                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                                                {cargo === 1 ? (
-                                                                    <Link to={`/filial/update/${filial.filialId}`} className="btn btn-outline-warning">
-                                                                        <span className="bi bi-pen-fill" />
-                                                                    </Link>
-                                                                ) : null}
+                            <div
+                                className={`tab-pane fade show ${currentTable === 2 ? 'active' : ''}`}
+                                id="nav-departamentos"
+                                role="tabpanel"
+                                aria-labelledby="nav-departamentos-tab"
+                                style={{ minHeight: "calc(100vh - 150px)" }}
+                            >
+                                <div className='mt-3 mb-3'>
+                                    {cargo === 1 ? (
+                                        <button
+                                            className="btn btn-outline-danger me-2 del-btn"
+                                            onClick={() => deleteSelectedDepartamentos()}
+                                        >
+                                            <span className='bi bi-trash-fill' />
+                                        </button>
+                                    ) : null}
+                                    {cargo === 1 ? (
+                                        <Link to="/departamento/create" className="btn btn-outline-success add-btn">
+                                            <span className='bi bi-plus-circle' />
+                                        </Link>
+                                    ) : null}
+                                </div>
+                                <table className="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            {cargo === 1 ? (
+                                                <th scope="col">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectAllDepartamento}
+                                                        onChange={() => handleSelectAll('Departamento')}
+                                                    />
+                                                </th>
+                                            ) : null}
+                                            <th scope="col" className='th-adm'>Nome</th>
+                                            <th scope="col" className='th-adm'>Descrição</th>
+                                            {cargo === 1 ? (
+                                                <th scope="col" className='th-adm'>Ações</th>
+                                            ) : null}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {departamentos.map((departamento) => {
+                                            return (
+                                                <tr key={departamento.departamentoId}>
+                                                    {cargo === 1 ? (
+                                                        <td>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selectedDepartamento.includes(departamento)}
+                                                                onChange={() => handleItemSelect('Departamento', departamento)}
+                                                            />
+                                                        </td>
+                                                    ) : null}
+                                                    <td>{departamento.departamentoNome}</td>
+                                                    <td>{departamento.descricao}</td>
+                                                    {cargo === 1 ? (
+                                                        <td>
+                                                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                                                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                                                    {cargo === 1 ? (
+                                                                        <Link to={`/departamento/update/${departamento.departamentoId}`} className="btn btn-outline-warning">
+                                                                            <span className="bi bi-pen-fill" />
+                                                                        </Link>
+                                                                    ) : null}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                ) : null}
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div
-                            className={`tab-pane fade show ${currentTable === 2 ? 'active' : ''}`}
-                            id="nav-departamentos"
-                            role="tabpanel"
-                            aria-labelledby="nav-departamentos-tab"
-                        >
-                            <div className='mt-3 mb-3'>
-                                {cargo === 1 ? (
-                                    <button
-                                        className="btn btn-outline-danger me-2"
-                                        onClick={() => deleteSelectedDepartamentos()}
-                                    >
-                                        <span className='bi bi-trash-fill' />
-                                    </button>
-                                ) : null}
-                                {cargo === 1 ? (
-                                    <Link to="/departamento/create" className="btn btn-outline-success">
-                                        <span className='bi bi-plus-circle' />
-                                    </Link>
-                                ) : null}
+                                                        </td>
+                                                    ) : null}
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
                             </div>
-                            <table className="table table-hover">
-                                <thead>
-                                    <tr>
-                                        {cargo === 1 ? (
-                                            <th scope="col">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectAllDepartamento}
-                                                    onChange={() => handleSelectAll('Departamento')}
-                                                />
-                                            </th>
-                                        ) : null}
-                                        <th scope="col">Nome</th>
-                                        <th scope="col">Descrição</th>
-                                        {cargo === 1 ? (
-                                            <th scope="col">Ações</th>
-                                        ) : null}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {departamentos.map((departamento) => {
-                                        return (
-                                            <tr key={departamento.departamentoId}>
-                                                {cargo === 1 ? (
-                                                    <td>
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedDepartamento.includes(departamento)}
-                                                            onChange={() => handleItemSelect('Departamento', departamento)}
-                                                        />
-                                                    </td>
-                                                ) : null}
-                                                <td>{departamento.departamentoNome}</td>
-                                                <td>{departamento.descricao}</td>
-                                                {cargo === 1 ? (
-                                                    <td>
-                                                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                                                {cargo === 1 ? (
-                                                                    <Link to={`/departamento/update/${departamento.departamentoId}`} className="btn btn-outline-warning">
-                                                                        <span className="bi bi-pen-fill" />
-                                                                    </Link>
-                                                                ) : null}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                ) : null}
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div >
+                </div >
+            </div >
+        </main >
     );
 }

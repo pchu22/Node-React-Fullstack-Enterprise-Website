@@ -169,27 +169,26 @@ export default function ListVaga() {
     }
 
     return filteredVagas.map((vaga, index) => (
-      <tr className="user-row" key={index}>
+      <tr 
+        className="user-row" 
+        key={index}
+        onClick={() => showVagaInfo(vaga)}
+      >
         <td>
-        {cargo === 1 ? (
-          <input
-            type="checkbox"
-            checked={selectedVaga.includes(vaga)}
-            onChange={() => handleVagaSelect(vaga)}
-          />
-        ) : null}
+          {cargo === 1 ? (
+            <input
+              type="checkbox"
+              className='row-vaga'
+              checked={selectedVaga.includes(vaga)}
+              onChange={() => handleVagaSelect(vaga)}
+            />
+          ) : null}
         </td>
-        {cargo === 1 ? (
-          <td>{index + 1}</td>
-        ) : null}
-        <td>{vaga.titulo}</td>
-        <td>{vaga.descricao}</td>
-        <td>{vaga.habilitacoesMin}</td>
-        <td>{vaga.experienciaMin}</td>
-        <td>{vaga.remuneracao} €</td>
-        <td>{getDepartamentoName(vaga.departamentoId)}</td>
-        <td>{getFilialName(vaga.filialId)}</td>
-        <td>
+        <td className='row-vaga'>{vaga.titulo}</td>
+        <td className='row-vaga'>{vaga.descricao}</td>
+        <td className='row-vaga'>{getDepartamentoName(vaga.departamentoId)}</td>
+        <td className='row-vaga'>{getFilialName(vaga.filialId)}</td>
+        <td className='row-vaga'>
           <div style={{ display: 'inline-block' }}>
             {cargo === 1 ? (
               <>
@@ -222,52 +221,68 @@ export default function ListVaga() {
     ));
   }
 
+  function showVagaInfo(vaga) {
+      Swal.fire({
+        title: vaga.titulo,
+        html:`
+          <strong>Descrição</strong>: ${vaga.descricao}<br/>
+          <strong>Habilitações Mínimas</strong>: ${vaga.habilitacoesMin}<br/>
+          <strong>Experiençia Mínima</strong>: ${vaga.experienciaMin}<br/>
+          <strong>Remuneração</strong>: ${vaga.remuneracao}<br/>
+          <strong>Departamento</strong>: ${getDepartamentoName(vaga.departamentoId)}<br/>
+          <strong>Filial</strong>: ${getFilialName(vaga.filialId)}
+        `,
+        showCancelButton: false,
+        focusConfirm: false
+      })
+  }
+
   return (
-    <div className="wrapper" style={{ width: '100vw', height: '100vh' }}>
-      <div className="container">
-        <h2 className="text-center">Lista de Vagas</h2>
+    <main className='main-vagas'>
+      <div className="wrapper-vagas">
         <div className="text-left">
           {cargo === 1 ? (
-            <button className="btn btn-outline-danger" role="button" aria-pressed="true" onClick={handleDeleteSelected}>
+            <button className="btn btn-outline-danger del-btn" role="button" aria-pressed="true" onClick={handleDeleteSelected}>
               <span className="bi bi-trash-fill" />
             </button>
           ) : null}
+          {cargo === 1 ? (
+            <Link to="/vaga/create" className="btn btn-outline-success add-btn">
+              <span className='bi bi-plus-circle' />
+            </Link>
+          ) : null}
         </div>
-        <table className="table table-striped mt-3">
-          <thead>
-            <tr>
-              <th>
-              {cargo === 1 ? (
-                  <input
-                  type="checkbox"
-                  checked={selectAll}
-                  onChange={handleSelectAll}
-                />
-              ) : null}
-              </th>
-              {cargo === 1 ? (
-                <th>ID</th>
-              ) : null}
-              <th>Título</th>
-              <th>Descrição</th>
-              <th>Habilitações Mínimas</th>
-              <th>Experiência Mínima</th>
-              <th>Remuneração</th>
-              <th>Departamento</th>
-              <th>Filial</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {vagas.length > 0 ? (
-              renderVagas()
-            ) : (
+        <div className="container-vagas">
+          <table className="table table-striped mt-3">
+            <thead>
               <tr>
-                <td colSpan="13">Não existem vagas!</td>
+                <th>
+                  {cargo === 1 ? (
+                    <input
+                      type="checkbox"
+                      checked={selectAll}
+                      onChange={handleSelectAll}
+                    />
+                  ) : null}
+                </th>
+                <th className='th-vaga'>Título</th>
+                <th className='th-vaga'>Descrição</th>
+                <th className='th-vaga'>Departamento</th>
+                <th className='th-vaga'>Filial</th>
+                <th className='th-vaga'>Ações</th>
               </tr>
-            )}</tbody>
-        </table>
+            </thead>
+            <tbody>
+              {vagas.length > 0 ? (
+                renderVagas()
+              ) : (
+                <tr>
+                  <td colSpan="6">Não existem vagas!</td>
+                </tr>
+              )}</tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

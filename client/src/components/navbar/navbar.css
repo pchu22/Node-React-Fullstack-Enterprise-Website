@@ -8,6 +8,7 @@
     padding: 0 30px 0 30px;
     border-bottom: 1px solid lightgray;
     width: calc(100vw - 335px);
+    z-index: 1;
 }
 
 .nav-icon {

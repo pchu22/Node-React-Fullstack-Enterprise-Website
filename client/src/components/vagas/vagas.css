@@ -1,80 +1,67 @@
-.container {
-    margin: 20px auto;
-    max-width: 95%;
+.main-vagas {
+  background: url('../../assets/bg-login.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.container-vagas {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  padding: 20px;
+}
+
+.wrapper-vagas {
+  max-width: 100%;
+  margin: auto;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   margin: 0 auto;
+  table-layout: fixed;
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
+.row-vaga:hover {
+  cursor: pointer;
 }
 
 .text-left {
   text-align: left;
-  margin-bottom: 20px;
+  margin: 50px 0 0 20px;
 }
 
-.btn {
-  margin-bottom: 10px;
+.add-btn {
+  margin-left: 10px;
 }
 
-th,
-td {
-  padding: 10px;
-  text-align: left;
+.th-vaga {
+  	text-align: center;
+}
+
+.row-vaga{
+  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 th {
-  background-color: #f2f2f2;
-  max-width: 150px;
   align-items: center;
   text-align: center;
   justify-content: center;
 }
 
 td {
-  max-width: 200px;
   align-items: center;
   text-align: center;
   justify-content: center;
+  height: 75px;
 }
+
 tr:nth-child(even) {
   background-color: #f9f9f9;
-}
-
-.user-row {
-  cursor: pointer;
-}
-
-.btn-outline-info {
-  color: #17a2b8;
-  border-color: #17a2b8;
-}
-
-.btn-outline-info:hover {
-  background-color: #17a2b8;
-  color: white;
-}
-
-.btn-danger {
-  background-color: #dc3545;
-  color: white;
-  border-color: #dc3545;
-}
-
-.btn-danger:hover {
-  background-color: #c82333;
-  border-color: #bd2130;
-}
-
-.link {
-  text-decoration: none;
 }
