@@ -43,14 +43,147 @@ html {
         "sidebar main main main";
 }
 
-th:first-child,
-td:first-child {
-    width: 30px;
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 }
 
-th:last-child,
-td:last-child {
-    width: 200px;
+.card {
+    width: 400px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-image {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.header-image img {
+    width: 150px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.textarea-container {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.textarea-container label {
+    font-size: 14px;
+    font-weight: bold;
+    width: 100px;
+}
+
+.textarea-container input[type="email"],
+.textarea-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.textarea-container input[type="email"].is-invalid,
+.textarea-container input[type="password"].is-invalid {
+    border-color: #dc3545;
+}
+
+.textarea-container .invalid-feedback {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    position: absolute;
+    bottom: -18px;
+    left: 0;
+}
+
+.textarea-container .password-input input[type="password"] .textarea-container .password-input input[type="text"] {
+    width: 100%;
+    padding-right: 35px;
+}
+
+.password-input input[type="password"],
+.password-input input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+    font-size: 16px;
+}
+
+.textarea-container .password-input .password-toggle-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.textarea-container .password-input.with-eye input[type="password"] {
+    padding-right: 35px;
+}
+
+.textarea-container.is-invalid .password-toggle-icon {
+    display: none;
+}
+
+.textarea-container-nome {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.textarea-container-nome .name-input {
+    flex: 1;
+    position: relative;
+}
+
+.textarea-container-nome label {
+    font-size: 14px;
+    font-weight: bold;
+    width: 100px;
+}
+
+.textarea-container-nome input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.textarea-container-nome input[type="email"].is-invalid,
+.textarea-container-nome input[type="password"].is-invalid {
+    border-color: #dc3545;
+}
+
+.textarea-container-nome .invalid-feedback {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    position: absolute;
+    bottom: -18px;
+    left: 0;
+}
+
+label {
+    font-weight: bold;
+}
+
+th:first-child {
+    width: 30px;
 }
 
 @media only screen and (max-width: 978px) {

@@ -53,11 +53,12 @@ export default function Candidatar() {
             })
             .catch(err => {
                 console.log("Error: ", err);
-                if (err.response && err.response.status === 400 && err.response.data.message === "Você já se candidatou para essa vaga!") {
+                if (err.response && err.response.status === 400) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Já se candidatou a esta vaga',
                     });
+                    navigate("/vaga");
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -88,8 +89,20 @@ export default function Candidatar() {
                                 />
                             </div>
                             <div className="btn-wrapper">
-                                <button type="submit" className="btn btn-outline-success">Candidatar-me</button>
-                                <button type="button" className="btn btn-outline-danger cancel-btn" onClick={() => navigate('/vaga')}>Cancelar</button>
+                                <div className="btn-group">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-outline-success">
+                                        <span className="bi bi-check" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-danger cancel-btn"
+                                        onClick={() => navigate('/vaga')}
+                                        style={{ marginLeft: '10px' }}>
+                                        <span className="bi bi-x-octagon-fill" />
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>

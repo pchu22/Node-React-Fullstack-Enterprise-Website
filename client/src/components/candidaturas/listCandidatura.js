@@ -12,11 +12,13 @@ export default function ListCandidatura() {
     const [vagas, setVagas] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedCandidatura, setSelectedCandidatura] = useState([]);
+    const [cargo, setCargo] = useState("");
 
     useEffect(() => {
         loadCandidaturas();
         loadUsers();
         loadVagas();
+        loadUserCargo();
     }, []);
 
     function loadCandidaturas() {
@@ -66,6 +68,25 @@ export default function ListCandidatura() {
                     setVagas(data);
                 } else {
                     Swal.fire('Error Web Service', 'Lista de vagas indisponível!', 'error');
+                }
+            })
+            .catch((err) => {
+                alert('Error: ' + err.message);
+            });
+    }
+
+    function loadUserCargo() {
+        const userId = localStorage.getItem('userId');
+        const urlCargo = baseURL + '/user/get/' + userId;
+
+        axios
+            .get(urlCargo)
+            .then((res) => {
+                if (res.data.success) {
+                    console.log(res.data.data.cargo.cargoId);
+                    setCargo(res.data.data.cargo.cargoId);
+                } else {
+                    Swal.fire('Error Web Service', 'Erro ao carregar o cargo do utilizador!', 'error');
                 }
             })
             .catch((err) => {
@@ -139,18 +160,17 @@ export default function ListCandidatura() {
     function renderCandidaturas() {
         return candidaturas.map((candidatura, index) => (
             <tr className="user-row" key={index}>
-                <td>
+                <td className='candidaturas-data'>
                     <input
                         type="checkbox"
                         checked={selectedCandidatura.includes(candidatura)}
                         onChange={() => handleCandidaturaSelect(candidatura)}
                     />
                 </td>
-                <td>{index + 1}</td>
-                {/*<td>button that allows to download cv</td>*/}
-                <td>{getUserName(candidatura.userId)}</td>
-                <td>{getVagaTitle(candidatura.vagaId)}</td>
-                <td>
+                {/*<td className='candidaturas-data'>button that allows to download cv</td>*/}
+                <td className='candidaturas-data'>{getUserName(candidatura.userId)}</td>
+                <td className='candidaturas-data'>{getVagaTitle(candidatura.vagaId)}</td>
+                <td className='candidaturas-data'>
                     <Link className="btn btn-outline-warning" role="button" aria-pressed="true" to={`/candidatura/update/${candidatura.candidaturaId}`}>
                         <span className="bi bi-pen-fill" />
                     </Link>
@@ -160,38 +180,46 @@ export default function ListCandidatura() {
     }
 
     return (
-        <div className="wrapper" style={{ width: '100vw', height: '100vh' }}>
-            <div className="container">
-                <div className="text-left">
-                    <h2>Lista de Candidaturas</h2>
-                    <button className="btn btn-outline-danger" role="button" aria-pressed="true" onClick={handleDeleteSelected}>
-                        <span className="bi bi-trash-fill" />
-                    </button>
+        <main className='main-candidaturas'>
+            <div className="container container-candidaturas">
+                <h1 className="mt-5 mb-5"><br /></h1>
+                <div className="row-candidaturas">
+                    <div className="col-md-12">
+                        <div className="mb-3 mt-3">
+                            {cargo === 1 ? (
+                                <button
+                                    className="btn btn-outline-danger me-2"
+                                    onClick={() => handleDeleteSelected()}
+                                >
+                                    <span className='bi bi-trash-fill' />
+                                </button>
+                            ) : null}
+                        </div>
+                        <table className="table table-striped mt-3">
+                            <thead>
+                                <tr>
+                                    <th className='candidaturas-header'>
+                                        <input type="checkbox" checked={selectAll} onChange={handleSelectAll} />
+                                    </th>
+                                    {/*<th className='candidaturas-header'>Curriculum vitae</th>*/}
+                                    <th className='candidaturas-header'>Utilizador</th>
+                                    <th className='candidaturas-header'>Vaga</th>
+                                    <th className='candidaturas-header'>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {candidaturas.length > 0 ? (
+                                    renderCandidaturas()) :
+                                    (
+                                        <tr>
+                                            <td colSpan="4">Não existem candidaturas!</td>
+                                        </tr>
+                                    )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <table className="table table-striped mt-3">
-                    <thead>
-                        <tr>
-                            <th>
-                                <input type="checkbox" checked={selectAll} onChange={handleSelectAll} />
-                            </th>
-                            <th>ID</th>
-                            {/*<th>Curriculum vitae</th>*/}
-                            <th>Utilizador</th>
-                            <th>Vaga</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>            
-                        {candidaturas.length > 0 ? (
-                            renderCandidaturas()) : 
-                        (
-                            <tr>
-                                <td colSpan="5">Não existem candidaturas!</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
             </div>
-        </div>
+        </main >
     );
 }

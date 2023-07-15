@@ -1,11 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import axios from 'axios';
 import Swal from 'sweetalert2';
+
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
+import logo from '../../../assets/logo.png'
 
 const baseURL = "https://softinsa-web-app-carreiras01.onrender.com/";
 
@@ -15,8 +18,6 @@ export default function CreateUser() {
   const [numeroFuncionario, setNumeroFuncionario] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [telemovel, setTelemovel] = useState("");
-  const [morada, setMorada] = useState("");
   const [salario, setSalario] = useState("");
   const [cargo, setCargo] = useState(null);
   const [departamento, setDepartamento] = useState(null);
@@ -118,8 +119,6 @@ export default function CreateUser() {
       numeroFuncionario.trim() === "" ||
       email.trim() === "" ||
       password.trim() === "" ||
-      telemovel.trim() === "" ||
-      morada.trim() === "" ||
       salario.trim() === "" ||
       isCandidato === null ||
       cargo === null
@@ -127,18 +126,6 @@ export default function CreateUser() {
       Swal.fire('Todos os campos são de preenchimento obrigatório!');
     } else if (password.length < 8) {
       Swal.fire('A senha deve ter pelo menos 8 caracteres!');
-    } else if (!/[A-Z]/.test(password)) {
-      Swal.fire('A senha deve conter pelo menos uma letra maiúscula!');
-    } else if (!/[a-z]/.test(password)) {
-      Swal.fire('A senha deve conter pelo menos uma letra minúscula!');
-    } else if (!/\d/.test(password)) {
-      Swal.fire('A senha deve conter pelo menos um número!');
-    } else if (!/[!#?%\-_]/.test(password)) {
-      Swal.fire('A senha deve conter pelo menos um caractere especial (!#?%-_)!');
-    } else if (!/^\d{9}$/.test(telemovel) && !/^\d{10}$/.test(telemovel)) {
-      Swal.fire("Tem de inserir um número de telemóvel ou de telefone fixo!");
-    } else if (salario < 0) {
-      Swal.fire('O salário não pode ser menor que 0!');
     } else {
       const url = baseURL + "user/create";
       const datapost = {
@@ -147,8 +134,6 @@ export default function CreateUser() {
         numeroFuncionario: numeroFuncionario,
         email: email,
         password: password,
-        telemovel: telemovel,
-        morada: morada,
         salario: salario,
         isCandidato: isCandidato,
         cargoId: cargo,
@@ -158,9 +143,9 @@ export default function CreateUser() {
 
       axios.post(url, datapost)
         .then(res => {
-          if (res.data.success === true) {
-            alert(res.data.message);
-            navigate('/user');
+          if (res.data.success) {
+            Swal.fire(res.data.message);
+            navigate('/area-administrativa');
           } else {
             alert(res.data.message);
           }
@@ -173,124 +158,141 @@ export default function CreateUser() {
   }
 
   return (
-    <div>
-      <div className="form-row justify-content-center">
-        <div className="form-group col-md-6">
-          <label htmlFor="inputPNome">Primeiro Nome</label>
-          <input type="text" className="form-control" placeholder="Primeiro Nome"
-            value={primeiroNome} onChange={event => setPrimeiroNome(event.target.value)} />
-        </div>
-        <div className="form-group col-md-6">
-          <label htmlFor="inputUNome">Ultimo Nome</label>
-          <input type="text" className="form-control" placeholder="Ultimo Nome"
-            value={ultimoNome} onChange={event => setUltimoNome(event.target.value)} />
-        </div>
-      </div>
-      <div className="form-row justify-content-center">
-      </div>
-      <div className="form-row justify-content-center">
-        <div className="form-group col-md-6">
-          <label htmlFor="inputNFunc">Número de Funcionários</label>
-          <input
-            type="number"
-            className="form-control"
-            id="inputNFunc"
-            placeholder="Número de Funcionário"
-            value={numeroFuncionario}
-            onChange={(value) => setNumeroFuncionario(value.target.value)}
-          />
-        </div>
-      </div>
-      <div className="form-row justify-content-center">
-        <div className="form-group col-md-6">
-          <label htmlFor="inputEmail">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            id="inputEmail"
-            placeholder="Email"
-            value={email}
-            onChange={(value) => setEmail(value.target.value)}
-          />
-        </div>
-        <div className="form-row justify-content-center">
-          <div className="form-group col-md-6">
-            <label htmlFor="inputPassword">Password</label>
-            <input
-              type={passwordEye ? "text" : "password"}
-              className="form-control"
-              id="inputPassword"
-              placeholder="Password"
-              value={password}
-              onChange={(value) => setPassword(value.target.value)}
-              onBlur={handlePasswordBlur}
-            />
-            <span className='password-toggle-icon'>
-              {passwordEye === false ? (<AiFillEyeInvisible onClick={handlePasswordClick} />) : (<AiFillEye onClick={handlePasswordClick} />)}
-            </span>
+
+    <div className='wrapper'>
+      <div className="d-flex align-items-center justify-content-center" style={{ height: "100vh" }}>
+        <div className="card">
+          <div className="header-image">
+            <img src={logo} alt="Logo-Softinsa" />
+          </div>
+          <div className="card-body">
+            <form onSubmit={SendSave}>
+              <div class="textarea-container">
+                <label htmlFor="inputPNome">Primeiro Nome</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Primeiro Nome"
+                  value={primeiroNome}
+                  onChange={(event) => setPrimeiroNome(event.target.value)}
+                />
+              </div>
+              <div class="textarea-container">
+                <label htmlFor="inputUNome">Último Nome</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Ultimo Nome"
+                  value={ultimoNome}
+                  onChange={(event) => setUltimoNome(event.target.value)}
+                />
+              </div>
+              <div class="textarea-container">
+                <label htmlFor="inputNFunc">Número de Funcionário</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="inputNFunc"
+                  placeholder="Número de Funcionário"
+                  value={numeroFuncionario}
+                  onChange={(value) => setNumeroFuncionario(value.target.value)}
+                />
+              </div>
+              <div class="textarea-container">
+                <label htmlFor="inputEmail">Email</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="inputEmail"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(value) => setEmail(value.target.value)}
+                />
+              </div>
+              <div class="textarea-container">
+                <label htmlFor="inputPassword">Password</label>
+                <input
+                  type={passwordEye ? "text" : "password"}
+                  className="form-control"
+                  id="inputPassword"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(value) => setPassword(value.target.value)}
+                  onBlur={handlePasswordBlur}
+                />
+                <span className='password-toggle-icon'>
+                  {passwordEye === false ? (
+                    <AiFillEyeInvisible
+                      onClick={handlePasswordClick}
+                    />
+                  ) : (
+                    <AiFillEye
+                      onClick={handlePasswordClick}
+                    />
+                  )}
+                </span>
+              </div>
+              <div class="textarea-container">
+                <label htmlFor="inputSalario">Salário</label>
+                <input
+                  type="tel"
+                  className="form-control"
+                  id="inputSalario"
+                  placeholder="Salário"
+                  value={salario}
+                  onChange={(value) => setSalario(value.target.value)}
+                />
+              </div>
+              <div class="textarea-container">
+                <label htmlFor="inputCargo">Cargo</label>
+                <select
+                  id="inputCargo"
+                  className="form-control"
+                  onChange={(event) => setCargo(event.target.value)}>
+                  <option defaultValue>Escolha um cargo...</option>
+                  {LoadCargo()}
+                </select>
+              </div>
+              <div class="textarea-container">
+                <label htmlFor="inputDepartamento">Departamento</label>
+                <select
+                  id="inputDepartamento"
+                  className="form-control"
+                  onChange={(event) => setDepartamento(event.target.value)}>
+                  <option defaultValue>Escolha um departamento...</option>
+                  {LoadDepartamento()}
+                </select>
+              </div>
+              <div class="textarea-container">
+                <label htmlFor="inputFilial">Filial</label>
+                <select
+                  id="inputFilial"
+                  className="form-control"
+                  onChange={(event) => setFilial(event.target.value)}>
+                  <option defaultValue>Escolha uma filial...</option>
+                  {LoadFilial()}
+                </select>
+              </div>
+              <div className="btn-wrapper">
+                <div className="btn-group">
+                  <button
+                    type="submit"
+                    className="btn btn-outline-success">
+                    <span className="bi bi-check-lg" />
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger cancel-btn"
+                    onClick={() => navigate('/area-administrativa')}
+                    style={{ marginLeft: '10px' }}>
+                    <span className="bi bi-x-octagon-fill" />
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-        <div className="form-group col-md-6">
-          <label htmlFor="inputTelemovel">Telemovel</label>
-          <input
-            type="tel"
-            className="form-control"
-            id="inputTelemovel"
-            placeholder="Telemovel"
-            value={telemovel}
-            onChange={(value) => setTelemovel(value.target.value)}
-          />
-        </div>
       </div>
-      <div className="form-row justify-content-center">
-        <div className="form-group col-md-6">
-          <label htmlFor="inputMorada">Morada</label>
-          <input
-            type="text"
-            className="form-control"
-            id="inputMorada"
-            placeholder="Morada"
-            value={morada}
-            onChange={(value) => setMorada(value.target.value)}
-          />
-        </div>
-        <div className="form-group col-md-6">
-          <label htmlFor="inputSalario">Salário</label>
-          <input
-            type="tel"
-            className="form-control"
-            id="inputSalario"
-            placeholder="Salário"
-            value={salario}
-            onChange={(value) => setSalario(value.target.value)}
-          />
-        </div>
-      </div>
-      <div className="form-row">
-        <div className="form-group col-md-6">
-          <label htmlFor="inputCargo">Cargo</label>
-          <select id="inputCargo" className="form-control" onChange={event => setCargo(event.target.value)}>
-            <option defaultValue>Escolha um cargo...</option>
-            {LoadCargo()}
-          </select>
-        </div>
-        <div className="form-group col-md-6">
-          <label htmlFor="inputDepartamento">Departamento</label>
-          <select id="inputDepartamento" className="form-control" onChange={event => setDepartamento(event.target.value)}>
-            <option defaultValue>Escolha um departamento...</option>
-            {LoadDepartamento()}
-          </select>
-        </div>
-        <div className="form-group col-md-6">
-          <label htmlFor="inputFilial">Filial</label>
-          <select id="inputFilial" className="form-control" onChange={event => setFilial(event.target.value)}>
-            <option defaultValue>Escolha uma filial...</option>
-            {LoadFilial()}
-          </select>
-        </div>
-      </div>
-
-      <button type="submit" className="btn btn-primary mt-2" onClick={SendSave}>Criar utilizador</button>
     </div>
   );
 }

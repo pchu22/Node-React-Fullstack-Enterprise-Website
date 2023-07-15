@@ -23,6 +23,7 @@ h1 {
     margin-right: 10px;
     flex: 1;
 }
+
 .investimentos-header,
 .negocios-header,
 .parecerias-header,
@@ -59,34 +60,7 @@ h1 {
 }
 
 /*UPDATE FORMS*/
-
-.wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
-
-.card {
-    width: 400px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.header-image {
-    text-align: center;
-    padding: 20px 0;
-}
-
-.header-image img {
-    width: 150px;
-}
-
-.card-body {
-    padding: 20px;
-}
-
+    
 .form-control {
     width: 100%;
     padding: 10px;

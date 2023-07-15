@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 import axios from 'axios';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import logo from '../../../assets/logo.png'
@@ -19,15 +19,15 @@ export default function CreateInvestimento() {
     event.preventDefault();
 
     if (montante.trim() === "" || descricao.trim() === "") {
-        Swal.fire("Existem campos são de preenchimento obrigatório que estão em branco!");
+      Swal.fire("Existem campos são de preenchimento obrigatório que estão em branco!");
     } else {
-        const url = baseURL + "/investimento/create";
-        const userId = localStorage.getItem('userId');
-        const datapost = {
-            montante: montante,
-            userId: userId,
-            descricao: descricao,
-        };
+      const url = baseURL + "/investimento/create";
+      const userId = localStorage.getItem('userId');
+      const datapost = {
+        montante: montante,
+        userId: userId,
+        descricao: descricao,
+      };
 
       axios.post(url, datapost)
         .then(res => {
@@ -54,7 +54,7 @@ export default function CreateInvestimento() {
           </div>
           <div className="card-body">
             <form onSubmit={SendSave}>
-            <div class="textarea-container">
+              <div class="textarea-container">
                 <label htmlFor="inputMontante">Montante</label>
                 <input
                   type="number"

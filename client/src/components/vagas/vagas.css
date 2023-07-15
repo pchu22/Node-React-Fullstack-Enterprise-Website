@@ -18,8 +18,7 @@
   margin: auto;
 }
 
-table {
-  width: 100%;
+.table {
   border-collapse: collapse;
   margin: 0 auto;
   table-layout: fixed;
@@ -29,39 +28,21 @@ table {
   cursor: pointer;
 }
 
-.text-left {
-  text-align: left;
-  margin: 50px 0 0 20px;
-}
-
 .add-btn {
   margin-left: 10px;
 }
 
-.th-vaga {
-  	text-align: center;
-}
-
-.row-vaga{
+.row-vaga {
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-th {
-  align-items: center;
+.th-vaga:not(:first-child) {
   text-align: center;
-  justify-content: center;
 }
 
-td {
-  align-items: center;
+.th-vaga {
   text-align: center;
-  justify-content: center;
-  height: 75px;
-}
-
-tr:nth-child(even) {
-  background-color: #f9f9f9;
 }

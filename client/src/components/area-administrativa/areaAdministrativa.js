@@ -236,6 +236,58 @@ export default function AreaAdministrativa() {
             });
     }
 
+
+    function handleDeleteSelectedUsers() {
+        Swal.fire({
+            title: 'Tem a certeza que deseja apagar o(s) utilizador(es) selecionados?',
+            text: 'Após a eliminação do(s) utilizador(es) não será possível a sua visualização!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Apagar utilizador(es)',
+            cancelButtonText: 'Manter utilizador(es)',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteSelectedUsers();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Cancelado...', 'Não foi possível apagar o(s) utilizador(es)!', 'error');
+            }
+        });
+    }
+
+    function handleDeleteSelectedFiliais() {
+        Swal.fire({
+            title: 'Tem a certeza que deseja apagar a(s) filial(ais) selecionadas?',
+            text: 'Após a eliminação da(s) filial(ais) não será possível a sua visualização!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Apagar filial(ais)',
+            cancelButtonText: 'Manter filial(ais)',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteSelectedFiliais();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Cancelado...', 'Não foi possível apagar a(s) filial(ais)!', 'error');
+            }
+        });
+    }
+
+    function handleDeleteSelectedDepartamentos() {
+        Swal.fire({
+            title: 'Tem a certeza que deseja apagar o(s) departamento(s) selecionados?',
+            text: 'Após a eliminação do(s) departamento(s) não será possível a sua visualização!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Apagar departamento(s)',
+            cancelButtonText: 'Manter departamento(s)',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteSelectedDepartamentos();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Cancelado...', 'Não foi possível apagar o(s) departamento(s)!', 'error');
+            }
+        });
+    }
+
     function getCargoIcon(cargoId) {
         let cargoName = '';
 
@@ -284,9 +336,10 @@ export default function AreaAdministrativa() {
     return (
         <main className='main-adm'>
             <div className="container container-adm">
+            <h1 className="mt-5 mb-5"><br/></h1>
                 <div className="row">
                     <div className="col-md-12">
-                        <nav className='nav'>
+                        <nav>
                             <div className="nav nav-tabs" id="nav-tab" role="tablist">
                                 {cargo === 1 ? (
                                     <button
@@ -328,26 +381,25 @@ export default function AreaAdministrativa() {
                                 </button>
                             </div>
                         </nav>
-                        <div className="tab-content w-100" id="nav-tabContent">
+                        <div className="tab-content" id="nav-tabContent">
                             {cargo === 1 ? (
                                 <div
                                     className={`tab-pane fade show ${currentTable === 0 ? 'active' : ''}`}
                                     id="nav-users"
                                     role="tabpanel"
                                     aria-labelledby="nav-users-tab"
-                                    style={{ minHeight: "calc(100vh - 150px)" }}
                                 >
                                     <div className="mb-3 mt-3">
                                         {cargo === 1 ? (
                                             <button
-                                                className="btn btn-outline-danger me-2 del-btn"
-                                                onClick={() => deleteSelectedUsers()}
+                                                className="btn btn-outline-danger me-2"
+                                                onClick={() => handleDeleteSelectedUsers()}
                                             >
                                                 <span className='bi bi-trash-fill' />
                                             </button>
                                         ) : null}
                                         {cargo === 1 ? (
-                                            <Link to="/user/create" className="btn btn-outline-success add-btn">
+                                            <Link to="/user/create" className="btn btn-outline-success">
                                                 <span className='bi bi-plus-circle' />
                                             </Link>
                                         ) : null}
@@ -423,19 +475,18 @@ export default function AreaAdministrativa() {
                                 id="nav-filiais"
                                 role="tabpanel"
                                 aria-labelledby="nav-filiais-tab"
-                                style={{ minHeight: "calc(100vh - 150px)" }}
                             >
                                 <div className="mb-3 mt-3">
                                     {cargo === 1 ? (
                                         <button
-                                            className="btn btn-outline-danger me-2 del-btn"
-                                            onClick={() => deleteSelectedFiliais()}
+                                            className="btn btn-outline-danger me-2"
+                                            onClick={() => handleDeleteSelectedFiliais()}
                                         >
                                             <span className='bi bi-trash-fill' />
                                         </button>
                                     ) : null}
                                     {cargo === 1 ? (
-                                        <Link to="/filial/create" className="btn btn-outline-success add-btn">
+                                        <Link to="/filial/create" className="btn btn-outline-success">
                                             <span className='bi bi-plus-circle' />
                                         </Link>
                                     ) : null}
@@ -502,19 +553,18 @@ export default function AreaAdministrativa() {
                                 id="nav-departamentos"
                                 role="tabpanel"
                                 aria-labelledby="nav-departamentos-tab"
-                                style={{ minHeight: "calc(100vh - 150px)" }}
                             >
                                 <div className='mt-3 mb-3'>
                                     {cargo === 1 ? (
                                         <button
-                                            className="btn btn-outline-danger me-2 del-btn"
-                                            onClick={() => deleteSelectedDepartamentos()}
+                                            className="btn btn-outline-danger me-2"
+                                            onClick={() => handleDeleteSelectedDepartamentos()}
                                         >
                                             <span className='bi bi-trash-fill' />
                                         </button>
                                     ) : null}
                                     {cargo === 1 ? (
-                                        <Link to="/departamento/create" className="btn btn-outline-success add-btn">
+                                        <Link to="/departamento/create" className="btn btn-outline-success">
                                             <span className='bi bi-plus-circle' />
                                         </Link>
                                     ) : null}

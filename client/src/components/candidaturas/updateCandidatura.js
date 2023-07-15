@@ -14,19 +14,19 @@ const FormCandidaturas = () => {
     const { candidaturaId } = useParams();
 
     useEffect(() => {
-            const url = baseURL + "candidatura/get/" + candidaturaId;
-            axios.get(url)
-                .then((res) => {
-                    if (res.data.success) {
-                        const data = res.data.data;
-                        setCandidatura(data);
-                        setCV(data.cv)
-                    } else {
-                        alert("Error Web service");
-                    }
-                }).catch((err) => {
-                    alert("Error server: " + err);
-                });
+        const url = baseURL + "candidatura/get/" + candidaturaId;
+        axios.get(url)
+            .then((res) => {
+                if (res.data.success) {
+                    const data = res.data.data;
+                    setCandidatura(data);
+                    setCV(data.cv)
+                } else {
+                    alert("Error Web service");
+                }
+            }).catch((err) => {
+                alert("Error server: " + err);
+            });
     }, []);
 
     return (
@@ -49,8 +49,20 @@ const FormCandidaturas = () => {
                                 />
                             </div>
                             <div className="btn-wrapper">
-                                <button type="submit" className="btn btn-outline-success">Atualizar Candidatura</button>
-                                <button type="button" className="btn btn-outline-danger cancel-btn" onClick={() => navigate('/candidatura')}>Cancelar</button>
+                                <div className="btn-group">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-outline-success">
+                                        <span className="bi bi-check" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-danger cancel-btn"
+                                        onClick={() => navigate('/candidatura')}
+                                        style={{ marginLeft: '10px' }}>
+                                        <span className="bi bi-x-octagon-fill" />
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -62,16 +74,23 @@ const FormCandidaturas = () => {
 
     async function updateCandidatura(event) {
         event.preventDefault();
-    
+
         const formData = new FormData();
         formData.append('cv', CV);
-    
+
+        if (!CV) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Por favor, insira o seu CV!',
+            });
+            return
+        }
+
         try {
             const url = baseURL + "candidatura/update/" + candidaturaId;
-    
             const response = await axios.put(url, formData, {
             });
-    
+
             if (response.data.success) {
                 Swal.fire({
                     title: "Candidatura alterada com sucesso!",
@@ -89,7 +108,7 @@ const FormCandidaturas = () => {
                 title: err.response.data.message,
             });
         }
-    }    
+    }
 }
 
 export default FormCandidaturas;

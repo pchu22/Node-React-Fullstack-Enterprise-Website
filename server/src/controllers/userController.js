@@ -81,8 +81,6 @@ controllers.create = async (req, res) => {
       filialId,
       email,
       password,
-      telemovel,
-      morada,
       salario,
       dataRegisto: new Date(),
       dataContratacao,

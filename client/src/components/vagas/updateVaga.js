@@ -89,132 +89,123 @@ const FormVagas = () => {
     }, []);
 
     return (
-        <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', backgroundColor: '#D9D9D9' }}>
-            <section className="h-100">
-                <div className="container h-100">
-                    <div className="row justify-content-sm-center h-100">
-                        <div className="col-md-8 col-sm-9">
-                            <div className="card shadow-lg">
-                                <div className="form-row justify-content-center">
-                                    <div className="text-center mb-4">
-                                        <img src={logo} alt="Logo Softinsa" style={{ maxWidth: '100%', height: 'auto' }} />
-                                    </div>
-                                    <div className="form-group col-md-6">
-                                        <label htmlFor="inputTitulo">Título</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Título"
-                                            id="inputTitulo"
-                                            value={isDataLoaded ? titulo : ''}
-                                            onChange={(event) => setTitulo(event.target.value)} />
-                                    </div>
-                                    <div className="form-group col-md-6">
-                                        <label htmlFor="inputDesc">Descrição</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Descrição"
-                                            id="inputDesc"
-                                            value={isDataLoaded ? descricao : ''}
-                                            onChange={(event) => setDescricao(event.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="form-row justify-content-center">
-                                    <div className="form-group col-md-6">
-                                        <label htmlFor="inputHabMin">Habilitações Mínimas</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="inputHabMin"
-                                            placeholder="Habilitações Mínimas"
-                                            value={isDataLoaded ? habilitacoesMin : ''}
-                                            onChange={(event) => setHabilitacoesMin(event.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="form-row justify-content-center">
-                                    <div className="form-group col-md-6">
-                                        <label htmlFor="inputXPMin">Experiência Mínima</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="inputXPMin"
-                                            placeholder="Experiência Mínima"
-                                            value={isDataLoaded ? experienciaMin : ''}
-                                            onChange={(event) => setExperienciaMin(event.target.value)} />
-                                    </div>
-                                    <div className="form-row justify-content-center">
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="inputRemuneracao">Remuneração</label>
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                id="inputRemuneracao"
-                                                placeholder="Remuneração"
-                                                value={isDataLoaded ? remuneracao : ''}
-                                                onChange={(event) => setRemuneracao(event.target.value)} />
-                                        </div>
-                                    </div>
-                                    <div className="form-group col-md-6">
-                                        <label htmlFor="inputIsInterna">Interna?</label>
-                                        <div className="form-check">
-                                            <input
-                                                type="checkbox"
-                                                className="form-check-input"
-                                                id="inputIsInterna"
-                                                checked={isInterna}
-                                                onChange={() => setIsInterna(!isInterna)}
-                                            />
-                                            <label className="form-check-label" htmlFor="inputIsColaborador">
-                                                {isInterna ? "Sim" : "Não"}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="form-row">
-                                    <div className="form-group col-md-6">
-                                        <label htmlFor="inputDepartamento">Departamento</label>
-                                        <select
-                                            id="inputDepartamento"
-                                            className="form-control"
-                                            value={isDataLoaded ? departamento : ''}
-                                            onChange={(event) => setDepartamento(parseInt(event.target.value))}
-                                        >
-                                            <option>Por favor, escolha um departamento:</option>
-                                            <FillDepartamento />
-                                        </select>
-                                    </div>
-                                    <div className="form-group col-md-6">
-                                        <label htmlFor="inputFilial">Filial</label>
-                                        <select
-                                            id="inputFilial"
-                                            className="form-control"
-                                            value={isDataLoaded ? filial : ''}
-                                            onChange={(event) => setFilial(parseInt(event.target.value))}
-                                        >
-                                            <option>Por favor, escolha uma filial:</option>
-                                            <FillFilial />
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="form-row justify-content-center">
-                                    <div className="form-group col-md-6">
-                                        <button type="button" className="btn btn-success" onClick={updateVaga}>Atualizar Vaga</button>
-                                    </div>
-                                    <div className="form-group col-md-6">
-                                        <button type="button" className="btn btn-danger" onClick={() => navigate("/vaga")}>Cancelar</button>
-                                    </div>
+        <div className='wrapper'>
+            <div className="d-flex align-items-center justify-content-center" style={{ height: "100vh" }}>
+                <div className="card">
+                    <div className="header-image">
+                        <img src={logo} alt="Logo-Softinsa" />
+                    </div>
+                    <div className="card-body">
+                        <form onSubmit={updateVaga}>
+                            <div className="textarea-container">
+                                <label htmlFor="inputTitulo">Título</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Título"
+                                    id="inputTitulo"
+                                    value={isDataLoaded ? titulo : ''}
+                                    onChange={(event) => setTitulo(event.target.value)} />
+                            </div>
+                            <div className="textarea-container">
+                                <label htmlFor="inputDesc">Descrição</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Descrição"
+                                    id="inputDesc"
+                                    value={isDataLoaded ? descricao : ''}
+                                    onChange={(event) => setDescricao(event.target.value)} />
+                            </div>
+                            <div className="textarea-container">
+                                <label htmlFor="inputHabMin">Habilitações Mínimas</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="inputHabMin"
+                                    placeholder="Habilitações Mínimas"
+                                    value={isDataLoaded ? habilitacoesMin : ''}
+                                    onChange={(event) => setHabilitacoesMin(event.target.value)} />
+                            </div>
+                            <div className="textarea-container">
+                                <label htmlFor="inputXPMin">Experiência Mínima</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="inputXPMin"
+                                    placeholder="Experiência Mínima"
+                                    value={isDataLoaded ? experienciaMin : ''}
+                                    onChange={(event) => setExperienciaMin(event.target.value)} />
+                            </div>
+                            <div className="textarea-container">
+                                <label htmlFor="inputRemuneracao">Remuneração</label>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    id="inputRemuneracao"
+                                    placeholder="Remuneração"
+                                    value={isDataLoaded ? remuneracao : ''}
+                                    onChange={(event) => setRemuneracao(event.target.value)} />
+                            </div>
+                            <div className="textarea-container">
+                                <label htmlFor="inputIsInterna">Interna?</label>
+                                <div className="form-check">
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        id="inputIsInterna"
+                                        checked={isInterna}
+                                        onChange={() => setIsInterna(!isInterna)}
+                                    />
+                                    <label className="form-check-label" htmlFor="inputIsColaborador">
+                                        {isInterna ? "Sim" : "Não"}
+                                    </label>
                                 </div>
                             </div>
-                        </div>
+                            <div className="textarea-container">
+                                <label htmlFor="inputDepartamento">Departamento</label>
+                                <select
+                                    id="inputDepartamento"
+                                    className="form-control"
+                                    value={isDataLoaded ? departamento : ''}
+                                    onChange={(event) => setDepartamento(parseInt(event.target.value))}
+                                >
+                                    <option>Por favor, escolha um departamento</option>
+                                    <FillDepartamento />
+                                </select>
+                            </div>
+                            <div className="textarea-container">
+                                <label htmlFor="inputFilial">Filial</label>
+                                <select
+                                    id="inputFilial"
+                                    className="form-control"
+                                    value={isDataLoaded ? filial : ''}
+                                    onChange={(event) => setFilial(parseInt(event.target.value))}
+                                >
+                                    <option>Por favor, escolha uma filial</option>
+                                    <FillFilial />
+                                </select>
+                            </div>
+                            <div className="btn-wrapper">
+                                <div className="btn-group">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-outline-success">
+                                        <span className="bi bi-check" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-danger cancel-btn"
+                                        onClick={() => navigate('/vaga')}
+                                        style={{ marginLeft: '10px' }}>
+                                        <span className="bi bi-x-octagon-fill" />
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </section >
-            {/*<div className="position-absolute end-0 top-0 rounded-circle m-5">
-                <button type="button" className="btn btn-primary btn-lg" aria-expanded="false" onClick={goBack}>
-                    <i className="bi bi-arrow-left"></i>
-                </button>
-            </div>*/}
+            </div >
         </div >
     );
 

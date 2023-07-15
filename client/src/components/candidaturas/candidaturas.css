@@ -1,18 +1,22 @@
-.wrapper {
-    background: url("../../assets/bg-login.png");
-    background-repeat: no-repeat;
+.main-candidaturas {
+    background: url('../../assets/bg-login.png');
     background-size: cover;
-    background-position: center bottom;
-    min-height: 100vh;
+    background-position: center;
 }
 
-.form-row {
-    margin-top: 20px;
+.container-candidaturas {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-.card-header {
-    padding: 10px;
+h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
+
+/* Forms */
 
 .card-body {
     display: flex;
@@ -23,18 +27,6 @@
 
 .form-group {
     margin-bottom: 20px;
-}
-
-.btn-primary {
-    margin-top: 20px;
-}
-
-.file-input-label {
-    margin-bottom: 10px;
-}
-
-label {
-    font-weight: bold;
 }
 
 .header-image {
@@ -49,11 +41,13 @@ label {
 
 .btn-wrapper {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
     margin-top: 20px;
 }
 
-.btn-wrapper button {
+.btn-group {
+    display: flex;
+    justify-content: space-between;
     width: 100%;
+    max-width: 220px;
 }

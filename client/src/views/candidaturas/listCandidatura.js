@@ -1,12 +1,23 @@
-import React from "react";
+import React, {useState} from "react";
 import ListCandidaturaForm from "../../components/candidaturas/listCandidatura";
-import Navbar from "../../components/sidebar/sidebar";
-import Footer from "../../components/footer";
+import Sidebar from '../../components/sidebar/sidebar';
+import Navbar from '../../components/navbar/navbar';
 
 const ListCandidatura = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const openSidebar = () => {
+    setSidebarOpen(true);
+  };
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <ListCandidaturaForm style={{ flex: 1 }} />
+    <div className="container-sidebar">
+      <Navbar sidebarOpen={sidebarOpen} openSidebar={openSidebar} />
+      <Sidebar sidebarOpen={sidebarOpen} closeSidebar={closeSidebar} />
+      <ListCandidaturaForm />
     </div>
   );
 };
