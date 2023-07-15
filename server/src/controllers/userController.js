@@ -60,8 +60,6 @@ controllers.create = async (req, res) => {
     filialId,
     email,
     password,
-    telemovel,
-    morada,
     salario,
     dataContratacao
   } = req.body;
@@ -108,6 +106,8 @@ controllers.update = async (req, res) => {
     numeroFuncionario,
     email,
     password,
+    telemovel,
+    morada,
     salario,
     cargoId: cargo,
     departamentoId: departamento,
