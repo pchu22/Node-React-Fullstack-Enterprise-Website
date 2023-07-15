@@ -88,7 +88,7 @@ const FormUsers = () => {
         alert("Error: " + err);
       });
   }
-  
+
   function loadFilial() {
     const urlFilial = baseURL + "filial/list";
     axios.get(urlFilial)
@@ -120,143 +120,143 @@ const FormUsers = () => {
         alert("Error: " + err);
       });
   }
-  
+
   return (
-    <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', backgroundColor: '#D9D9D9' }}>
-      <section className="h-100">
-        <div className="container h-100">
-          <div className="row justify-content-sm-center h-100">
-            <div className="col-md-8 col-sm-9">
-              <div className="card shadow-lg">
-                <div className="card-body py-4 px-5">
-                  <div className="text-center mb-4">
-                    <img src={logo} alt="Logo Softinsa" style={{ maxWidth: '100%', height: 'auto' }} />
-                  </div>
-                  <div>
-                  <div className="textarea-container">
-                        <label htmlFor="inputPNome">Primeiro Nome</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="inputPNome"
-                          placeholder="Primeiro Nome"
-                          value={isDataLoaded ? primeiroNome : ''}
-                          onChange={(event) => setPrimeiroNome(event.target.value)}
-                        />
-                      </div>
-                      <div className="textarea-container">
-                        <label htmlFor="inputUNome">Último Nome</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="inputUNome"
-                          placeholder="Ultimo Nome"
-                          value={isDataLoaded ? ultimoNome : ''}
-                          onChange={(event) => setUltimoNome(event.target.value)}
-                        />
-                      </div>
-                      <div className="textarea-container">
-                        <label htmlFor="inputIsColaborador">É Colaborador?</label>
-                        <div
-                          className={`status-bar ${isColaborador ? "active" : "inactive"}`}
-                          onClick={toggleUserStatus}
-                        >
-                          <div className={`status-ball ${isBallMoving ? "ball-moving" : ""}`}/>
-                        </div>
-                      </div>
-                      <div className="textarea-container">
-                        <label htmlFor="inputNFunc">Número de Funcionário</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          id="inputNFunc"
-                          placeholder="Número de Funcionário"
-                          value={isDataLoaded ? numeroFuncionario : ''}
-                          onChange={(event) => setNumeroFuncionario(event.target.value)}
-                          disabled={!isColaborador}
-                        />
-                      </div>
-                      <div className="textarea-container">
-                        <label htmlFor="inputEmail">Email</label>
-                        <input
-                          type="email"
-                          className="form-control"
-                          id="inputEmail"
-                          placeholder="Email"
-                          value={isDataLoaded ? email : ''}
-                          onChange={(event) => setEmail(event.target.value)}
-                        />
-                      </div>
-                      <div className="textarea-container">
-                        <label htmlFor="inputSalario">Salário</label>
-                        <input
-                          type="number"
-                          step=".01"
-                          className="form-control"
-                          id="inputSalario"
-                          placeholder="Salário"
-                          value={isDataLoaded ? salario : ''}
-                          onChange={(event) => { setSalario(event.target.value); }}
-                        />
-                      </div>
-                      <div className="textarea-container">
-                        <label htmlFor="inputCargo">Cargo</label>
-                        <select
-                          id="inputCargo"
-                          className="form-control"
-                          value={isDataLoaded ? cargo : ''}
-                          onChange={(event) => setCargo(parseInt(event.target.value))}
-                        >
-                          <option>Escolha um cargo:</option>
-                          <FillCargo />
-                        </select>
-                      </div>
-                      <div className="textarea-container">
-                        <label htmlFor="inputDepartamento">Departamento</label>
-                        <select
-                          id="inputDepartamento"
-                          className="form-control"
-                          value={isDataLoaded ? departamento : ''}
-                          onChange={(event) => setDepartamento(parseInt(event.target.value))}
-                        >
-                          <option>Escolha um departamento:</option>
-                          <FillDepartamento />
-                        </select>
-                      </div>
-                      <div className="textarea-container">
-                        <label htmlFor="inputFilial">Filial</label>
-                        <select
-                          id="inputFilial"
-                          className="form-control"
-                          value={isDataLoaded ? filial : ''}
-                          onChange={(event) => setFilial(parseInt(event.target.value))}
-                        >
-                          <option>Escolha uma filial:</option>
-                          <FillFilial />
-                        </select>
-                      </div>
-                    <div className="textarea-container">
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={updateUser}
-                        >
-                          Atualizar Utilizador
-                        </button>
-                      </div>
-                  </div>
+    <div className="wrapper">
+      <div className="d-flex align-items-center justify-content-center" style={{ height: "100vh" }}>
+        <div className="card">
+          <div className="header-image">
+            <img src={logo} alt="Logo-Softinsa" />
+          </div>
+          <div className="card-body">
+            <form onSubmit={updateUser}>
+              <div className="textarea-container">
+                <label htmlFor="inputPNome">Primeiro Nome</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="inputPNome"
+                  placeholder="Primeiro Nome"
+                  value={isDataLoaded ? primeiroNome : ''}
+                  onChange={(event) => setPrimeiroNome(event.target.value)}
+                />
+              </div>
+              <div className="textarea-container">
+                <label htmlFor="inputUNome">Último Nome</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="inputUNome"
+                  placeholder="Ultimo Nome"
+                  value={isDataLoaded ? ultimoNome : ''}
+                  onChange={(event) => setUltimoNome(event.target.value)}
+                />
+              </div>
+              <div className="textarea-container">
+                <label htmlFor="inputIsColaborador">É Colaborador?</label>
+                <div
+                  className={`status-bar ${isColaborador ? "active" : "inactive"}`}
+                  onClick={toggleUserStatus}
+                >
+                  <div className={`status-ball ${isBallMoving ? "ball-moving" : ""}`} />
                 </div>
               </div>
-            </div>
+              <div className="textarea-container">
+                <label htmlFor="inputNFunc">Número de Funcionário</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="inputNFunc"
+                  placeholder="Número de Funcionário"
+                  value={isDataLoaded ? numeroFuncionario : ''}
+                  onChange={(event) => setNumeroFuncionario(event.target.value)}
+                  disabled={!isColaborador}
+                />
+              </div>
+              <div className="textarea-container">
+                <label htmlFor="inputEmail">Email</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="inputEmail"
+                  placeholder="Email"
+                  value={isDataLoaded ? email : ''}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </div>
+              <div className="textarea-container">
+                <label htmlFor="inputSalario">Salário</label>
+                <input
+                  type="number"
+                  step=".01"
+                  className="form-control"
+                  id="inputSalario"
+                  placeholder="Salário"
+                  value={isDataLoaded ? salario : ''}
+                  onChange={(event) => { setSalario(event.target.value); }}
+                  disabled={!isColaborador}
+                />
+              </div>
+              <div className="textarea-container">
+                <label htmlFor="inputCargo">Cargo</label>
+                <select
+                  id="inputCargo"
+                  className="form-control"
+                  value={isDataLoaded ? cargo : ''}
+                  onChange={(event) => setCargo(parseInt(event.target.value))}
+                >
+                  <option>Por favor, escolha um cargo</option>
+                  <FillCargo />
+                </select>
+              </div>
+              <div className="textarea-container">
+                <label htmlFor="inputDepartamento">Departamento</label>
+                <select
+                  id="inputDepartamento"
+                  className="form-control"
+                  value={isDataLoaded ? departamento : ''}
+                  onChange={(event) => setDepartamento(parseInt(event.target.value))}
+                  disabled={!isColaborador}
+                >
+                  <option>Por favor, escolha um departamento</option>
+                  <FillDepartamento />
+                </select>
+              </div>
+              <div className="textarea-container">
+                <label htmlFor="inputFilial">Filial</label>
+                <select
+                  id="inputFilial"
+                  className="form-control"
+                  value={isDataLoaded ? filial : ''}
+                  onChange={(event) => setFilial(parseInt(event.target.value))}
+                  disabled={!isColaborador}
+                >
+                  <option>Por favor, escolha uma filial</option>
+                  <FillFilial />
+                </select>
+              </div>
+              <div className="btn-wrapper">
+                <div className="btn-group">
+                  <button
+                    type="submit"
+                    className="btn btn-outline-success">
+                    <span className="bi bi-check" />
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger cancel-btn"
+                    onClick={() => navigate('/oportunidade')}
+                    style={{ marginLeft: '10px' }}>
+                    <span className="bi bi-x-octagon-fill" />
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-      </section>
-      {/*<div className="position-absolute end-0 top-0 rounded-circle m-5">
-        <button type="button" className="btn btn-primary btn-lg" aria-expanded="false" onClick={goBack}>
-          <i className="bi bi-arrow-left"></i>
-        </button>
-      </div>*/}
+      </div>
     </div>
+
   );
 
   async function toggleUserStatus() {
@@ -283,12 +283,23 @@ const FormUsers = () => {
     });
   }
 
-  async function updateUser() {
+  async function updateUser(event) {
+    event.preventDefault();
+
     if (!cargo) {
       Swal.fire({
         title: "Por favor, escolha um cargo!",
       });
       return;
+    }
+
+    if(isColaborador) {
+      if(!filial || !departamento){
+        Swal.fire({
+          title: "A filial e o departamento são campos de preenchimento obrigatório!",
+        });
+        return;
+      }
     }
 
     try {

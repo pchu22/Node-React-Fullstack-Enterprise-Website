@@ -147,10 +147,6 @@ controllers.delete = async (req, res) => {
     const del = await Candidatura.destroy({ where: { candidaturaId: candidaturaIds } });
 
     if (del > 0) {
-      await User.update({ isCandidato: false }, {
-        where: { userId: { [sequelize.Op.in]: candidaturaIds } }
-      });
-
       res.status(200).json({
         success: true,
         deleted: del,

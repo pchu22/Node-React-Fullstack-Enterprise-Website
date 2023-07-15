@@ -208,13 +208,7 @@ export default function ListCandidatura() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {candidaturas.length > 0 ? (
-                                    renderCandidaturas()) :
-                                    (
-                                        <tr>
-                                            <td colSpan="4">Não existem candidaturas!</td>
-                                        </tr>
-                                    )}
+                                {renderCandidaturas()}
                             </tbody>
                         </table>
                     </div>

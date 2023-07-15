@@ -16,6 +16,10 @@ h1 {
     margin-bottom: 20px;
 }
 
+.candidaturas-header,
+.candidaturas-data {
+    text-align: center;
+}
 /* Forms */
 
 .card-body {
