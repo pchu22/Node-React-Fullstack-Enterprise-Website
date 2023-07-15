@@ -147,7 +147,7 @@ export default function CreateUser() {
             Swal.fire(res.data.message);
             navigate('/area-administrativa');
           } else {
-            alert(res.data.message);
+            Swal.fire(res.data.message);
           }
         })
         .catch(err => {

@@ -108,8 +108,6 @@ controllers.update = async (req, res) => {
     numeroFuncionario,
     email,
     password,
-    telemovel,
-    morada,
     salario,
     cargoId: cargo,
     departamentoId: departamento,
