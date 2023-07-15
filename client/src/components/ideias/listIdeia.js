@@ -30,7 +30,11 @@ export default function ListBeneficios() {
           const data = res.data.data;
           setIdeias(data);
         } else {
-          Swal.fire('Error Web Service', 'Lista de ideias indisponível!', 'error');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error Web Service',
+            text: 'Lista de ideias indisponível!'
+          });
         }
       })
       .catch((err) => {
@@ -46,14 +50,18 @@ export default function ListBeneficios() {
           const data = res.data.data;
           setUsers(data instanceof Array ? data : [data]);
         } else {
-          Swal.fire('Error Web Service', 'Erro ao carregar o cargo do utilizador!', 'error');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error Web Service',
+            text: 'Erro ao carregar o cargo do utilizador!'
+          });
         }
       })
       .catch((err) => {
         alert('Error: ' + err.message);
       });
   }
-  
+
   function loadCargo() {
     const userId = localStorage.getItem('userId');
     const urlCargo = baseURL + '/user/get/' + userId;
@@ -65,7 +73,11 @@ export default function ListBeneficios() {
           console.log(res.data.data.cargo.cargoId);
           setCargo(res.data.data.cargo.cargoId);
         } else {
-          Swal.fire('Error Web Service', 'Erro ao carregar o cargo do utilizador!', 'error');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error Web Service',
+            text: 'Erro ao carregar o cargo do utilizador!'
+          });
         }
       })
       .catch((err) => {
@@ -102,7 +114,11 @@ export default function ListBeneficios() {
       if (result.isConfirmed) {
         deleteSelectedIdeia();
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Cancelado...', 'Não foi possível apagar as ideias!', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Cancelado...', 
+          text: 'Não foi possível apagar as ideias!'
+        });
       }
     });
   }
@@ -115,7 +131,11 @@ export default function ListBeneficios() {
       .post(url, { ideiaIds })
       .then((res) => {
         if (res.data.success) {
-          Swal.fire('Apagadas!', 'As ideias foram apagadas com sucesso!', 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Ação executada com sucesso!',
+            text: 'As ideias foram apagadas com sucesso!'
+          });
           loadIdeias();
         }
       })
@@ -133,10 +153,10 @@ export default function ListBeneficios() {
     return ideias.map((ideia, index) => {
       const canEdit = Number(ideia.userId) === Number(loggedInUserId);
       const userName = getUserName(ideia.userId);
-  
+
       return (
         <tr className="user-row" key={index}>
-          <td>
+          <td className='ideias-data'>
             {cargo === 1 ? (
               <input
                 type="checkbox"
@@ -145,11 +165,10 @@ export default function ListBeneficios() {
               />
             ) : null}
           </td>
-          {cargo === 1 ? <td>{index + 1}</td> : null}
-          <td>{ideia.titulo}</td>
-          <td>{ideia.descricao}</td>
-          <td>{ideia.tipo}</td>
-          <td>{userName}</td>
+          <td className='ideais-data'>{ideia.titulo}</td>
+          <td className='ideais-data'>{ideia.descricao}</td>
+          <td className='ideais-data'>{ideia.tipo}</td>
+          <td className='ideais-data'>{userName}</td>
           {canEdit ? (
             <td>
               <div style={{ display: 'inline-block' }}>
@@ -163,59 +182,54 @@ export default function ListBeneficios() {
                 </Link>
               </div>
             </td>
-          ) : null  }
+          ) : <td />}
         </tr>
       );
     });
   }
-  
-  
+
+
 
   return (
-    <div className="wrapper" style={{ width: '100vw', height: '100vh' }}>
-      <div className="container">
-        <h2 className="text-center">
-          <br />
-        </h2>
-        <div className="text-left">
-          {cargo === 1 ? (
-            <button
-              className="btn btn-outline-danger"
-              role="button"
-              aria-pressed="true"
-              onClick={handleDeleteSelected}
-            >
-              <span className="bi bi-trash-fill" />
-            </button>
-          ) : null}
+    <main className='main-vagas'>
+      <div className="container container-vagas">
+        <h1 className="mt-5 mb-5"><br /></h1>
+        <div className="row-vagas">
+          <div className="col-md-12">
+            <div className="mb-3 mt-3">
+              {cargo === 1 ? (
+                <button className="btn btn-outline-danger del-btn" role="button" aria-pressed="true" onClick={handleDeleteSelected}>
+                  <span className="bi bi-trash-fill" />
+                </button>
+              ) : null}
+              {cargo === 1 ? (
+                <Link to="/ideia/create" className="btn btn-outline-success add-btn">
+                  <span className='bi bi-plus-circle' />
+                </Link>
+              ) : null}
+            </div>
+            <table className="table table-striped mt-3">
+              <thead>
+                <tr>
+                  <th className='th-ideias' style={{ width: "30px" }}>
+                    {cargo === 1 ? (
+                      <input type="checkbox" checked={selectAll} onChange={handleSelectAll} />
+                    ) : null}
+                  </th>
+                  <th className='th-ideias'>Título</th>
+                  <th className='th-ideias'>Ideia</th>
+                  <th className='th-ideias'>Tipo</th>
+                  <th className='th-ideias'>Criador</th>
+                  {cargo === 1 ? <th>Ações</th> : <th/>}
+                </tr>
+              </thead>
+              <tbody>
+                {renderIdeias()}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <table className="table table-striped mt-3">
-          <thead>
-            <tr>
-              <th>
-                {cargo === 1 ? (
-                  <input type="checkbox" checked={selectAll} onChange={handleSelectAll} />
-                ) : null}
-              </th>
-              {cargo === 1 ? <th>ID</th> : null}
-              <th>Título</th>
-              <th>Ideia</th>
-              <th>Tipo</th>
-              <th>Criador</th>
-              {cargo === 1 ? <th>Ações</th> : null}
-            </tr>
-          </thead>
-          <tbody>
-            {ideias.length > 0 ? (
-              renderIdeias()
-            ) : (
-              <tr>
-                <td colSpan="7">Não existem ideias!</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
       </div>
-    </div>
+    </main>
   );
 }

@@ -64,7 +64,7 @@ const PrimeiroLoginForm = () => {
         } else if (!isPasswordValid(password)) {
             Swal.fire({
                 icon: 'error',
-                text: 'A password deve ter entre 8 e 24 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial (!@#?%-_).',
+                text: 'A password deve ter entre 8 e 24 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial (!, @, #, ?, %, -, ou _).',
             });
         } else {
             try {
@@ -88,7 +88,7 @@ const PrimeiroLoginForm = () => {
             } catch (error) {
                 Swal.fire({
                     icon: 'error',
-                    text: 'Erro ao atualizar a password',
+                    text: 'Erro ao efetuar a atualização da password',
                 });
             }
         }

@@ -1,6 +1,5 @@
 import React from "react";
 import FormCreateUser from "../../../components/area-administrativa/users/createUser";
-import Navbar from "../../../components/sidebar/sidebar";
 
 const CreateUser = () => {
   return (

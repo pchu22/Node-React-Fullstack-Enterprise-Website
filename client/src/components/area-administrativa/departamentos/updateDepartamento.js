@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 import logo from '../../../assets/logo.png'
+import '.././style.css'
 
 const baseURL = "https://softinsa-web-app-carreiras01.onrender.com/";
 
@@ -30,80 +31,77 @@ const FormDepartamentos = () => {
                 } else {
                     alert("Error Web service");
                 }
-        }) .catch((err) => {
-            alert("Error server: " + err);
-        });
+            }).catch((err) => {
+                alert("Error server: " + err);
+            });
     }, []);
 
     return (
-        <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', backgroundColor: '#D9D9D9' }}>
-            <section className="h-100">
-                <div className="container h-100">
-                    <div className="row justify-content-sm-center h-100">
-                        <div className="col-md-8 col-sm-9">
-                            <div className="card shadow-lg">
-                                <div className="card-body py-4 px-5">
-                                    <div className="text-center mb-4">
-                                        <img src={logo} alt="Logo Softinsa" style={{ maxWidth: '100%', height: 'auto' }} />
-                                    </div>
-                                    <div>
-                                        <h2 className="my-4">Atualizar departamento</h2>
-                                        <div className="form-row justify-content-center">
-                                            <div className="form-group col-md-6">
-                                                <label htmlFor="inputNomeDepartamento">Nome do departamento</label>
-                                                <input
-                                                type="text"
-                                                className="form-control"
-                                                id="inputNomeDepartamento"
-                                                placeholder="Nome"
-                                                value={isDataLoaded ? departamentoNome : ''}
-                                                onChange={(event) => setDepartamentoNome(event.target.value)}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-row justify-content-center">
-                                        <div className="form-group col-md-6">
-                                            <label htmlFor="inputDescricao">descricao</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="inputDescricao"
-                                                placeholder="Email"
-                                                value={isDataLoaded ? descricao : ''}
-                                                onChange={(event) => setDescricao(event.target.value)}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="form-row justify-content-center">
-                                        <div className="form-row justify-content-center">
-                                            <div className="form-group col-md-6">
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-primary"
-                                                    onClick={updateDepartamento}
-                                                >
-                                                    Atualizar Departamento
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+        <div className="wrapper">
+            <div className="d-flex align-items-center justify-content-center" style={{ height: "100vh" }}>
+                <div className="card">
+                    <div className="header-image">
+                        <img src={logo} alt="Logo-Softinsa" />
+                    </div>
+                    <div className="card-body">
+                        <form onSubmit={updateDepartamento}>
+                            <div className="textarea-container">
+                                <label htmlFor="inputNomeDepartamento">Nome do Departamento</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="inputNomeDepartamento"
+                                    placeholder="Nome"
+                                    value={isDataLoaded ? departamentoNome : ''}
+                                    onChange={(event) => setDepartamentoNome(event.target.value)}
+                                />
+                            </div>
+                            <div className="textarea-container">
+                                <label htmlFor="inputDescricao">Descrição</label>
+                                <textarea
+                                    type="text"
+                                    className="form-control"
+                                    id="inputDescricao"
+                                    placeholder="Email"
+                                    value={isDataLoaded ? descricao : ''}
+                                    onChange={(event) => setDescricao(event.target.value)}
+                                />
+                            </div>
+                            <div className="btn-wrapper">
+                                <div className="btn-group">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-outline-success">
+                                        <span className="bi bi-check" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-danger cancel-btn"
+                                        onClick={() => navigate('/area-administrativa')}
+                                        style={{ marginLeft: '10px' }}>
+                                        <span className="bi bi-x-octagon-fill" />
+                                    </button>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </section>
-            {/*<div className="position-absolute end-0 top-0 rounded-circle m-5">
-                <button type="button" className="btn btn-primary btn-lg" aria-expanded="false" onClick={goBack}>
-                    <i className="bi bi-arrow-left"></i>
-                </button>
-            </div>*/}
-        </div>
+            </div >
+        </div >
     );
 
 
-    async function updateDepartamento() {
+    async function updateDepartamento(event) {
+        event.preventDefault();
+
+        if (!departamentoNome || !descricao) {
+            Swal.fire({
+                icon: 'error',
+                text: "Existem campos de preenchimento obrigatório que se encontram por preencher!",
+            });
+            return;
+        }
+
         try {
             const url = baseURL + "departamento/update/" + departamentoId;
             const datapost = {
@@ -114,18 +112,22 @@ const FormDepartamentos = () => {
             const response = await axios.put(url, datapost);
             if (response.data.success === true) {
                 Swal.fire({
-                title: "Departamento alterado com sucesso!",
-                }).then(() => {
-                navigate("/departamento");
+                    icon: 'success',
+                    title: "Departamento alterado com sucesso!",
+                })
+                .then(() => {
+                    navigate("/area-administrativa");
                 });
             } else {
                 Swal.fire({
-                title: "Erro!",
+                    icon: 'error',
+                    title: "Erro ao efetuar a atualização do departamento!",
                 });
             }
         } catch (err) {
             console.log(err);
             Swal.fire({
+                icon: 'error',
                 title: err.response.data.message,
             });
         }

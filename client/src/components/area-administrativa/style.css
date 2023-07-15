@@ -208,3 +208,11 @@ h1 {
     background-color: #e74c3c;
     transform: translateX(0);
 }
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}

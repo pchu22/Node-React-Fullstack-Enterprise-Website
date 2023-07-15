@@ -47,13 +47,12 @@ const PasswordResetForm = () => {
     if (password !== confirmPassword) {
       Swal.fire({
         icon: 'error',
-        text: 'As senhas não coincidem.',
+        text: 'As passwords não coincidem.',
       });
     } else if (!isPasswordValid(password)) {
       Swal.fire({
         icon: 'error',
-        text:
-          'A password deve ter entre 8 e 24 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caracter especial (!, @, #, ?, %, - ou _).',
+        text: 'A password deve ter entre 8 e 24 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caracter especial (!, @, #, ?, %, - ou _).',
       });
     } else {
       const recoverToken = window.location.pathname.split('/').pop();

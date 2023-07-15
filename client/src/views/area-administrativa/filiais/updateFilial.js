@@ -1,6 +1,5 @@
 import React from "react";
 import FormEditFiliais from "../../../components/area-administrativa/filiais/updateFilial";
-import Navbar from "../../../components/sidebar/sidebar";
 
 const EditFiliais = () => {
   return (

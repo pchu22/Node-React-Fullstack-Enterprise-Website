@@ -47,18 +47,17 @@ const SignupForm = () => {
     if (!primeiroNome || !ultimoNome || !email || !telemovel || !password || !agreePolicy) {
       Swal.fire({
         icon: 'error',
-        text: 'Preencha todos os campos obrigatórios.',
+        text: "Existem campos de preenchimento obrigatório que se encontram por preencher!",
       });
     } else if (password !== confirmPassword) {
       Swal.fire({
         icon: 'error',
-        text: 'As senhas não coincidem.',
+        text: 'As passwords não coincidem.',
       });
     } else if (!isPasswordValid(password)) {
       Swal.fire({
         icon: 'error',
-        text:
-          'A password deve ter entre 8 e 24 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caracter especial (!, @, #, ?, %, - ou _).',
+        text: 'A password deve ter entre 8 e 24 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caracter especial (!, @, #, ?, %, - ou _).',
       });
     } else {
       AuthService.signup(primeiroNome, ultimoNome, telemovel, email, password)
@@ -70,18 +69,14 @@ const SignupForm = () => {
           confirmButtonText: 'OK',
         });
       })
-      .catch((error) => {
-        let errorMessage = 'Ocorreu um erro durante a criação da sua conta';
-        if (error.response && error.response.data && error.response.data.message) {
-          errorMessage = error.response.data.message;
-        }
+      .catch((err) => {
         Swal.fire({
           icon: 'error',
           title: 'Erro durante o registo!',
-          text: errorMessage,
+          text: 'Ocorreu um erro durante a criação da sua conta',
           confirmButtonText: 'OK',
         });
-        console.log(error);
+        console.log(err);
       });
     }
   };

@@ -13,6 +13,7 @@ const ListCandidatura = () => {
   const closeSidebar = () => {
     setSidebarOpen(false);
   };
+  
   return (
     <div className="container-sidebar">
       <Navbar sidebarOpen={sidebarOpen} openSidebar={openSidebar} />

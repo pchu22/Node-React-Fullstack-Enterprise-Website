@@ -2,7 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React from "react";
 import FormUpdateDepartamento from "../../../components/area-administrativa/departamentos/updateDepartamento"
-import Navbar from "../../../components/sidebar/sidebar";
 
 const UpdateDepartamento = () => {
   return (

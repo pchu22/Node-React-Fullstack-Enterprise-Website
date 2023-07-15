@@ -12,6 +12,7 @@ export default function AreaAdministrativa() {
     const [users, setUsers] = useState([]);
     const [filiais, setFiliais] = useState([]);
     const [departamentos, setDepartamentos] = useState([]);
+    const [cargos, setCargos] = useState([]);
 
     const [selectedUser, setSelectedUser] = useState([]);
     const [selectedFilial, setSelectedFilial] = useState([]);
@@ -33,6 +34,7 @@ export default function AreaAdministrativa() {
         loadFiliais();
         loadDepartamentos();
         loadUserCargo();
+        loadCargos();
         startingTable();
     }, [cargo]);
 
@@ -62,7 +64,11 @@ export default function AreaAdministrativa() {
 
                     setUsers(sortedUsers);
                 } else {
-                    Swal.fire('Error Web Service', 'Lista de Utilizadores indisponível!', 'error');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error Web Service',
+                        text: 'Lista de Utilizadores indisponível!'
+                    });
                 }
             }).catch((err) => {
                 alert('Error: ' + err.message);
@@ -72,17 +78,25 @@ export default function AreaAdministrativa() {
     function loadFiliais() {
         const url = baseURL + '/filial/list';
 
-        axios
-            .get(url)
+        axios.get(url)
             .then((res) => {
                 if (res.data.success) {
                     const data = res.data.data;
-                    setFiliais(data);
+                    const sortedFiliais = data.sort((a, b) => {
+                        if (a.dataRegisto < b.dataRegisto) return -1;
+                        if (a.dataRegisto > b.dataRegisto) return 1;
+
+                        return 0;
+                    });
+                    setFiliais(sortedFiliais);
                 } else {
-                    Swal.fire('Error Web Service', 'Lista de filiais indisponível!', 'error');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error Web Service',
+                        text: 'Lista de filiais indisponível!'
+                    });
                 }
-            })
-            .catch((err) => {
+            }).catch((err) => {
                 alert('Error: ' + err.message);
             });
     }
@@ -90,17 +104,25 @@ export default function AreaAdministrativa() {
     function loadDepartamentos() {
         const url = baseURL + '/departamento/list';
 
-        axios
-            .get(url)
+        axios.get(url)
             .then((res) => {
                 if (res.data.success) {
                     const data = res.data.data;
-                    setDepartamentos(data);
+                    const sortedDepartamentos = data.sort((a, b) => {
+                        if (a.dataCriacao < b.dataCriacao) return -1;
+                        if (a.dataCriacao > b.dataCriacao) return 1;
+
+                        return 0;
+                    });
+                    setDepartamentos(sortedDepartamentos);
                 } else {
-                    Swal.fire('Error Web Service', 'Lista de departamentos indisponível!', 'error');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error Web Service',
+                        text: 'Lista de departamentos indisponível!'
+                    });
                 }
-            })
-            .catch((err) => {
+            }).catch((err) => {
                 alert('Error: ' + err.message);
             });
     }
@@ -109,17 +131,39 @@ export default function AreaAdministrativa() {
         const userId = localStorage.getItem('userId');
         const urlCargo = baseURL + '/user/get/' + userId;
 
-        axios
-            .get(urlCargo)
+        axios.get(urlCargo)
             .then((res) => {
                 if (res.data.success) {
                     console.log(res.data.data.cargo.cargoId);
                     setCargo(res.data.data.cargo.cargoId);
                 } else {
-                    Swal.fire('Error Web Service', 'Erro ao carregar o cargo do utilizador!', 'error');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error Web Service',
+                        text: 'Erro ao carregar o cargo do utilizador!'
+                    });
                 }
-            })
-            .catch((err) => {
+            }).catch((err) => {
+                alert('Error: ' + err.message);
+            });
+    }
+
+    function loadCargos() {
+        const urlCargo = baseURL + '/cargo/list/';
+
+        axios.get(urlCargo)
+            .then((res) => {
+                if (res.data.success) {
+                    const data = res.data.data;
+                    setCargos(data);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error Web Service',
+                        text: 'Erro ao carregar a lista de cargos!'
+                    });
+                }
+            }).catch((err) => {
                 alert('Error: ' + err.message);
             });
     }
@@ -189,11 +233,14 @@ export default function AreaAdministrativa() {
         const url = baseURL + '/user/delete';
         const userIds = selectedUser.map((user) => user.userId);
 
-        axios
-            .post(url, { userIds })
+        axios.post(url, { userIds })
             .then((res) => {
                 if (res.data.success) {
-                    Swal.fire('Ação executada com sucesso!', 'Os utilizadores foram apagados com sucesso!', 'success');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Ação executada com sucesso!',
+                        text: 'Os utilizadores foram apagados com sucesso!'
+                    });
                     loadUsers();
                 }
             })
@@ -210,8 +257,11 @@ export default function AreaAdministrativa() {
             .post(url, { filialIds })
             .then((res) => {
                 if (res.data.success) {
-                    Swal.fire('Ação executada com sucesso!', 'As filiais foram apagadas com sucesso!', 'success');
-                    loadFiliais();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Ação executada com sucesso!',
+                        text: 'As filiais foram apagadas com sucesso!'
+                    }); loadFiliais();
                 }
             })
             .catch((err) => {
@@ -227,7 +277,11 @@ export default function AreaAdministrativa() {
             .post(url, { departamentoIds })
             .then((res) => {
                 if (res.data.success) {
-                    Swal.fire('Ação executada com sucesso!', 'Os departamentos foram apagados com sucesso!', 'success');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Ação executada com sucesso!',
+                        text: 'Os departamentos foram apagados com sucesso!'
+                    });
                     loadDepartamentos();
                 }
             })
@@ -249,7 +303,11 @@ export default function AreaAdministrativa() {
             if (result.isConfirmed) {
                 deleteSelectedUsers();
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire('Cancelado...', 'Não foi possível apagar o(s) utilizador(es)!', 'error');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cancelado...',
+                    text: 'Não foi possível apagar o(s) utilizador(es)!'
+                });
             }
         });
     }
@@ -266,7 +324,11 @@ export default function AreaAdministrativa() {
             if (result.isConfirmed) {
                 deleteSelectedFiliais();
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire('Cancelado...', 'Não foi possível apagar a(s) filial(ais)!', 'error');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cancelado...',
+                    text: 'Não foi possível apagar a(s) filial(ais)!'
+                });
             }
         });
     }
@@ -283,7 +345,11 @@ export default function AreaAdministrativa() {
             if (result.isConfirmed) {
                 deleteSelectedDepartamentos();
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire('Cancelado...', 'Não foi possível apagar o(s) departamento(s)!', 'error');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cancelado...',
+                    text: 'Não foi possível apagar o(s) departamento(s)!'
+                });
             }
         });
     }
@@ -333,10 +399,80 @@ export default function AreaAdministrativa() {
             });
     }
 
+    function getCargoName(cargoId) {
+        const cargo = cargos.find((cargo) => cargo.cargoId === cargoId);
+        return cargo ? cargo.cargoNome : '';
+    }
+
+    function getDepartamentoName(departamentoId) {
+        const departamento = departamentos.find((departamento) => departamento.departamentoId === departamentoId);
+        return departamento ? departamento.departamentoNome : '';
+    }
+
+    function getFilialName(filialId) {
+        const filial = filiais.find((filial) => filial.filialId === filialId);
+        return filial ? filial.filialNome : '';
+    }
+
+    function showUserInfo(user) {
+        Swal.fire({
+            title: user.primeiroNome + ' ' + user.ultimoNome,
+            html: `
+              <strong>Cargo</strong>: ${getCargoName(user.cargoId)}<br/>
+              <strong>Número de Funcionário</strong>: ${user.numeroFuncionario ? user.numeroFuncionario : 'N/A'}<br/>
+              <strong>Email</strong>: ${user.email}<br/>
+              <strong>Número de Telemóvel</strong>: ${user.telemovel ? user.telemovel : 'N/A'}<br/>
+              <strong>Filial</strong>: ${getFilialName(user.filialId)}<br/>
+              <strong>Departamento</strong>: ${getDepartamentoName(user.departamentoId)}
+            `,
+            showCancelButton: false,
+            focusConfirm: false
+        })
+    }
+
+    function showFilialInfo(filial) {
+        Swal.fire({
+            title: filial.filialNome,
+            html: `
+              <strong>Morada</strong>: ${filial.morada}<br/>
+              <strong>Email</strong>: ${filial.email}<br/>
+              <strong>Número de Telemóvel</strong>: ${filial.telemovel}<br/>
+              <strong>Data de Inauguração</strong>: ${convertDate(filial.dataRegisto)}
+            `,
+            showCancelButton: false,
+            focusConfirm: false
+        })
+    }
+
+    function showDepartamentoInfo(departamento) {
+        Swal.fire({
+            title: departamento.departamentoNome,
+            html: `
+              <strong>Descrição</strong>: ${departamento.descricao}<br/>
+              <strong>Data de Criação</strong>: ${convertDate(departamento.dataCriacao)}
+            `,
+            showCancelButton: false,
+            focusConfirm: false
+        })
+    }
+
+    function convertDate(date) {
+        const datetimeParts = date.split(' ');
+        const datePortion = datetimeParts[0];
+
+        const splittedDate = new Date(datePortion);
+
+        const year = splittedDate.getFullYear();
+        const month = splittedDate.getMonth() + 1; // +1 porque arrays são 0-indexed
+        const day = splittedDate.getDate();
+
+        return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`; //padStart adiçiona '0' no caso do mês ou do dia serem compostos por apenas 1 número
+    }
+
     return (
         <main className='main-adm'>
             <div className="container container-adm">
-            <h1 className="mt-5 mb-5"><br/></h1>
+                <h1 className="mt-5 mb-5"><br /></h1>
                 <div className="row">
                     <div className="col-md-12">
                         <nav>
@@ -408,7 +544,7 @@ export default function AreaAdministrativa() {
                                         <table className="table table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col" className='th-adm'>
+                                                    <th scope="col" className='th-adm' style={{width: "30px"}}>
                                                         <input
                                                             type="checkbox"
                                                             checked={selectAllUser}
@@ -416,10 +552,8 @@ export default function AreaAdministrativa() {
                                                         />
                                                     </th>
                                                     <th scope='col' className='th-adm'>Nome</th>
-                                                    {/*<th scope='col' className='th-adm'>Nº Funcionário</th>*/}
                                                     <th scope='col' className='th-adm'>Cargo</th>
                                                     <th scope='col' className='th-adm'>Email</th>
-                                                    {/*<th scope='col' className='th-adm'>Nº Telemóvel</th>*/}
                                                     <th scope='col' className='th-adm'>Estado</th>
                                                     <th scope='col' className='th-adm'>Ações</th>
                                                 </tr>
@@ -438,11 +572,9 @@ export default function AreaAdministrativa() {
                                                                     />
                                                                 </td>
                                                             ) : null}
-                                                            <td className='td-adm'>{user.primeiroNome + ' ' + user.ultimoNome}</td>
-                                                            {/*<td className='td-adm'>{user.numeroFuncionario ? user.numeroFuncionario : 'N/A'}</td>*/}
-                                                            <td className='td-adm'>{getCargoIcon(user.cargoId)}</td>
-                                                            <td className='td-adm'>{user.email}</td>
-                                                            {/*<td className='td-adm'>{user.telemovel ? user.telemovel : 'N/A'}</td>*/}
+                                                            <td className='td-adm' onClick={() => showUserInfo(user)}>{user.primeiroNome + ' ' + user.ultimoNome}</td>
+                                                            <td className='td-adm' onClick={() => showUserInfo(user)}>{getCargoIcon(user.cargoId)}</td>
+                                                            <td className='td-adm' onClick={() => showUserInfo(user)}>{user.email}</td>
                                                             <td className='td-adm'>
                                                                 <div
                                                                     className={`status-bar ${user.isAtivo ? 'active' : 'inactive'}`}
@@ -495,7 +627,7 @@ export default function AreaAdministrativa() {
                                     <thead>
                                         <tr>
                                             {cargo === 1 ? (
-                                                <th scope="col">
+                                                <th scope="col" style={{width: "30px"}}>
                                                     <input
                                                         type="checkbox"
                                                         checked={selectAllFilial}
@@ -525,10 +657,10 @@ export default function AreaAdministrativa() {
                                                             />
                                                         </td>
                                                     ) : null}
-                                                    <td className='td-adm'>{filial.filialNome}</td>
-                                                    <td className='td-adm'>{filial.morada}</td>
-                                                    <td className='td-adm'>{filial.email}</td>
-                                                    <td className='td-adm'>{filial.telemovel}</td>
+                                                    <td className='td-adm' onClick={() => showFilialInfo(filial)}>{filial.filialNome}</td>
+                                                    <td className='td-adm' onClick={() => showFilialInfo(filial)}>{filial.morada}</td>
+                                                    <td className='td-adm' onClick={() => showFilialInfo(filial)}>{filial.email}</td>
+                                                    <td className='td-adm' onClick={() => showFilialInfo(filial)}>{filial.telemovel}</td>
                                                     {cargo === 1 ? (
                                                         <td className='td-adm'>
                                                             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -573,7 +705,7 @@ export default function AreaAdministrativa() {
                                     <thead>
                                         <tr>
                                             {cargo === 1 ? (
-                                                <th scope="col">
+                                                <th scope="col" style={{width: "30px"}}>
                                                     <input
                                                         type="checkbox"
                                                         checked={selectAllDepartamento}
@@ -601,8 +733,8 @@ export default function AreaAdministrativa() {
                                                             />
                                                         </td>
                                                     ) : null}
-                                                    <td>{departamento.departamentoNome}</td>
-                                                    <td>{departamento.descricao}</td>
+                                                    <td className='td-adm' onClick={() => showDepartamentoInfo(departamento)}>{departamento.departamentoNome}</td>
+                                                    <td className='td-adm' onClick={() => showDepartamentoInfo(departamento)}>{departamento.descricao}</td>
                                                     {cargo === 1 ? (
                                                         <td>
                                                             <div style={{ display: 'flex', justifyContent: 'center' }}>

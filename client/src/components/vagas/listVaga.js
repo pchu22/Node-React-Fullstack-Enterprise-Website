@@ -237,9 +237,9 @@ export default function ListVaga() {
 
   return (
     <main className='main-vagas'>
-      <div className="container container-candidaturas">
+      <div className="container container-vagas">
         <h1 className="mt-5 mb-5"><br /></h1>
-        <div className="row-candidaturas">
+        <div className="row-vagas">
           <div className="col-md-12">
             <div className="mb-3 mt-3">
               {cargo === 1 ? (
@@ -256,7 +256,7 @@ export default function ListVaga() {
             <table className="table table-striped mt-3">
               <thead>
                 <tr>
-                  <th className='th-vaga'>
+                  <th className='th-vaga' style={{ width: "30px" }}>
                     {cargo === 1 ? (
                       <input
                         type="checkbox"
@@ -279,7 +279,8 @@ export default function ListVaga() {
                   <tr>
                     <td colSpan="6" className='row-vaga'>Não existem vagas!</td>
                   </tr>
-                )}</tbody>
+                )}
+              </tbody>
             </table>
           </div>
         </div>

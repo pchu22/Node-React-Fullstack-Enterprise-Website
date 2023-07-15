@@ -1,7 +1,5 @@
 import React from "react";
 import CreateBeneficioForm from "../../components/beneficios/createBeneficio";
-import Navbar from "../../components/sidebar/sidebar";
-import Footer from "../../components/footer";
 
 const CreateBeneficio = () => {
   return (

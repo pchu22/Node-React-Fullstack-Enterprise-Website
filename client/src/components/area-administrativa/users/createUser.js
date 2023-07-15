@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
 import logo from '../../../assets/logo.png'
+import '.././style.css'
 
 const baseURL = "https://softinsa-web-app-carreiras01.onrender.com/";
 
@@ -114,29 +115,20 @@ export default function CreateUser() {
   }
   function SendSave(event) {
     event.preventDefault();
-    
-    if (primeiroNome.trim() === "" ||
-      ultimoNome.trim() === "" ||
-      numeroFuncionario.trim() === "" ||
-      email.trim() === "" ||
-      password.trim() === "" ||
-      salario.trim() === "" ||
-      isCandidato === null ||
-      cargo === null
-    ) {
-      Swal.fire('Todos os campos são de preenchimento obrigatório!');
+
+    if (!primeiroNome || !ultimoNome || !numeroFuncionario || !email || !password || !salario) {
+      Swal.fire({
+        icon: 'error',
+        text: "Existem campos de preenchimento obrigatório que se encontram por preencher!",
+      });
+      return;
     } else if (password.length < 8) {
       Swal.fire('A senha deve ter pelo menos 8 caracteres!');
-    } else if (!/[A-Z]/.test(password)) {
-      Swal.fire('A senha deve conter pelo menos uma letra maiúscula!');
-    } else if (!/[a-z]/.test(password)) {
-      Swal.fire('A senha deve conter pelo menos uma letra minúscula!');
-    } else if (!/\d/.test(password)) {
-      Swal.fire('A senha deve conter pelo menos um número!');
-    } else if (!/[!#?%\-_]/.test(password)) {
-      Swal.fire('A senha deve conter pelo menos um caractere especial (!#?%-_)!');
-    } else if (salario < 0) {
-      Swal.fire('O salário não pode ser menor que 0!');
+    } else if (!cargo || !filial || !departamento) {
+      Swal.fire({
+        icon: 'error',
+        text: "O cargo, a filial e o departamento são campos de preenchimento obrigatório!",
+      });
     } else {
       const url = baseURL + "user/create";
       const datapost = {
@@ -155,13 +147,18 @@ export default function CreateUser() {
       axios.post(url, datapost)
         .then(res => {
           if (res.data.success === true) {
-            Swal.fire(res.data.message);
+            Swal.fire({
+              icon: 'success',
+              text: res.data.message
+            });
             navigate('/area-administrativa');
           } else {
-            Swal.fire(res.data.message);
+            Swal.fire({
+              icon: 'error',
+              text: res.data.message
+            });
           }
-        })
-        .catch(err => {
+        }).catch(err => {
           console.log("Error: ", err);
           alert("Error 34: " + err);
         });

@@ -1,9 +1,13 @@
-.wrapper {
-    background: url("../../assets/bg-login.png");
-    background-repeat: no-repeat;
+.main-beneficios {
+    background: url('../../assets/bg-login.png');
     background-size: cover;
-    background-position: center bottom;
-    min-height: 100vh;
+    background-position: center;
+}
+
+.container-beneficios {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .form-row {
@@ -56,4 +60,19 @@ label {
 
 .btn-wrapper button {
     width: 100%;
+}
+
+.th-beneficios {
+    text-align: center;
+}
+
+.beneficios-data {
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.beneficios-data:hover {
+    cursor: pointer;
 }

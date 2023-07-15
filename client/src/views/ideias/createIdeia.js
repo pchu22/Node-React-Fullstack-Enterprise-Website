@@ -1,7 +1,5 @@
 import React from "react";
 import CreateIdeiaForm from "../../components/ideias/createIdeia";
-import Navbar from "../../components/sidebar/sidebar";
-import Footer from "../../components/footer";
 
 const CreateIdeia = () => {
   return (

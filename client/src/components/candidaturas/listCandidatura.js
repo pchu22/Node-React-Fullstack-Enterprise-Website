@@ -13,6 +13,7 @@ export default function ListCandidatura() {
     const [selectAll, setSelectAll] = useState(false);
     const [selectedCandidatura, setSelectedCandidatura] = useState([]);
     const [cargo, setCargo] = useState("");
+    const loggedInUser = localStorage.getItem('userId');
 
     useEffect(() => {
         loadCandidaturas();
@@ -24,8 +25,7 @@ export default function ListCandidatura() {
     function loadCandidaturas() {
         const url = baseURL + '/candidatura/list';
 
-        axios
-            .get(url)
+        axios.get(url)
             .then((res) => {
                 if (res.data.success) {
                     const data = res.data.data;
@@ -33,8 +33,7 @@ export default function ListCandidatura() {
                 } else {
                     Swal.fire('Error Web Service', 'Lista de candidaturas indisponível!', 'error');
                 }
-            })
-            .catch((err) => {
+            }).catch((err) => {
                 alert('Error: ' + err.message);
             });
     }
@@ -42,8 +41,7 @@ export default function ListCandidatura() {
     function loadUsers() {
         const url = baseURL + '/user/list';
 
-        axios
-            .get(url)
+        axios.get(url)
             .then((res) => {
                 if (res.data.success) {
                     const data = res.data.data;
@@ -51,8 +49,7 @@ export default function ListCandidatura() {
                 } else {
                     Swal.fire('Error Web Service', 'Lista de utilizadores indisponível!', 'error');
                 }
-            })
-            .catch((err) => {
+            }).catch((err) => {
                 alert('Error: ' + err.message);
             });
     }
@@ -60,8 +57,7 @@ export default function ListCandidatura() {
     function loadVagas() {
         const url = baseURL + '/vaga/list';
 
-        axios
-            .get(url)
+        axios.get(url)
             .then((res) => {
                 if (res.data.success) {
                     const data = res.data.data;
@@ -69,8 +65,7 @@ export default function ListCandidatura() {
                 } else {
                     Swal.fire('Error Web Service', 'Lista de vagas indisponível!', 'error');
                 }
-            })
-            .catch((err) => {
+            }).catch((err) => {
                 alert('Error: ' + err.message);
             });
     }
@@ -79,8 +74,7 @@ export default function ListCandidatura() {
         const userId = localStorage.getItem('userId');
         const urlCargo = baseURL + '/user/get/' + userId;
 
-        axios
-            .get(urlCargo)
+        axios.get(urlCargo)
             .then((res) => {
                 if (res.data.success) {
                     console.log(res.data.data.cargo.cargoId);
@@ -88,8 +82,7 @@ export default function ListCandidatura() {
                 } else {
                     Swal.fire('Error Web Service', 'Erro ao carregar o cargo do utilizador!', 'error');
                 }
-            })
-            .catch((err) => {
+            }).catch((err) => {
                 alert('Error: ' + err.message);
             });
     }
@@ -158,25 +151,32 @@ export default function ListCandidatura() {
     }
 
     function renderCandidaturas() {
-        return candidaturas.map((candidatura, index) => (
-            <tr className="user-row" key={index}>
-                <td className='candidaturas-data'>
-                    <input
-                        type="checkbox"
-                        checked={selectedCandidatura.includes(candidatura)}
-                        onChange={() => handleCandidaturaSelect(candidatura)}
-                    />
-                </td>
-                {/*<td className='candidaturas-data'>button that allows to download cv</td>*/}
-                <td className='candidaturas-data'>{getUserName(candidatura.userId)}</td>
-                <td className='candidaturas-data'>{getVagaTitle(candidatura.vagaId)}</td>
-                <td className='candidaturas-data'>
-                    <Link className="btn btn-outline-warning" role="button" aria-pressed="true" to={`/candidatura/update/${candidatura.candidaturaId}`}>
-                        <span className="bi bi-pen-fill" />
-                    </Link>
-                </td>
-            </tr>
-        ));
+        return candidaturas.map((candidatura, index) => {
+            const canEdit = Number(candidatura.userId) === Number(loggedInUser)
+            return (
+                <tr className="user-row" key={index}>
+                    {cargo === 1 ? (
+                        <td className='candidaturas-data'>
+                            <input
+                                type="checkbox"
+                                checked={selectedCandidatura.includes(candidatura)}
+                                onChange={() => handleCandidaturaSelect(candidatura)}
+                            />
+                        </td>
+                    ) : <td />}
+                    {/*<td className='candidaturas-data'>button that allows to download cv</td>*/}
+                    <td className='candidaturas-data'>{getUserName(candidatura.userId)}</td>
+                    <td className='candidaturas-data'>{getVagaTitle(candidatura.vagaId)}</td>
+                    {canEdit ? (
+                        <td className='candidaturas-data'>
+                            <Link className="btn btn-outline-warning" role="button" aria-pressed="true" to={`/candidatura/update/${candidatura.candidaturaId}`}>
+                                <span className="bi bi-pen-fill" />
+                            </Link>
+                        </td>
+                    ) : <td />}
+                </tr>
+            )
+        });
     }
 
     return (
@@ -198,9 +198,11 @@ export default function ListCandidatura() {
                         <table className="table table-striped mt-3">
                             <thead>
                                 <tr>
-                                    <th className='candidaturas-header'>
-                                        <input type="checkbox" checked={selectAll} onChange={handleSelectAll} />
-                                    </th>
+                                    {cargo === 1 ? (
+                                        <th className='candidaturas-header'>
+                                            <input type="checkbox" checked={selectAll} onChange={handleSelectAll} />
+                                        </th>
+                                    ) : <th />}
                                     {/*<th className='candidaturas-header'>Curriculum vitae</th>*/}
                                     <th className='candidaturas-header'>Utilizador</th>
                                     <th className='candidaturas-header'>Vaga</th>

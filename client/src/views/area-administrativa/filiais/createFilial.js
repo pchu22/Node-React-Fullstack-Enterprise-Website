@@ -2,7 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React from "react";
 import FormCreateFilial from "../../../components/area-administrativa/filiais/createFilial";
-import Navbar from "../../../components/sidebar/sidebar";
 
 const CreateFilial = () => {
   return (

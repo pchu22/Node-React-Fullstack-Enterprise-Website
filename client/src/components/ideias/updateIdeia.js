@@ -16,6 +16,10 @@ const FormCandidaturas = () => {
   const { ideiaId } = useParams();
 
   useEffect(() => {
+    loadIdeiaInfo();
+  }, [ideiaId]);
+
+  function loadIdeiaInfo() {
     const url = baseURL + "ideia/get/" + ideiaId;
     axios
       .get(url)
@@ -33,7 +37,7 @@ const FormCandidaturas = () => {
       .catch((err) => {
         alert("Error server: " + err);
       });
-  }, [ideiaId]);
+  }
 
   async function updateIdeia(event) {
     event.preventDefault();

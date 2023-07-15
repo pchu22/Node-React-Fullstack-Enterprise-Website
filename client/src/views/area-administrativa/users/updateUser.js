@@ -1,6 +1,5 @@
 import React from "react";
 import FormEditUsers from "../../../components/area-administrativa/users/updateUser";
-import Navbar from "../../../components/sidebar/sidebar";
 
 
 const EditUser = () => {

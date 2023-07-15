@@ -22,7 +22,7 @@ export default function Candidatar() {
         if (!CV) {
             Swal.fire({
                 icon: 'warning',
-                title: 'Por favor, insira o seu CV!',
+                title: 'O CV é um campo de preenchimento obrogatório!',
             });
             return;
         }
@@ -50,8 +50,7 @@ export default function Candidatar() {
                         text: res.data.message,
                     });
                 }
-            })
-            .catch(err => {
+            }).catch(err => {
                 console.log("Error: ", err);
                 if (err.response && err.response.status === 400) {
                     Swal.fire({

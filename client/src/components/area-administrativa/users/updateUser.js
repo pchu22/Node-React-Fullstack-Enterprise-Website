@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
 import logo from '../../../assets/logo.png'
+import '.././style.css'
 
 const baseURL = "https://softinsa-web-app-carreiras01.onrender.com/";
 
@@ -245,7 +245,7 @@ const FormUsers = () => {
                   <button
                     type="button"
                     className="btn btn-outline-danger cancel-btn"
-                    onClick={() => navigate('/oportunidade')}
+                    onClick={() => navigate('/area-administrativa')}
                     style={{ marginLeft: '10px' }}>
                     <span className="bi bi-x-octagon-fill" />
                   </button>
@@ -288,7 +288,8 @@ const FormUsers = () => {
 
     if (!cargo) {
       Swal.fire({
-        title: "Por favor, escolha um cargo!",
+        icon: 'error',
+        text: "O cargo é um campo de preenchimento obrigatório!",
       });
       return;
     }
@@ -296,10 +297,25 @@ const FormUsers = () => {
     if(isColaborador) {
       if(!filial || !departamento){
         Swal.fire({
-          title: "A filial e o departamento são campos de preenchimento obrigatório!",
+          icon: 'error',
+          text: "A filial e o departamento são campos de preenchimento obrigatório!",
+        });
+        return;
+      } else if(!salario || !numeroFuncionario) {
+        Swal.fire({
+          icon: 'error',
+          text: "Existem campos de preenchimento obrigatório que se encontram por preencher!",
         });
         return;
       }
+    }
+
+    if(!primeiroNome || !ultimoNome || !email) {
+      Swal.fire({
+        icon: 'error',
+        text: "Existem campos de preenchimento obrigatório que se encontram por preencher!",
+      });
+      return;
     }
 
     try {
@@ -318,21 +334,24 @@ const FormUsers = () => {
       };
 
       const response = await axios.put(url, datapost);
-      if (response.data.success === true) {
+      if (response.data.success) {
         Swal.fire({
-          title: "Utilizador alterado com sucesso!",
+          icon: 'success',
+          text: "Utilizador alterado com sucesso!",
         }).then(() => {
           navigate("/area-administrativa");
         });
       } else {
         Swal.fire({
-          title: "Erro!",
+          icon: 'error',
+          text: "Ocorreu um erro ao atualizar o utilizador!",
         });
       }
     } catch (err) {
       console.log(err);
       Swal.fire({
-        title: err.response.data.message,
+        icon: 'error',
+        text: err.response.data.message,
       });
     }
   }

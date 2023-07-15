@@ -20,7 +20,7 @@ export default function CreateBeneficio() {
   function SendSave(event) {
     event.preventDefault();
 
-    if (titulo.trim() === "" || descricao.trim() === "" || tipo === "") {
+    if (!titulo || !descricao || !tipo) {
       Swal.fire("Todos os campos são de preenchimento obrigatório");
     } else {
       const url = baseURL + "/beneficio/create";
@@ -55,7 +55,7 @@ export default function CreateBeneficio() {
           </div>
           <div className="card-body">
             <form onSubmit={SendSave}>
-              <div className="form-group">
+            <div className="textarea-container">
                 <label htmlFor="inputTitulo">Título</label>
                 <input
                   type="text"
@@ -66,9 +66,9 @@ export default function CreateBeneficio() {
                   onChange={(event) => setTitulo(event.target.value)}
                 />
               </div>
-              <div className="form-group">
+              <div className="textarea-container">
                 <label htmlFor="inputDesc">Descrição</label>
-                <input
+                <textarea
                   type="text"
                   className="form-control"
                   placeholder="Descrição"
@@ -77,7 +77,7 @@ export default function CreateBeneficio() {
                   onChange={(event) => setDescricao(event.target.value)}
                 />
               </div>
-              <div className="form-group">
+              <div className="textarea-container">
                 <label htmlFor="inputTipo">Tipo</label>
                 <input
                   type="text"
@@ -89,8 +89,20 @@ export default function CreateBeneficio() {
                 />
               </div>
               <div className="btn-wrapper">
-                <button type="submit" className="btn btn-outline-success">Criar Benefício</button>
-                <button type="button" className="btn btn-outline-danger cancel-btn" onClick={() => navigate('/beneficio')}>Cancelar</button>
+                <div className="btn-group">
+                  <button
+                    type="submit"
+                    className="btn btn-outline-success">
+                    <span className="bi bi-check-lg" />
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger cancel-btn"
+                    onClick={() => navigate('/beneficio')}
+                    style={{ marginLeft: '10px' }}>
+                    <span className="bi bi-x-octagon-fill" />
+                  </button>
+                </div>
               </div>
             </form>
           </div>

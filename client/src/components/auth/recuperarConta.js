@@ -13,7 +13,6 @@ const baseURL = 'https://softinsa-web-app-carreiras01.onrender.com/auth';
 
 const RecuperarConta = () => {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
@@ -22,9 +21,7 @@ const RecuperarConta = () => {
     setIsLoading(true);
   
     try {
-      const response = await axios.post(`${baseURL}/forgot-password`, { email });
-      setMessage(response.data.message);
-  
+      const response = await axios.post(`${baseURL}/forgot-password`, { email });  
       Swal.fire({
         icon: 'success',
         title: 'Sucesso!',
@@ -36,7 +33,6 @@ const RecuperarConta = () => {
         navigate('/login');
       });
     } catch (error) {
-      setMessage('Erro ao enviar o email de recuperação.');
       Swal.fire({
         icon: 'error',
         title: 'Erro',

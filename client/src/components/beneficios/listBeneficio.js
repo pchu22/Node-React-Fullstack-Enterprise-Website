@@ -25,12 +25,21 @@ export default function ListBeneficios() {
       .then((res) => {
         if (res.data.success) {
           const data = res.data.data;
-          setBeneficios(data);
+          const sortedBeneficios = data.sort((a, b) => {
+            if (a.dataRegisto < b.dataRegisto) return -1;
+            if (a.dataRegisto > b.dataRegisto) return 1;
+
+            return 0;
+          });
+          setBeneficios(sortedBeneficios);
         } else {
-          Swal.fire('Error Web Service', 'Lista de benefícios indisponível!', 'error');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error Web Service',
+            text: 'Lista de benefícios indisponível!'
+          });
         }
-      })
-      .catch((err) => {
+      }).catch((err) => {
         alert('Error: ' + err.message);
       });
   }
@@ -45,10 +54,13 @@ export default function ListBeneficios() {
           console.log(res.data.data.cargo.cargoId);
           setCargo(res.data.data.cargo.cargoId);
         } else {
-          Swal.fire('Error Web Service', 'Erro ao carregar o cargo do utilizador!', 'error');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error Web Service',
+            text: 'Erro ao carregar o cargo do utilizador!'
+          });
         }
-      })
-      .catch((err) => {
+      }).catch((err) => {
         alert('Error: ' + err.message);
       });
   }
@@ -58,14 +70,14 @@ export default function ListBeneficios() {
       ? selectedBeneficio.filter((selectedBeneficio) => selectedBeneficio !== beneficio)
       : [...selectedBeneficio, beneficio];
 
-      setSelectedBeneficio(updatedSelectedBeneficio);
+    setSelectedBeneficio(updatedSelectedBeneficio);
   }
 
   function handleSelectAll() {
     if (selectAll) {
       setSelectedBeneficio([]);
     } else {
-        setSelectedBeneficio(beneficios);
+      setSelectedBeneficio(beneficios);
     }
     setSelectAll(!selectAll);
   }
@@ -82,7 +94,11 @@ export default function ListBeneficios() {
       if (result.isConfirmed) {
         deleteSelectedBeneficios();
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Cancelado...', 'Não foi possível apagar os benefícios!', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Cancelado...',
+          text: 'Não foi possível apagar os benefícios!'
+        });
       }
     });
   }
@@ -91,95 +107,106 @@ export default function ListBeneficios() {
     const url = baseURL + '/beneficio/delete';
     const beneficioIds = selectedBeneficio.map((beneficio) => beneficio.beneficioId);
 
-    axios
-      .post(url, { beneficioIds })
+    axios.post(url, { beneficioIds })
       .then((res) => {
         if (res.data.success) {
-          Swal.fire('Apagadas!', 'Os benefícios foram apagadas com sucesso!', 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Ação executada com sucesso!',
+            text: 'Os benefícios foram apagadas com sucesso!'
+          });
           loadBeneficios();
         }
-      })
-      .catch((err) => {
+      }).catch((err) => {
         alert('Error: ' + err);
       });
   }
 
-  function renderBeneficios() {
+  function showBeneficioInfo(beneficio) {
+    Swal.fire({
+      title: beneficio.titulo,
+      html: `
+          <strong>Descrição</strong>: ${beneficio.descricao}<br/>
+          <strong>Tipo de Benefícios</strong>: ${beneficio.tipo}
+        `,
+      showCancelButton: false,
+      focusConfirm: false
+    })
+  }
 
+  function renderBeneficios() {
     return beneficios.map((beneficio, index) => (
       <tr className="user-row" key={index}>
-        <td>
-        {cargo === 1 ? (
-          <input
-            type="checkbox"
-            checked={selectedBeneficio.includes(beneficio)}
-            onChange={() => handleBeneficioSelect(beneficio)}
-          />
-        ) : null}
+        <td className='beneficios-data'>
+          {cargo === 1 ? (
+            <input
+              type="checkbox"
+              checked={selectedBeneficio.includes(beneficio)}
+              onChange={() => handleBeneficioSelect(beneficio)}
+            />
+          ) : null}
         </td>
+        <td className='beneficios-data' onClick={() => showBeneficioInfo(beneficio)}>{beneficio.titulo}</td>
+        <td className='beneficios-data' onClick={() => showBeneficioInfo(beneficio)}>{beneficio.descricao}</td>
+        <td className='beneficios-data' onClick={() => showBeneficioInfo(beneficio)}>{beneficio.tipo}</td>
         {cargo === 1 ? (
-          <td>{index + 1}</td>
-        ) : null}
-        <td>{beneficio.titulo}</td>
-        <td>{beneficio.descricao}</td>
-        <td>{beneficio.tipo}</td>
-        {cargo === 1 ? (
-        <td>
-          <div style={{ display: 'inline-block' }}>
-                <Link className="btn btn-outline-warning" role="button" aria-pressed="true" to={`/beneficio/update/${beneficio.beneficioId}`}>
-                  <span className="bi bi-pen-fill" />
-                </Link>
-          </div>
-        </td>
+          <td className='beneficios-data'>
+            <div style={{ display: 'inline-block' }}>
+              <Link className="btn btn-outline-warning" role="button" aria-pressed="true" to={`/beneficio/update/${beneficio.beneficioId}`}>
+                <span className="bi bi-pen-fill" />
+              </Link>
+            </div>
+          </td>
         ) : (null)}
       </tr>
     ));
   }
 
   return (
-    <div className="wrapper" style={{ width: '100vw', height: '100vh' }}>
-      <div className="container">
-        <h2 className="text-center">Lista de Vagas</h2>
-        <div className="text-left">
-          {cargo === 1 ? (
-            <button className="btn btn-outline-danger" role="button" aria-pressed="true" onClick={handleDeleteSelected}>
-              <span className="bi bi-trash-fill" />
-            </button>
-          ) : null}
+    <main className='main-beneficios'>
+      <div className="container container-beneficios">
+        <h1 className="mt-5 mb-5"><br /></h1>
+        <div className="row-beneficios">
+          <div className="col-md-12">
+            <div className="mb-3 mt-3">
+              {cargo === 1 ? (
+                <button className="btn btn-outline-danger" role="button" aria-pressed="true" onClick={handleDeleteSelected}>
+                  <span className="bi bi-trash-fill" />
+                </button>
+              ) : null}
+              {cargo === 1 ? (
+                <Link to="/beneficio/create" className="btn btn-outline-success add-btn">
+                  <span className='bi bi-plus-circle' />
+                </Link>
+              ) : null}
+            </div>
+            <table className="table table-striped mt-3">
+              <thead>
+                <tr>
+                  <th className='th-beneficios'>
+                    {cargo === 1 ? (
+                      <input
+                        type="checkbox"
+                        checked={selectAll}
+                        onChange={handleSelectAll}
+                      />
+                    ) : null}
+                  </th>
+                  <th className='th-beneficios'>Título</th>
+                  <th className='th-beneficios'>Descrição</th>
+                  <th className='th-beneficios'>Tipo</th>
+                  {cargo === 1 ? (
+                    <th className='th-beneficios'>Ações</th>
+                  ) : null}
+                </tr>
+              </thead>
+              <tbody>
+                {renderBeneficios()}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <table className="table table-striped mt-3">
-          <thead>
-            <tr>
-              <th>
-              {cargo === 1 ? (
-                  <input
-                  type="checkbox"
-                  checked={selectAll}
-                  onChange={handleSelectAll}
-                />
-              ) : null}
-              </th>
-              {cargo === 1 ? (
-                <th>ID</th>
-              ) : null}
-              <th>Título</th>
-              <th>Descrição</th>
-              <th>Tipo</th>
-              {cargo === 1 ? (
-                <th>Ações</th>
-              ) : null}
-            </tr>
-          </thead>
-          <tbody>
-            {beneficios.length > 0 ? (
-              renderBeneficios()
-            ) : (
-              <tr>
-                <td colSpan="6">Não existem beneficios!</td>
-              </tr>
-            )}</tbody>
-        </table>
       </div>
-    </div>
+    </main>
   );
 }
