@@ -12,6 +12,9 @@ var User = sequelize.define('users', {
         primaryKey: true,
         autoIncrement: true,
     },
+    googleId: {
+        type: DataType.STRING
+    },
     primeiroNome: {
         type: DataType.STRING,
     },
@@ -38,12 +41,12 @@ var User = sequelize.define('users', {
     salario: {
         type: DataType.INTEGER
     },
-    dataRegisto:{
+    dataRegisto: {
         type: DataType.DATE,
         allowNull: false,
         defaultValue: DataType.NOW
     },
-    ultimoLogin:{
+    ultimoLogin: {
         type: DataType.DATE,
     },
     dataContratacao: {
@@ -80,44 +83,44 @@ var User = sequelize.define('users', {
     cargoId: {
         type: DataType.INTEGER,
         references: {
-          model: Cargo,
-          key: "cargoId",
+            model: Cargo,
+            key: "cargoId",
         },
-      },
-      departamentoId: {
+    },
+    departamentoId: {
         type: DataType.INTEGER,
         references: {
-          model: Departamento,
-          key: "departamentoId",
+            model: Departamento,
+            key: "departamentoId",
         },
-      },
-      filialId: {
+    },
+    filialId: {
         type: DataType.INTEGER,
         references: {
-          model: Filial,
-          key: "filialId",
+            model: Filial,
+            key: "filialId",
         },
-      }, 
-}, 
-{timestamps: false});
+    },
+},
+    { timestamps: false });
 
 User.beforeCreate((user, options) => {
     if (user.password) {
-      return bcrypt
-        .hash(user.password, 10)
-        .then((hash) => {
-          user.password = hash;
-        })
-        .catch((err) => {
-          throw new Error('Error hashing password');
-        });
+        return bcrypt
+            .hash(user.password, 10)
+            .then((hash) => {
+                user.password = hash;
+            })
+            .catch((err) => {
+                throw new Error('Error hashing password');
+            });
     }
-  });
+});
 
 
 
-User.belongsTo(Cargo, {foreignKey:'cargoId'});
-User.belongsTo(Departamento, {foreignKey:'departamentoId'});
-User.belongsTo(Filial, {foreignKey:'filialId'});
+User.belongsTo(Cargo, { foreignKey: 'cargoId' });
+User.belongsTo(Departamento, { foreignKey: 'departamentoId' });
+User.belongsTo(Filial, { foreignKey: 'filialId' });
 
 module.exports = User;
