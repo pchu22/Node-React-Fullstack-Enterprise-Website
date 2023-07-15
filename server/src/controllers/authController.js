@@ -71,6 +71,18 @@ function generateToken() {
   return token;
 }
 
+function generateRandomPassword(length) {
+  var pool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=";
+  var password = "";
+  
+  for (var i = 0; i < length; i++) {
+    var randomIndex = Math.floor(Math.random() * pool.length);
+    password += pool.charAt(randomIndex);
+  }
+  
+  return password;
+}
+
 controllers.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -148,7 +160,7 @@ controllers.googleLegoin = async (req, res, next) => {
         });
       } else {
         User.findOne({ where: { email: email } })
-          .then(async userWithEmail => {
+          .then(userWithEmail => {
             if (userWithEmail && userWithEmail.googleId === null) {
               console.log("Já existe um utilizador com este email...");
               res.status(401).json({
@@ -157,9 +169,9 @@ controllers.googleLegoin = async (req, res, next) => {
               });
             } else {
               if (!userWithEmail) {
-                const randomPassword = await generateRandomPassword();
+                const randomPassword = generateRandomPassword(12);
 
-                const newUser = User.create({
+                const newUser = new User({
                   primeiroNome: primeiroNome,
                   ultimoNome: ultimoNome,
                   email: email,
@@ -169,6 +181,7 @@ controllers.googleLegoin = async (req, res, next) => {
                   isPrimeiroLogin: false,
                   cargoId: 5
                 });
+                newUser.save()
 
                 res.status(201).json({
                   success: true,
