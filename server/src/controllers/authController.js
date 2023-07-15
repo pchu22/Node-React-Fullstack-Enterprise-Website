@@ -138,7 +138,7 @@ controllers.googleLegoin = async (req, res, next) => {
         console.log("O utilizador já existe");
         const payload = {
           email: existingUser.email,
-          id: existingUser.NUsuario
+          id: existingUser.userId
         }
         const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" });
         res.status(200).json({
