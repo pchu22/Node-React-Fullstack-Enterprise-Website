@@ -37,6 +37,7 @@ const investimentoRoute = require('./src/routes/investimentoRoute');
 const parceriaRoute = require('./src/routes/parceriaRoute');
 const tipoProjetoRoute = require('./src/routes/tipo-projetoRoute');
 const projetoRoute = require('./src/routes/projetoRoute');
+const estadoRoute = require('./src/routes/estadoRoute');
 
 app.use('/user', userRoute);
 app.use('/auth', authRoute);

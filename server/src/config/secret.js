@@ -1,5 +1,6 @@
 module.exports = {
     jwtSecret: "softinsauserauth",
+    jwtSecretGoogle: "googleauth",
     EMAIL: "pmdc2001@gmail.com",
     PASSWORD: "atpzmaqxpiwzneba",
     google: {

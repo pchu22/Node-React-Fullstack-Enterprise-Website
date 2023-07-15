@@ -12,6 +12,8 @@ export default function ListOportunidades() {
   const [parcerias, setParcerias] = useState([]);
   const [projetos, setProjetos] = useState([]);
   const [users, setUsers] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [estados, setEstados] = useState([])
 
   const [selectedInvestimento, setSelectedInvestimento] = useState([]);
   const [selectedNegocio, setSelectedNegocio] = useState([]);
@@ -35,6 +37,8 @@ export default function ListOportunidades() {
     loadNegocios();
     loadParcerias();
     loadProjetos();
+    loadEstados();
+    loadAreas();
     loadUserCargo();
     loadUsers();
   }, []);
@@ -96,8 +100,7 @@ export default function ListOportunidades() {
   function loadProjetos() {
     const url = baseURL + '/projeto/list';
 
-    axios
-      .get(url)
+    axios.get(url)
       .then((res) => {
         if (res.data.success) {
           const data = res.data.data;
@@ -105,8 +108,39 @@ export default function ListOportunidades() {
         } else {
           Swal.fire('Error Web Service', 'Lista de projetos indisponível!', 'error');
         }
-      })
-      .catch((err) => {
+      }).catch((err) => {
+        alert('Error: ' + err.message);
+      });
+  }
+
+  function loadEstados() {
+    const url = baseURL + '/estado/list';
+
+    axios.get(url)
+      .then((res) => {
+        if (res.data.success) {
+          const data = res.data.data;
+          setEstados(data);
+        } else {
+          Swal.fire('Error Web Service', 'Lista de estados indisponível!', 'error');
+        }
+      }).catch((err) => {
+        alert('Error: ' + err.message);
+      });
+  }
+
+  function loadAreas() {
+    const url = baseURL + '/area-negocio/list';
+
+    axios.get(url)
+      .then((res) => {
+        if (res.data.success) {
+          const data = res.data.data;
+          setAreas(data);
+        } else {
+          Swal.fire('Error Web Service', 'Lista de áreas de negócios indisponível!', 'error');
+        }
+      }).catch((err) => {
         alert('Error: ' + err.message);
       });
   }
@@ -295,6 +329,16 @@ export default function ListOportunidades() {
     return user ? user.primeiroNome + ' ' + user.ultimoNome : '';
   }
 
+  function getEstadoName(estadoId) {
+    const estado = estados.find((estado) => estado.estadoId === estadoId);
+    return estado ? estado.estadoNome : '';
+  }
+
+  function getAreaNegocioName(areaNegocioId) {
+    const area = areas.find((area) => area.areaNegocioId === areaNegocioId);
+    return area ? area.areaNegocioNome : '';
+  }
+
   function permissionInvestimentos() {
     return (
       cargo === 1 || cargo === 2 ||
@@ -321,6 +365,49 @@ export default function ListOportunidades() {
       cargo === 1 || cargo === 2 ||
       projetos.some((projeto) => Number(projeto.userId) === Number(loggedInUserId))
     );
+  }
+
+  function showInvetimentoInfo(investimento) {
+    Swal.fire({
+      title: null,
+      html: `
+          <strong>Investidor</strong>: ${getUserName(investimento.userId)}<br/>
+          <strong>Descrição</strong>: ${investimento.descricao}<br/>
+          <strong>Montante a Investir</strong>: ${investimento.montante}<br/>
+          <strong>Data de Proposta</strong>: ${convertDate(investimento.dataRegisto)}<br/>
+          <strong>Data de Aceitação</strong>: ${investimento.dataInvestimento ? convertDate(investimento.dataInvestimento) : 'Investimento em análise'}
+        `,
+      showCancelButton: false,
+      focusConfirm: false
+    })
+  }
+
+  function showNegocioInfo(negocio) {
+    Swal.fire({
+      title: getAreaNegocioName(negocio.areaNegocioId),
+      html: `
+          <strong>Nome</strong>: ${getUserName(negocio.userId)}<br/>
+          <strong>Descrição</strong>: ${negocio.descricao}<br/>
+          <strong>Orçamento</strong>: ${negocio.orcamento}<br/>
+          <strong>Data de Proposta</strong>: ${convertDate(negocio.dataRegisto)}<br/>
+          <strong>Data de Aceitação</strong>: ${getEstadoName(negocio.estadoId)}
+        `,
+      showCancelButton: false,
+      focusConfirm: false
+    })
+  }
+
+  function convertDate(date) {
+    const datetimeParts = date.split(' ');
+    const datePortion = datetimeParts[0];
+
+    const splittedDate = new Date(datePortion)
+
+    const year = splittedDate.getFullYear();
+    const month = splittedDate.getMonth() + 1;
+    const day = splittedDate.getDay();
+
+    return `${day.toString().padStart(2, '0')}-${month.toString().padStart(2,'0')}-${year}`
   }
 
   return (
@@ -406,7 +493,7 @@ export default function ListOportunidades() {
                     <thead>
                       <tr>
                         {cargo === 1 ? (
-                          <th scope="col" className='investimentos-header'>
+                          <th scope="col" className='investimentos-header' style={{width: "30px"}}>
                             <input
                               type="checkbox"
                               checked={selectAllInvestimento}
@@ -436,9 +523,9 @@ export default function ListOportunidades() {
                                   />
                                 </td>
                               ) : null}
-                              <td className='investimentos-data'>{getUserName(investimento.userId)}</td>
-                              <td className='investimentos-data'>{investimento.descricao}</td>
-                              <td className='investimentos-data'>{investimento.montante} €</td>
+                              <td className='investimentos-data' onClick={() => showInvetimentoInfo(investimento)}>{getUserName(investimento.userId)}</td>
+                              <td className='investimentos-data' onClick={() => showInvetimentoInfo(investimento)}>{investimento.descricao}</td>
+                              <td className='investimentos-data' onClick={() => showInvetimentoInfo(investimento)}>{investimento.montante} €</td>
                               <td className='investimentos-data'>
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                                   <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -491,7 +578,7 @@ export default function ListOportunidades() {
                     <thead>
                       <tr>
                         {cargo === 1 ? (
-                          <th scope="col" className='negocios-header'>
+                          <th scope="col" className='negocios-header' style={{width: "30px"}}>
                             <input
                               type="checkbox"
                               checked={selectAllNegocio}
@@ -502,8 +589,6 @@ export default function ListOportunidades() {
                         <th scope="col" className='negocios-header'>Nome</th>
                         <th scope="col" className='negocios-header'>Descrição</th>
                         <th scope="col" className='negocios-header'>Orçamento</th>
-                        <th scope="col" className='negocios-header'>Email</th>
-                        <th scope="col" className='negocios-header'>Telemóvel</th>
                         <th scope="col" className='negocios-header'>Ações</th>
                       </tr>
                     </thead>
@@ -523,11 +608,9 @@ export default function ListOportunidades() {
                                   />
                                 </td>
                               ) : null}
-                              <td className='negocios-data'>{getUserName(negocio.userId)}</td>
-                              <td className='negocios-data'>{negocio.descricao}</td>
-                              <td className='negocios-data'>{negocio.orcamento} €</td>
-                              <td className='negocios-data'>{negocio.email}</td>
-                              <td className='negocios-data'>{negocio.telemovel}</td>
+                              <td className='negocios-data' onClick={() => showNegocioInfo(negocio)}>{getUserName(negocio.userId)}</td>
+                              <td className='negocios-data' onClick={() => showNegocioInfo(negocio)}>{negocio.descricao}</td>
+                              <td className='negocios-data' onClick={() => showNegocioInfo(negocio)}>{negocio.orcamento} €</td>
                               <td className='negocios-data'>
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                                   <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -580,7 +663,7 @@ export default function ListOportunidades() {
                     <thead>
                       <tr>
                         {cargo === 1 ? (
-                          <th scope="col" className='parcerias-header'>
+                          <th scope="col" className='parcerias-header' style={{width: "30px"}}>
                             <input
                               type="checkbox"
                               checked={selectAllParceria}
@@ -663,9 +746,9 @@ export default function ListOportunidades() {
                 {permissionProjetos() ? (
                   <table className="table table-hover">
                     <thead>
-                      <tr  className='projetos-header'>
+                      <tr>
                         {cargo === 1 ? (
-                          <th scope="col">
+                          <th scope="col" className='projetos-header' style={{width: "30px"}}>
                             <input
                               type="checkbox"
                               checked={selectAllProjeto}
@@ -673,13 +756,10 @@ export default function ListOportunidades() {
                             />
                           </th>
                         ) : null}
-                        <th scope="col" className='projetos-header'>Prioridade</th>
                         <th scope="col" className='projetos-header'>Nome</th>
                         <th scope="col" className='projetos-header'>Projeto</th>
                         <th scope="col" className='projetos-header'>Descrição</th>
                         <th scope="col" className='projetos-header'>Orçamento</th>
-                        <th scope="col" className='projetos-header'>Início</th>
-                        <th scope="col" className='projetos-header'>Fim</th>
                         <th scope="col" className='projetos-header'>Ações</th>
                       </tr>
                     </thead>
@@ -699,15 +779,10 @@ export default function ListOportunidades() {
                                   />
                                 </td>
                               ) : null}
-                              <td>
-                                {projeto.prioridade === '1' ? 'Urgente' : projeto.prioridade === '2' ? 'Normal' : 'S/ Urgência'}
-                              </td>
                               <td className='projetos-data'>{getUserName(projeto.userId)}</td>
                               <td className='projetos-data'>{projeto.projetoNome}</td>
                               <td className='projetos-data'>{projeto.descricao}</td>
                               <td className='projetos-data'>{projeto.orcamento} €</td>
-                              <td className='projetos-data'>{projeto.dataInicio ? new Date(projeto.dataInicio).toLocaleDateString('en-GB') : 'N/A'}</td>
-                              <td className='projetos-data'>{projeto.dataFim ? new Date(projeto.dataFim).toLocaleDateString('en-GB') : 'N/A'}</td>
                               <td className='projetos-data'>
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                                   <div style={{ display: 'flex', flexDirection: 'row' }}>

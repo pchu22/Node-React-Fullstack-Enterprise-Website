@@ -57,3 +57,21 @@ label {
 .btn-wrapper button {
     width: 100%;
 }
+
+.th-ideias {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.th-ideias:not(:first-child) {
+    text-align: center;
+}
+
+.ideias-data {
+    max-width: 1000px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

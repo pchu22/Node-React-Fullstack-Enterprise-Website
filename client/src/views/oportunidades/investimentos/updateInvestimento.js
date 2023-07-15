@@ -1,7 +1,5 @@
 import React from "react";
 import UpdateInvestimentoForm from "../../../components/oportunidades/investimentos/updateInvestimento";
-import Navbar from "../../../components/sidebar/sidebar";
-import Footer from "../../../components/footer";
 
 const UpdateInvestimento = () => {
   return (

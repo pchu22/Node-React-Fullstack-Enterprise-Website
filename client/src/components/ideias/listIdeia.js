@@ -149,6 +149,18 @@ export default function ListBeneficios() {
     return user ? user.primeiroNome + ' ' + user.ultimoNome : '';
   }
 
+  function showIdeiaInfo(ideia) {
+    Swal.fire({
+      title: ideia.titulo,
+      html: `
+          <strong>Descrição</strong>: ${ideia.descricao}<br/>
+          <strong>Tipo de Ideia</strong>: ${ideia.tipo}
+        `,
+      showCancelButton: false,
+      focusConfirm: false
+    })
+  }
+
   function renderIdeias() {
     return ideias.map((ideia, index) => {
       const canEdit = Number(ideia.userId) === Number(loggedInUserId);
@@ -165,12 +177,12 @@ export default function ListBeneficios() {
               />
             ) : null}
           </td>
-          <td className='ideais-data'>{ideia.titulo}</td>
-          <td className='ideais-data'>{ideia.descricao}</td>
-          <td className='ideais-data'>{ideia.tipo}</td>
-          <td className='ideais-data'>{userName}</td>
+          <td className='ideias-data' onClick={() => showIdeiaInfo(ideia)}>{ideia.titulo}</td>
+          <td className='ideias-data' onClick={() => showIdeiaInfo(ideia)}>{ideia.descricao}</td>
+          <td className='ideias-data' onClick={() => showIdeiaInfo(ideia)}>{ideia.tipo}</td>
+          <td className='ideias-data' onClick={() => showIdeiaInfo(ideia)}>{userName}</td>
           {canEdit ? (
-            <td>
+            <td className='ideias-data'>
               <div style={{ display: 'inline-block' }}>
                 <Link
                   className="btn btn-outline-warning"
@@ -220,7 +232,7 @@ export default function ListBeneficios() {
                   <th className='th-ideias'>Ideia</th>
                   <th className='th-ideias'>Tipo</th>
                   <th className='th-ideias'>Criador</th>
-                  {cargo === 1 ? <th>Ações</th> : <th/>}
+                  {cargo === 1 ? <th className='th-ideias'>Ações</th> : <th/>}
                 </tr>
               </thead>
               <tbody>

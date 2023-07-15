@@ -26,8 +26,9 @@ h1 {
 
 .investimentos-header,
 .negocios-header,
-.parecerias-header,
+.parcerias-header,
 .projetos-header {
+    text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -37,6 +38,7 @@ h1 {
 .negocios-data,
 .parcerias-data,
 .projetos-data  {
+    text-align: center;
     max-width: 1000px;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -466,7 +466,7 @@ export default function AreaAdministrativa() {
         const month = splittedDate.getMonth() + 1; // +1 porque arrays são 0-indexed
         const day = splittedDate.getDate();
 
-        return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`; //padStart adiçiona '0' no caso do mês ou do dia serem compostos por apenas 1 número
+        return `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`; //padStart adiçiona '0' no caso do mês ou do dia serem compostos por apenas 1 número
     }
 
     return (

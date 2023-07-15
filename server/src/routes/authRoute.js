@@ -10,14 +10,7 @@ router.post("/primeiroLogin/:userId", AuthController.updatePasswordPrimeiroLogin
 router.post('/ativacao/:verificationToken', AuthController.verificarEmail);
 router.post('/forgot-password', AuthController.forgotPassword);
 router.post('/reset-password/:recoverToken', AuthController.mudarPassword);
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google/redirect',passport.authenticate('google'), AuthController.googleLegoin);
 
-//google authentication
-router.get('/google', passport.authenticate('google', {
-    scope: ["profile", "email"]
-}))
-
-//google callback function to redirect
-router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
-    res.send(req.user)
-})
 module.exports = router;

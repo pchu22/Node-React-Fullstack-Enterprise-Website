@@ -1,7 +1,5 @@
 import React from "react";
 import CreateProjetoForm from "../../../components/oportunidades/projetos/createProjeto";
-import Navbar from "../../../components/sidebar/sidebar";
-import Footer from "../../../components/footer";
 
 const CreateProjeto = () => {
   return (

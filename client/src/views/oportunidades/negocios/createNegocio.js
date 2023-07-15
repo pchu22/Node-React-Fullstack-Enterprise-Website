@@ -1,7 +1,5 @@
 import React from "react";
 import CreateNegocioForm from "../../../components/oportunidades/negocios/createNegocio";
-import Navbar from "../../../components/sidebar/sidebar";
-import Footer from "../../../components/footer";
 
 const CreateNegocio = () => {
   return (

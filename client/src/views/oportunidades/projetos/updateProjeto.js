@@ -1,7 +1,5 @@
 import React from "react";
 import UpdateProjetoForm from "../../../components/oportunidades/projetos/updateProjeto";
-import Navbar from "../../../components/sidebar/sidebar";
-import Footer from "../../../components/footer";
 
 const UpdateProjeto = () => {
   return (

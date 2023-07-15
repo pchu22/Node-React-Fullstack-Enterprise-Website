@@ -4,7 +4,9 @@ import FormCreateVaga from "../../components/vagas/createVaga";
 const CreateVaga = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <FormCreateVaga style={{ flex: 1 }} />
+      <div style={{ flex: 1 }} >
+        <FormCreateVaga />
+      </div>
     </div>
   );
 };

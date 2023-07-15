@@ -1,7 +1,5 @@
 import React from "react";
 import CreateParceriaForm from "../../../components/oportunidades/parcerias/createParceria";
-import Navbar from "../../../components/sidebar/sidebar";
-import Footer from "../../../components/footer";
 
 const CreateParceria = () => {
   return (
