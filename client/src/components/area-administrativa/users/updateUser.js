@@ -13,9 +13,6 @@ const FormUsers = () => {
   const [ultimoNome, setUltimoNome] = useState("");
   const [numeroFuncionario, setNumeroFuncionario] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [telemovel, setTelemovel] = useState("");
-  const [morada, setMorada] = useState("");
   const [salario, setSalario] = useState("");
   const [dataContratacao, setDataContratacao] = useState("");
   const [cargo, setCargo] = useState(null);
@@ -31,18 +28,14 @@ const FormUsers = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
 
-  const [passwordEye, setPasswordEye] = useState(false);
-  const [passwordSelected, setPasswordSelected] = useState(false);
-
-  const handlePasswordClick = () => {
-    setPasswordEye(!passwordEye);
-  };
-
-  const handlePasswordBlur = () => {
-    setPasswordSelected(true);
-  };
-
   useEffect(() => {
+    loadUserInfo();
+    loadCargo();
+    loadFilial();
+    loadDepartamento();
+  }, []);
+
+  function loadUserInfo() {
     const url = baseURL + "user/get/" + userId;
     axios.get(url)
       .then((res) => {
@@ -54,8 +47,6 @@ const FormUsers = () => {
           setUltimoNome(data.ultimoNome);
           setNumeroFuncionario(data.numeroFuncionario);
           setEmail(data.email);
-          setTelemovel(data.telemovel);
-          setMorada(data.morada);
           setSalario(data.salario);
           setIsColaborador(data.isColaborador);
           if (data.cargo) {
@@ -77,11 +68,12 @@ const FormUsers = () => {
         } else {
           alert("Error Web service");
         }
-      })
-      .catch((err) => {
+      }).catch((err) => {
         alert("Error server: " + err);
       });
+  }
 
+  function loadCargo() {
     const urlCargo = baseURL + "cargo/list";
     axios.get(urlCargo)
       .then((res) => {
@@ -91,27 +83,13 @@ const FormUsers = () => {
         } else {
           alert("Error Web Service");
         }
-      })
-      .catch((err) => {
+      }).catch((err) => {
         console.error(err);
         alert("Error: " + err);
       });
-
-    const urlDepartamento = baseURL + "departamento/list";
-    axios.get(urlDepartamento)
-      .then((res) => {
-        if (res.data.success) {
-          const data = res.data.data;
-          setDataDepartamento(data);
-        } else {
-          alert("Error Web Service");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Error: " + err);
-      });
-
+  }
+  
+  function loadFilial() {
     const urlFilial = baseURL + "filial/list";
     axios.get(urlFilial)
       .then((res) => {
@@ -121,13 +99,28 @@ const FormUsers = () => {
         } else {
           alert("Error Web Service");
         }
-      })
-      .catch((err) => {
+      }).catch((err) => {
         console.error(err);
         alert("Error: " + err);
       });
-  }, []);
+  }
 
+  function loadDepartamento() {
+    const urlDepartamento = baseURL + "departamento/list";
+    axios.get(urlDepartamento)
+      .then((res) => {
+        if (res.data.success) {
+          const data = res.data.data;
+          setDataDepartamento(data);
+        } else {
+          alert("Error Web Service");
+        }
+      }).catch((err) => {
+        console.error(err);
+        alert("Error: " + err);
+      });
+  }
+  
   return (
     <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh', backgroundColor: '#D9D9D9' }}>
       <section className="h-100">
@@ -140,9 +133,7 @@ const FormUsers = () => {
                     <img src={logo} alt="Logo Softinsa" style={{ maxWidth: '100%', height: 'auto' }} />
                   </div>
                   <div>
-                    <h2 className="my-4">Atualizar utilizador</h2>
-                    <div className="form-row justify-content-center">
-                      <div className="form-group col-md-6">
+                  <div className="textarea-container">
                         <label htmlFor="inputPNome">Primeiro Nome</label>
                         <input
                           type="text"
@@ -153,7 +144,7 @@ const FormUsers = () => {
                           onChange={(event) => setPrimeiroNome(event.target.value)}
                         />
                       </div>
-                      <div className="form-group col-md-6">
+                      <div className="textarea-container">
                         <label htmlFor="inputUNome">Último Nome</label>
                         <input
                           type="text"
@@ -164,23 +155,17 @@ const FormUsers = () => {
                           onChange={(event) => setUltimoNome(event.target.value)}
                         />
                       </div>
-                    </div>
-                    <div className="form-row justify-content-center">
-                      <div className="form-group col-md-6">
+                      <div className="textarea-container">
                         <label htmlFor="inputIsColaborador">É Colaborador?</label>
                         <div
                           className={`status-bar ${isColaborador ? "active" : "inactive"}`}
                           onClick={toggleUserStatus}
                         >
-                          <div
-                            className={`status-ball ${isBallMoving ? "ball-moving" : ""}`}
-                          ></div>
+                          <div className={`status-ball ${isBallMoving ? "ball-moving" : ""}`}/>
                         </div>
                       </div>
-                    </div>
-                    <div className="form-row justify-content-center">
-                      <div className="form-group col-md-6">
-                        <label htmlFor="inputNFunc">Número de Funcionários</label>
+                      <div className="textarea-container">
+                        <label htmlFor="inputNFunc">Número de Funcionário</label>
                         <input
                           type="number"
                           className="form-control"
@@ -191,9 +176,7 @@ const FormUsers = () => {
                           disabled={!isColaborador}
                         />
                       </div>
-                    </div>
-                    <div className="form-row justify-content-center">
-                      <div className="form-group col-md-6">
+                      <div className="textarea-container">
                         <label htmlFor="inputEmail">Email</label>
                         <input
                           type="email"
@@ -204,48 +187,7 @@ const FormUsers = () => {
                           onChange={(event) => setEmail(event.target.value)}
                         />
                       </div>
-                      <div className="form-row justify-content-center">
-                        <div className="form-group col-md-6">
-                          <label htmlFor="inputPassword">Password</label>
-                          <input
-                            type={passwordEye ? "text" : "password"}
-                            className="form-control"
-                            id="inputPassword"
-                            placeholder="Password"
-                            value={isDataLoaded ? password : ''}
-                            onChange={(event) => setPassword(event.target.value)}
-                            onBlur={handlePasswordBlur}
-                          />
-                          <span className='password-toggle-icon'>
-                            {passwordEye === false ? (<AiFillEyeInvisible onClick={handlePasswordClick} />) : (<AiFillEye onClick={handlePasswordClick} />)}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="form-group col-md-6">
-                        <label htmlFor="inputTelemovel">Telemovel</label>
-                        <input
-                          type="tel"
-                          className="form-control"
-                          id="inputTelemovel"
-                          placeholder="Telemovel"
-                          value={isDataLoaded ? telemovel : ''}
-                          onChange={(event) => setTelemovel(event.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div className="form-row justify-content-center">
-                      <div className="form-group col-md-6">
-                        <label htmlFor="inputMorada">Morada</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="inputMorada"
-                          placeholder="Morada"
-                          value={isDataLoaded ? morada : ''}
-                          onChange={(event) => { setMorada(event.target.value); }}
-                        />
-                      </div>
-                      <div className="form-group col-md-6">
+                      <div className="textarea-container">
                         <label htmlFor="inputSalario">Salário</label>
                         <input
                           type="number"
@@ -257,9 +199,7 @@ const FormUsers = () => {
                           onChange={(event) => { setSalario(event.target.value); }}
                         />
                       </div>
-                    </div>
-                    <div className="form-row">
-                      <div className="form-group col-md-6">
+                      <div className="textarea-container">
                         <label htmlFor="inputCargo">Cargo</label>
                         <select
                           id="inputCargo"
@@ -271,9 +211,7 @@ const FormUsers = () => {
                           <FillCargo />
                         </select>
                       </div>
-                    </div>
-                    <div className="form-row">
-                      <div className="form-group col-md-6">
+                      <div className="textarea-container">
                         <label htmlFor="inputDepartamento">Departamento</label>
                         <select
                           id="inputDepartamento"
@@ -285,9 +223,7 @@ const FormUsers = () => {
                           <FillDepartamento />
                         </select>
                       </div>
-                    </div>
-                    <div className="form-row">
-                      <div className="form-group col-md-6">
+                      <div className="textarea-container">
                         <label htmlFor="inputFilial">Filial</label>
                         <select
                           id="inputFilial"
@@ -299,9 +235,7 @@ const FormUsers = () => {
                           <FillFilial />
                         </select>
                       </div>
-                    </div>
-                    <div className="form-row justify-content-center">
-                      <div className="form-group col-md-6">
+                    <div className="textarea-container">
                         <button
                           type="button"
                           className="btn btn-primary"
@@ -310,7 +244,6 @@ const FormUsers = () => {
                           Atualizar Utilizador
                         </button>
                       </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -332,9 +265,13 @@ const FormUsers = () => {
     setIsColaborador(toggleIsColaborador);
 
     if (toggleIsColaborador) {
-      const currentDate = new Date();
-      setDataContratacao(currentDate);
+      setDataContratacao(new Date());
+    } else {
+      setCargo(5);
+      setNumeroFuncionario(null);
+      setSalario(null)
     }
+
     const action = toggleIsColaborador
       ? "colaborador Softinsa"
       : "utilizador comum";
@@ -361,9 +298,6 @@ const FormUsers = () => {
         ultimoNome: ultimoNome,
         numeroFuncionario: numeroFuncionario,
         email: email,
-        password: password,
-        telemovel: telemovel,
-        morada: morada,
         salario: salario,
         dataContratacao: dataContratacao,
         isColaborador: isColaborador,
@@ -377,7 +311,7 @@ const FormUsers = () => {
         Swal.fire({
           title: "Utilizador alterado com sucesso!",
         }).then(() => {
-          navigate("/user");
+          navigate("/area-administrativa");
         });
       } else {
         Swal.fire({

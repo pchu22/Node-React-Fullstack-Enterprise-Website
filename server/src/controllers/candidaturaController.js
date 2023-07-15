@@ -147,6 +147,10 @@ controllers.delete = async (req, res) => {
     const del = await Candidatura.destroy({ where: { candidaturaId: candidaturaIds } });
 
     if (del > 0) {
+      await User.update({ isCandidato: false }, {
+        where: { userId: { [sequelize.Op.in]: candidaturaIds } }
+      });
+
       res.status(200).json({
         success: true,
         deleted: del,
@@ -162,32 +166,6 @@ controllers.delete = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Erro ao eliminar as candidaturas!',
-    });
-  }
-};
-
-controllers.checkExistence = async (req, res) => {
-  const { vagaId, userId } = req.params;
-
-  try {
-
-    const candidatura = await Candidatura.findOne({
-      vagaId: vagaId,
-      userId: userId
-    });
-
-    const candidaturaExistence = !!candidatura;
-
-    console.log('Candidatura: ', candidaturaExistence);
-
-    res.status(200).json({
-      existence: candidaturaExistence
-    });
-  } catch (err) {
-    console.log('Error:', err);
-    res.status(500).json({
-      success: false,
-      message: `Occoreu um erro a procurar por uma candidatura com essas informações -> userId!: ${userId}, vagaId: ${vagaId}`
     });
   }
 };

@@ -2,10 +2,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai'
 import logo from '../../../assets/logo.png'
@@ -113,7 +112,9 @@ export default function CreateUser() {
       return <option key={index} value={data.filialId}>{data.filialNome}</option>;
     });
   }
-  function SendSave() {
+  function SendSave(event) {
+    event.preventDefault();
+    
     if (primeiroNome.trim() === "" ||
       ultimoNome.trim() === "" ||
       numeroFuncionario.trim() === "" ||
@@ -126,6 +127,16 @@ export default function CreateUser() {
       Swal.fire('Todos os campos são de preenchimento obrigatório!');
     } else if (password.length < 8) {
       Swal.fire('A senha deve ter pelo menos 8 caracteres!');
+    } else if (!/[A-Z]/.test(password)) {
+      Swal.fire('A senha deve conter pelo menos uma letra maiúscula!');
+    } else if (!/[a-z]/.test(password)) {
+      Swal.fire('A senha deve conter pelo menos uma letra minúscula!');
+    } else if (!/\d/.test(password)) {
+      Swal.fire('A senha deve conter pelo menos um número!');
+    } else if (!/[!#?%\-_]/.test(password)) {
+      Swal.fire('A senha deve conter pelo menos um caractere especial (!#?%-_)!');
+    } else if (salario < 0) {
+      Swal.fire('O salário não pode ser menor que 0!');
     } else {
       const url = baseURL + "user/create";
       const datapost = {
@@ -143,7 +154,7 @@ export default function CreateUser() {
 
       axios.post(url, datapost)
         .then(res => {
-          if (res.data.success) {
+          if (res.data.success === true) {
             Swal.fire(res.data.message);
             navigate('/area-administrativa');
           } else {
@@ -158,7 +169,6 @@ export default function CreateUser() {
   }
 
   return (
-
     <div className='wrapper'>
       <div className="d-flex align-items-center justify-content-center" style={{ height: "100vh" }}>
         <div className="card">
@@ -167,7 +177,7 @@ export default function CreateUser() {
           </div>
           <div className="card-body">
             <form onSubmit={SendSave}>
-              <div class="textarea-container">
+              <div className="textarea-container">
                 <label htmlFor="inputPNome">Primeiro Nome</label>
                 <input
                   type="text"
@@ -177,7 +187,7 @@ export default function CreateUser() {
                   onChange={(event) => setPrimeiroNome(event.target.value)}
                 />
               </div>
-              <div class="textarea-container">
+              <div className="textarea-container">
                 <label htmlFor="inputUNome">Último Nome</label>
                 <input
                   type="text"
@@ -187,7 +197,7 @@ export default function CreateUser() {
                   onChange={(event) => setUltimoNome(event.target.value)}
                 />
               </div>
-              <div class="textarea-container">
+              <div className="textarea-container">
                 <label htmlFor="inputNFunc">Número de Funcionário</label>
                 <input
                   type="number"
@@ -195,10 +205,10 @@ export default function CreateUser() {
                   id="inputNFunc"
                   placeholder="Número de Funcionário"
                   value={numeroFuncionario}
-                  onChange={(value) => setNumeroFuncionario(value.target.value)}
+                  onChange={(event) => setNumeroFuncionario(event.target.value)}
                 />
               </div>
-              <div class="textarea-container">
+              <div className="textarea-container">
                 <label htmlFor="inputEmail">Email</label>
                 <input
                   type="email"
@@ -206,10 +216,10 @@ export default function CreateUser() {
                   id="inputEmail"
                   placeholder="Email"
                   value={email}
-                  onChange={(value) => setEmail(value.target.value)}
+                  onChange={(event) => setEmail(event.target.value)}
                 />
               </div>
-              <div class="textarea-container">
+              <div className="textarea-container">
                 <label htmlFor="inputPassword">Password</label>
                 <input
                   type={passwordEye ? "text" : "password"}
@@ -217,7 +227,7 @@ export default function CreateUser() {
                   id="inputPassword"
                   placeholder="Password"
                   value={password}
-                  onChange={(value) => setPassword(value.target.value)}
+                  onChange={(event) => setPassword(event.target.value)}
                   onBlur={handlePasswordBlur}
                 />
                 <span className='password-toggle-icon'>
@@ -232,7 +242,7 @@ export default function CreateUser() {
                   )}
                 </span>
               </div>
-              <div class="textarea-container">
+              <div className="textarea-container">
                 <label htmlFor="inputSalario">Salário</label>
                 <input
                   type="tel"
@@ -240,10 +250,10 @@ export default function CreateUser() {
                   id="inputSalario"
                   placeholder="Salário"
                   value={salario}
-                  onChange={(value) => setSalario(value.target.value)}
+                  onChange={(event) => setSalario(event.target.value)}
                 />
               </div>
-              <div class="textarea-container">
+              <div className="textarea-container">
                 <label htmlFor="inputCargo">Cargo</label>
                 <select
                   id="inputCargo"
@@ -253,7 +263,7 @@ export default function CreateUser() {
                   {LoadCargo()}
                 </select>
               </div>
-              <div class="textarea-container">
+              <div className="textarea-container">
                 <label htmlFor="inputDepartamento">Departamento</label>
                 <select
                   id="inputDepartamento"
@@ -263,7 +273,7 @@ export default function CreateUser() {
                   {LoadDepartamento()}
                 </select>
               </div>
-              <div class="textarea-container">
+              <div className="textarea-container">
                 <label htmlFor="inputFilial">Filial</label>
                 <select
                   id="inputFilial"
