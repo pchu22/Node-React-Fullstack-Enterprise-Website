@@ -186,7 +186,7 @@ controllers.googleLogin = async (req, res, next) => {
                 res.status(201).json({
                   success: true,
                   message: 'Utilizador Google registado com sucesso!',
-                  data: data
+                  data: newUser
                 });
               } else {
                 res.status(401).send({
