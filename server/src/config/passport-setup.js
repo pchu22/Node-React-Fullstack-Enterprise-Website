@@ -33,39 +33,10 @@ passport.use(new GoogleStrategy(
     }, (accessToken, refreshToken, profile, done) => {
         console.log(profile);
         User.findOne({ where: { googleId: profile.id } }).then((existingUser) => {
-            if(existingUser) {
+            if (existingUser) {
                 done(null, existingUser)
             } else {
-                const randomPassword = generateRandomPassword(12);
-
-                const newUser = new User({
-                    googleId: profile.id,
-                    primeiroNome: profile.name.givenName,
-                    ultimoNome: profile.name.familyName,
-                    email: profile.emails[0].value,
-                    password: randomPassword,
-                    isAtivo: true,
-                    isPrimeiroLogin: false,
-                    cargoId: 5
-                }).save().then((newUser) => {
-                    console.log("New user created: ", newUser)
-                })
-                done(null, newUser)
-
-            }
-        })
-    }
-    /*async (accessToken, refreshToken, profile, done) => {
-        try {
-            console.log(profile);
-            console.log("Google ID:", profile.id);
-
-            const existingUser = await User.findOne({ where: { googleId: profile.id } });
-
-            if (existingUser) {
-                done(null, { success: true, message: existingUser });
-            } else {
-                const userWithEmail = await User.findOne({ where: { email: profile.emails[0].value } });
+                const userWithEmail = User.findOne({ where: { email: profile.emails[0].value } });
 
                 if (userWithEmail && userWithEmail.googleId === null) {
                     const authError = new Error('Este email já está associado a uma conta Softinsa!');
@@ -83,18 +54,13 @@ passport.use(new GoogleStrategy(
                         isAtivo: true,
                         isPrimeiroLogin: false,
                         cargoId: 5
-                    });
-
-                    const savedUser = await newUser.save();
-                    console.log("Novo utilizador criado com sucesso: ", savedUser);
-
-                    done(null, newUser);
+                    }).save().then((newUser) => {
+                        console.log("Novo utilizador criado com sucesso: ", newUser);                   
+                     })
+                    done(null, newUser)
                 }
             }
-        } catch (err) {
-            console.error('Erro: ', err);
-            done(err);
-        }
-    }*/
+        })
+    }
 ));
 
