@@ -143,16 +143,10 @@ controllers.login = async (req, res) => {
 controllers.googleLogin = async (req, res, next) => {
   try {
     const { googleId, email, primeiroNome, ultimoNome } = req.query;
-    console.log(req.query);
-    
-    if (!googleId || !email || !primeiroNome || !ultimoNome) {
-      return res.status(400).json({
-        success: false,
-        message: 'Missing required query parameters.',
-      });
-    }
+    console.log('googleId:', googleId); // Check the value of googleId
 
-    const existingUser = await User.findOne({ where: { email } });
+    const existingUser = await User.findOne({ where: { googleId } });
+    console.log('existingUser:', existingUser); // Check the fetched existingUser
 
     if (existingUser) {
       if (existingUser.googleId) {
@@ -162,21 +156,24 @@ controllers.googleLogin = async (req, res, next) => {
         };
         const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" });
 
+        console.log('Existing user with googleId:', googleId);
         return res.status(200).json({
           success: true,
           accessToken: token,
           user: existingUser,
           userId: existingUser.userId,
-          message: 'Login with Google successful!',
+          message: 'Login c/Google efetuado com sucesso!',
         });
       } else {
+        console.log('User exists, but does not have googleId:', googleId);
         return res.status(401).json({
           success: false,
-          message: 'A non-Google account already exists with this email. Unable to create a new Softinsa account.',
+          message: 'Já existe uma conta não Google come este email... Impossível criar uma nova conta Softinsa!'
         });
       }
     } else {
-      const newUser = await User.create({
+      console.log('Creating new user with googleId:', googleId);
+      const newUser = new User({
         primeiroNome,
         ultimoNome,
         email,
@@ -187,22 +184,23 @@ controllers.googleLogin = async (req, res, next) => {
         cargoId: 5
       });
 
+      await newUser.save();
+
       return res.status(201).json({
         success: true,
         message: 'User registered with Google successfully!',
-        data: newUser,
+        data: newUser
       });
     }
   } catch (err) {
     console.log('Error:', err);
     return res.status(500).json({
       success: false,
-      message: 'An error occurred during the account creation. Please try again later.',
-      error: err instanceof Error ? err.message : String(err),
+      message: 'Ocorreu um erro na criação da conta... Por favor, tente novamente mais tarde!',
+      error: err instanceof Error ? err.message : String(err)
     });
   }
 };
-
 
 controllers.signup = async (req, res) => {
   try {
