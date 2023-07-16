@@ -65,19 +65,11 @@ passport.use(new GoogleStrategy(
                     const savedUser = await newUser.save();
                     console.log("Novo utilizador criado com sucesso: ", savedUser);
 
-                    done(null, newUser, {
-                        message: {
-                            userId: savedUser.userId,
-                            primeiroNome: savedUser.primeiroNome,
-                            ultimoNome: savedUser.ultimoNome,
-                            email: savedUser.email,
-                            cargoId: savedUser.cargoId,
-                        }
-                    });
+                    done(null, newUser);
                 }
             }
         } catch (err) {
-            console.error('Error:', err);
+            console.error('Erro: ', err);
             done(err);
         }
     }
