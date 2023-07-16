@@ -142,8 +142,8 @@ controllers.login = async (req, res) => {
 
 controllers.googleLogin = async (req, res, next) => {
   try {
-    console.log('Request body:', req.body);
     const { googleId, email, primeiroNome, ultimoNome } = req.body;
+    console.log('Request body:', req.body);
 
     const existingUser = await User.findOne({ where: { googleId: googleId } });
 
