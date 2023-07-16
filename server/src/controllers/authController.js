@@ -74,12 +74,12 @@ function generateToken() {
 function generateRandomPassword(length) {
   var pool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=";
   var password = "";
-  
+
   for (var i = 0; i < length; i++) {
     var randomIndex = Math.floor(Math.random() * pool.length);
     password += pool.charAt(randomIndex);
   }
-  
+
   return password;
 }
 
@@ -144,9 +144,7 @@ controllers.googleLogin = async (req, res, next) => {
   try {
     const { googleId, email, primeiroNome, ultimoNome } = req.body;
 
-    console.log('Received googleId:', googleId); // Add this console.log statement
-
-    const existingUser = await User.findOne({ where: { googleId } });
+    const existingUser = await User.findOne({ where: { googleId: googleId } });
 
     if (existingUser) {
       console.log("Google ID:", googleId);
