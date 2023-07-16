@@ -31,8 +31,27 @@ passport.use(new GoogleStrategy(
         clientID: keys.google.clientId,
         clientSecret: keys.google.clientSecret,
         scope: ['profile', 'email']
-    },
-    async (accessToken, refreshToken, profile, done) => {
+    }, (accessToken, refreshToken, profile, done) => {
+        User.findOne({ where: { googleId: profile.id } }).then((currentUser) => {
+            if(currentUser) {
+                console.log("User is: ", currentUser)
+            } else {
+                new User({
+                    googleId: profile.id,
+                    primeiroNome: profile.name.givenName,
+                    ultimoNome: profile.name.familyName,
+                    email: profile.emails[0].value,
+                    password: randomPassword,
+                    isAtivo: true,
+                    isPrimeiroLogin: false,
+                    cargoId: 5
+                }).save().then((newUser) => {
+                    console.log("New user created: ", newUser)
+                })
+            }
+        })
+    }
+    /*async (accessToken, refreshToken, profile, done) => {
         try {
             console.log(profile);
             console.log("Google ID:", profile.id);
@@ -72,6 +91,6 @@ passport.use(new GoogleStrategy(
             console.error('Erro: ', err);
             done(err);
         }
-    }
+    }*/
 ));
 
