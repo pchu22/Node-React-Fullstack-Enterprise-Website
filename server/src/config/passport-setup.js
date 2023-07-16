@@ -16,11 +16,13 @@ function generateRandomPassword(length) {
 }
 
 passport.serializeUser(function (user, done) {
-    done(null, user);
+    done(null, user.userId);
 });
 
-passport.deserializeUser(function (user, done) {
-    done(null, user);
+passport.deserializeUser(function (userId, done) {
+    User.findById(userId).then((user) => {
+        done(null, user);
+    }); 
 });
 
 
@@ -62,6 +64,7 @@ passport.use(new GoogleStrategy(
                     });
 
                     const savedUser = await newUser.save();
+                    console.log("Novo utilizador criado com sucesso: ", savedUser);
 
                     done(null, newUser, {
                         message: {

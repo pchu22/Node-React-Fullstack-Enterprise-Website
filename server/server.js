@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const passportSetup = require('./src/config/passport-setup');
 const keys = require('./src/config/secret')
 const cookieSession = require('cookie-session')
 const passport = require('passport')
+const passportSetup = require('./src/config/passport-setup');
 //Configurações
 app.set('port', process.env.PORT || 8080);
 
