@@ -114,27 +114,48 @@ const LoginForm = () => {
   const googleLogin = (event) => {
     event.preventDefault();
     const authUrl = `${baseURL}/auth/google/redirect`;
-
+  
+    // Open Google Sign-In window
     const authWindow = window.open(authUrl, "_blank", "width=500,height=600");
-
-    let messageContent;
-
+  
+    // Define the data object with necessary properties
+    const data = {
+      prompt: 'select_account',
+      googleId: '',
+      email: '',
+      primeiroNome: '',
+      ultimoNome: ''
+    };
+  
     window.addEventListener("message", (event) => {
       event.preventDefault();
-
-      if (event.data && event.data.accessToken) {
-        messageContent = event.data;
-
-        localStorage.setItem("token", messageContent.accessToken);
-
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-
-        authWindow.close();
-      }
+  
+      data.googleId = event.data.googleId;
+      data.email = event.data.email;
+      data.primeiroNome = event.data.primeiroNome;
+      data.ultimoNome = event.data.ultimoNome;
+  
+      axios.post(authUrl, data)
+        .then((response) => {
+          const responseData = response.data;
+  
+          const { accessToken, user, userId, message } = responseData;
+  
+          localStorage.setItem("token", accessToken);
+          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("userId", userId);
+  
+          setTimeout(() => {
+            navigate("/homepage");
+          }, 1000);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
     });
   };
+  
+
 
   return (
     <div className="wrapper">
