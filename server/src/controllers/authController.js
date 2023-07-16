@@ -144,6 +144,13 @@ controllers.googleLogin = async (req, res, next) => {
   try {
     const { googleId, email, primeiroNome, ultimoNome } = req.query;
 
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Esse email não foi encontrado...',
+      });
+    }
+
     const existingUser = await User.findOne({ where: { email } });
 
     if (existingUser) {
