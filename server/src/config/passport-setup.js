@@ -32,15 +32,13 @@ passport.use(new GoogleStrategy(
         scope: ['profile', 'email']
     }, (accessToken, refreshToken, profile, done) => {
         console.log(profile);
-        done(null, profile)
-    }
-        /*User.findOne({ where: { googleId: profile.id } }).then((currentUser) => {
-            if(currentUser) {
-                console.log("User is: ", currentUser)
+        User.findOne({ where: { googleId: profile.id } }).then((existingUser) => {
+            if(existingUser) {
+                done(null, existingUser)
             } else {
                 const randomPassword = generateRandomPassword(12);
 
-                new User({
+                const newUser = new User({
                     googleId: profile.id,
                     primeiroNome: profile.name.givenName,
                     ultimoNome: profile.name.familyName,
@@ -52,9 +50,11 @@ passport.use(new GoogleStrategy(
                 }).save().then((newUser) => {
                     console.log("New user created: ", newUser)
                 })
+                done(null, newUser)
+
             }
         })
-    }*/
+    }
     /*async (accessToken, refreshToken, profile, done) => {
         try {
             console.log(profile);
