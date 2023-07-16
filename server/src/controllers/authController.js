@@ -143,11 +143,12 @@ controllers.login = async (req, res) => {
 controllers.googleLogin = async (req, res, next) => {
   try {
     const { googleId, email, primeiroNome, ultimoNome } = req.query;
-
-    if (!email) {
+    console.log(req.query);
+    
+    if (!googleId || !email || !primeiroNome || !ultimoNome) {
       return res.status(400).json({
         success: false,
-        message: 'Esse email não foi encontrado...',
+        message: 'Missing required query parameters.',
       });
     }
 
