@@ -31,60 +31,53 @@ passport.use(new GoogleStrategy(
         clientSecret: keys.google.clientSecret,
         scope: ['profile', 'email']
     },
-    (accessToken, refreshToken, profile, done) => {
-        console.log(profile);
-        console.log("Google ID:", profile.id);
-        User.findOne({ where: { googleId: profile.id } })
-            .then(existingUser => {
-                if (existingUser) {
-                    done(null, { success: true, message: existingUser });
-                } else {
-                    User.findOne({ where: { email: profile.emails[0].value } })
-                        .then(async userWithEmail => {
-                            if (userWithEmail && userWithEmail.googleId === null) {
-                                const authError = new Error('Este email já está associado a uma conta Softinsa!');
-                                authError.status = 401;
-                                done(authError);
-                            } else {
-                                const randomPassword = generateRandomPassword(12);
+    async (accessToken, refreshToken, profile, done) => {
+        try {
+            console.log(profile);
+            console.log("Google ID:", profile.id);
 
-                                const newUser = new User({
-                                    googleId: profile.id,
-                                    primeiroNome: profile.givenName,
-                                    ultimoNome: profile.familyName,
-                                    email: profile.emails[0].value,
-                                    password: randomPassword,
-                                    isAtivo: true,
-                                    isPrimeiroLogin: false,
-                                    cargoId: 5
-                                });
-                                newUser.save()
-                                    .then(user => {
-                                        done(null, newUser, {
-                                            message: {
-                                                userId: user.userId,
-                                                primeiroNome: user.primeiroNome,
-                                                ultimoNome: user.ultimoNome,
-                                                email: user.email,
-                                                cargoId: user.cargoId,
-                                            }
-                                        });
-                                    })
-                                    .catch(err => {
-                                        console.error('Error saving new user:', err);
-                                        done(err);
-                                    });
-                            }
-                        })
-                        .catch(err => {
-                            console.error('Error finding user with email:', err);
-                            done(err);
-                        });
+            const existingUser = await User.findOne({ where: { googleId: profile.id } });
+
+            if (existingUser) {
+                done(null, { success: true, message: existingUser });
+            } else {
+                const userWithEmail = await User.findOne({ where: { email: profile.emails[0].value } });
+
+                if (userWithEmail && userWithEmail.googleId === null) {
+                    const authError = new Error('Este email já está associado a uma conta Softinsa!');
+                    authError.status = 401;
+                    done(authError);
+                } else {
+                    const randomPassword = generateRandomPassword(12);
+
+                    const newUser = new User({
+                        googleId: profile.id,
+                        primeiroNome: profile.name.givenName,
+                        ultimoNome: profile.name.familyName,
+                        email: profile.emails[0].value,
+                        password: randomPassword,
+                        isAtivo: true,
+                        isPrimeiroLogin: false,
+                        cargoId: 5
+                    });
+
+                    const savedUser = await newUser.save();
+
+                    done(null, newUser, {
+                        message: {
+                            userId: savedUser.userId,
+                            primeiroNome: savedUser.primeiroNome,
+                            ultimoNome: savedUser.ultimoNome,
+                            email: savedUser.email,
+                            cargoId: savedUser.cargoId,
+                        }
+                    });
                 }
-            })
-            .catch(err => {
-                console.error('Error finding existing user:', err);
-                done(err);
-            });
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            done(err);
+        }
     }
 ));
+

@@ -141,78 +141,74 @@ controllers.login = async (req, res) => {
 };
 
 controllers.googleLogin = async (req, res, next) => {
-  const { googleId, email, primeiroNome, ultimoNome } = req.body;
+  try {
+    const { googleId, email, primeiroNome, ultimoNome } = req.body;
 
-  User.findOne({ where: { googleId: googleId } })
-    .then(existingUser => {
-      if (existingUser) {
-        console.log("Google ID: ", googleId);
-        console.log("O utilizador já existe");
-        const payload = {
-          email: existingUser.email,
-          userId: existingUser.userId
-        }
-        const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" });
-        res.status(200).json({
-          success: true,
-          accessToken: token,
-          message: 'Login c/ Google efetuado com sucesso!',
+    const existingUser = await User.findOne({ where: { googleId } });
+
+    if (existingUser) {
+      console.log("Google ID:", googleId);
+      console.log("O utilizador já existe");
+      const payload = {
+        email: existingUser.email,
+        userId: existingUser.userId
+      };
+      const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" });
+
+      res.status(200).json({
+        success: true,
+        accessToken: token,
+        message: 'Login c/ Google efetuado com sucesso!',
+      });
+    } else {
+      const userWithEmail = await User.findOne({ where: { email } });
+
+      if (userWithEmail && userWithEmail.googleId === null) {
+        console.log("Já existe um utilizador com este email...");
+        res.status(401).json({
+          success: false,
+          message: 'Já existe uma conta não Google com este email.'
         });
       } else {
-        User.findOne({ where: { email: email } })
-          .then(userWithEmail => {
-            if (userWithEmail && userWithEmail.googleId === null) {
-              console.log("Já existe um utilizador com este email...");
-              res.status(401).json({
-                success: false,
-                message: 'Já existe uma conta não Google com este email.'
-              });
-            } else {
-              if (!userWithEmail) {
-                const randomPassword = generateRandomPassword(12);
+        if (!userWithEmail) {
+          const randomPassword = generateRandomPassword(12);
 
-                const newUser = new User({
-                  primeiroNome: primeiroNome,
-                  ultimoNome: ultimoNome,
-                  email: email,
-                  password: randomPassword,
-                  googleId: googleId,
-                  isAtivo: true,
-                  isPrimeiroLogin: false,
-                  cargoId: 5
-                });
-                newUser.save()
+          const newUser = new User({
+            primeiroNome,
+            ultimoNome,
+            email,
+            password: randomPassword,
+            googleId,
+            isAtivo: true,
+            isPrimeiroLogin: false,
+            cargoId: 5
+          });
 
-                res.status(201).json({
-                  success: true,
-                  message: 'Utilizador Google registado com sucesso!',
-                  data: newUser
-                });
-              } else {
-                res.status(401).send({
-                  success: false,
-                  message: "Já existe uma conta não google com esse email... Impossível criar uma nova conta Softinsa."
-                });
-              }
-            }
-          }).catch(err => {
-            console.log('Error: ', err);
-            res.status(500).json({
-              success: false,
-              message: 'Ocorreu um erro na criação da conta... Por favor, tente novamente mais tarde!',
-              error: err instanceof Error ? err.message : String(err)
-            });
-          })
+          await newUser.save();
+
+          res.status(201).json({
+            success: true,
+            message: 'Utilizador Google registado com sucesso!',
+            data: newUser
+          });
+        } else {
+          res.status(401).json({
+            success: false,
+            message: "Já existe uma conta não Google com esse email... Impossível criar uma nova conta Softinsa."
+          });
+        }
       }
-    }).catch(err => {
-      console.log('Error: ', err);
-      res.status(500).json({
-        success: false,
-        message: 'Ocorreu um erro na criação da conta... Por favor, tente novamente mais tarde!',
-        error: err instanceof Error ? err.message : String(err)
-      });
-    })
+    }
+  } catch (err) {
+    console.log('Error:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Ocorreu um erro na criação da conta... Por favor, tente novamente mais tarde!',
+      error: err instanceof Error ? err.message : String(err)
+    });
+  }
 };
+
 
 controllers.signup = async (req, res) => {
   try {
