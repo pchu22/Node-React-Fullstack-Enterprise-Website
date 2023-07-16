@@ -22,7 +22,7 @@ router.get('/google/redirect',
   (req, res) => {
     const user = req.user;
     const token = generateToken(user);
-    res.redirect(`https://projeto-softinsa.onrender.com?token=${token}`);
+    res.redirect('https://projeto-softinsa.onrender.com/homepage');
   }
 );
 
