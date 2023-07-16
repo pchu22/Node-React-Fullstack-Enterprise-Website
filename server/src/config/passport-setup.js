@@ -63,4 +63,3 @@ passport.use(new GoogleStrategy(
         })
     }
 ));
-

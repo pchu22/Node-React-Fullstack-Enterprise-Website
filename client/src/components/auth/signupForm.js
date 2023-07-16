@@ -114,7 +114,7 @@ const SignupForm = () => {
             <form onSubmit={handleSubmit}>
               <div className="textarea-container-nome">
                 <div className="name-input">
-                  <label htmlFor="primeiroNome" className="larger-label">Primeiro Nome</label>
+                  <label htmlFor="primeiroNome" className="larger-label">Nome</label>
                   <input
                     id="primeiroNome"
                     type="text"
@@ -126,7 +126,7 @@ const SignupForm = () => {
                   />
                 </div>
                 <div className="name-input">
-                  <label htmlFor="ultimoNome" className="larger-label">Último Nome</label>
+                  <label htmlFor="ultimoNome" className="larger-label">Apelido</label>
                   <input
                     id="ultimoNome"
                     type="text"

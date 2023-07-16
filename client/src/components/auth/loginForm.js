@@ -171,12 +171,12 @@ const LoginForm = () => {
               </div>
               <div className="btn-wrapper">
                 <div className="btn-group">
-                  <button type="submit" className="btn btn-outline-success">
+                  <button type="submit" className="btn btn-outline-success" style={{marginBottom: "10px"}}>
                     <span className="bi bi-check-lg"> Login</span>
                   </button>
                 </div>
                 <div className="btn-group">
-                  <button type="submit" className="btn btn-outline-warning">
+                  <button type="submit" className="btn btn-outline-warning" style={{marginBottom: "10px"}}>
                     <span className="bi bi-google"> Login com o Google</span>
                   </button>
                 </div>
