@@ -6,9 +6,9 @@ import '../../custom.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import "bootstrap-icons/font/bootstrap-icons.css";
+import axios from "axios";
 import Swal from "sweetalert2";
 import logo from '../../assets/logo.png';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import './auth.css';
 
 const baseURL = "https://softinsa-web-app-carreiras01.onrender.com";
@@ -113,30 +113,52 @@ const LoginForm = () => {
 
   const googleLogin = (event) => {
     event.preventDefault();
-    const authUrl = `${baseURL}/auth/google/redirect?prompt=select_account`;
+    const authUrl = `${baseURL}/auth/google/redirect`;
 
+    // Open Google Sign-In window
     const authWindow = window.open(authUrl, "_blank", "width=500,height=600");
-
-    let messageContent;
 
     window.addEventListener("message", (event) => {
       event.preventDefault();
 
       if (event.data && event.data.accessToken) {
-        messageContent = event.data;
+        const { accessToken, user } = event.data;
 
-        localStorage.setItem("token", messageContent.accessToken);
-        localStorage.setItem("user", messageContent.user);
-        localStorage.setItem("userId", messageContent.userId);
+        // Extract relevant profile information from the user object
+        const { googleId, email, givenName, familyName } = user;
+
+        // Populate the data object with profile values
+        const data = {
+          prompt: 'select_account',
+          googleId,
+          email,
+          primeiroNome: givenName,
+          ultimoNome: familyName
+        };
+
+        localStorage.setItem("token", accessToken);
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("userId", user.userId);
 
         setTimeout(() => {
           navigate("/homepage");
         }, 1000);
 
         authWindow.close();
+
+        axios.post(authUrl, data)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Error occurred during Google login');
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
       }
     });
   };
+
 
   return (
     <div className="wrapper">
