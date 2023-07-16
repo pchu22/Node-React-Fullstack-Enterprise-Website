@@ -63,7 +63,7 @@ controllers.create = async (req, res) => {
             tipo,
             dataInicio,
             dataFim,
-            estadoId,
+            estadoId: 12,
             userId,
             participantes
         });

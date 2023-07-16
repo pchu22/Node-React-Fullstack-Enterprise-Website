@@ -5,6 +5,7 @@ const keys = require('./src/config/secret')
 const cookieSession = require('cookie-session')
 const passport = require('passport')
 const passportSetup = require('./src/config/passport-setup');
+
 //Configurações
 app.set('port', process.env.PORT || 8080);
 
@@ -38,6 +39,7 @@ const parceriaRoute = require('./src/routes/parceriaRoute');
 const tipoProjetoRoute = require('./src/routes/tipo-projetoRoute');
 const projetoRoute = require('./src/routes/projetoRoute');
 const estadoRoute = require('./src/routes/estadoRoute');
+const eventoRoute = require('./src/routes/eventoRoute');
 
 app.use('/user', userRoute);
 app.use('/auth', authRoute);
@@ -54,7 +56,8 @@ app.use('/investimento', investimentoRoute);
 app.use('/parceria', parceriaRoute)
 app.use('/tipo-projeto', tipoProjetoRoute)
 app.use('/projeto', projetoRoute)
-//app.use('/estado', estadoRoute);
+app.use('/estado', estadoRoute);
+app.use('/evento', eventoRoute);
 
 app.use('/',(req,res)=>{
     res.send("Hello World!");
