@@ -126,6 +126,8 @@ const LoginForm = () => {
         messageContent = event.data;
 
         localStorage.setItem("token", messageContent.accessToken);
+        localStorage.setItem("user", messageContent.user);
+        localStorage.setItem("userId", messageContent.userId);
 
         setTimeout(() => {
           navigate("/homepage");

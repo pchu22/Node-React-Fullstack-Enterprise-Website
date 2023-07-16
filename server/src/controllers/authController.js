@@ -157,6 +157,8 @@ controllers.googleLogin = async (req, res, next) => {
         return res.status(200).json({
           success: true,
           accessToken: token,
+          user: existingUser,
+          userId: existingUser.userId,
           message: 'Login c/Google efetuado com sucesso!',
         });
       } else {
