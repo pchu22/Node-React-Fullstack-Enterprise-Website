@@ -54,7 +54,7 @@ app.use('/investimento', investimentoRoute);
 app.use('/parceria', parceriaRoute)
 app.use('/tipo-projeto', tipoProjetoRoute)
 app.use('/projeto', projetoRoute)
-app.use('/estado', estadoRoute);
+//app.use('/estado', estadoRoute);
 
 app.use('/',(req,res)=>{
     res.send("Hello World!");
