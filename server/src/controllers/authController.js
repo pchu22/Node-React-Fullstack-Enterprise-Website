@@ -140,7 +140,7 @@ controllers.login = async (req, res) => {
   }
 };
 
-controllers.googleLegoin = async (req, res, next) => {
+controllers.googleLogin = async (req, res, next) => {
   const { googleId, email, primeiroNome, ultimoNome } = req.body;
 
   User.findOne({ where: { googleId: googleId } })
