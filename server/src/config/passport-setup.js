@@ -2,6 +2,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const keys = require('./secret');
 const User = require('../models/user');
+const { where } = require('sequelize');
 
 function generateRandomPassword(length) {
     var pool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=";
@@ -20,7 +21,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (userId, done) {
-    User.findById(userId).then((user) => {
+    User.findOne({where:{userId:userId}}).then((user) => {
         done(null, user);
     }); 
 });
