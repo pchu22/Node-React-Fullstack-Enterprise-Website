@@ -2,7 +2,6 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const keys = require('./secret');
 const User = require('../models/user');
-const { where } = require('sequelize');
 
 function generateRandomPassword(length) {
     var pool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=";
@@ -36,6 +35,8 @@ passport.use(new GoogleStrategy(
             if(currentUser) {
                 console.log("User is: ", currentUser)
             } else {
+                const randomPassword = generateRandomPassword(12);
+
                 new User({
                     googleId: profile.id,
                     primeiroNome: profile.name.givenName,
