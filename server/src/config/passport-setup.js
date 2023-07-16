@@ -32,6 +32,7 @@ passport.use(new GoogleStrategy(
         scope: ['profile', 'email']
     }, (accessToken, refreshToken, profile, done) => {
         console.log(profile);
+        done(null, profile)
     }
         /*User.findOne({ where: { googleId: profile.id } }).then((currentUser) => {
             if(currentUser) {
