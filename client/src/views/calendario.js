@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import CalendarioComponent from "../components/calendar";
+import CalendarioComponent from "../components/calendario/calendario";
 import Sidebar from '../components/sidebar/sidebar';
 import Navbar from '../components/navbar/navbar';
 

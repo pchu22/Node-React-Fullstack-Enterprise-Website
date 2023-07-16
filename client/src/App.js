@@ -19,6 +19,8 @@ import UpdateFilial from "./views/area-administrativa/filiais/updateFilial";
 import CreateDepartamento from "./views/area-administrativa/departamentos/createDepartamento";
 import UpdateDepartamento from "./views/area-administrativa/departamentos/updateDepartamento";
 
+import Reporting from "./views/reporting";
+
 import Vagas from './views/vagas/listVaga'
 import CreateVaga from "./views/vagas/createVaga";
 import UpdateVaga from "./views/vagas/updateVaga";
@@ -50,7 +52,7 @@ import UpdateParceria from "./views/oportunidades/parcerias/updateParceria"
 import CreateProjeto from "./views/oportunidades/projetos/createProjeto"
 import UpdateProjeto from "./views/oportunidades/projetos/updateProjeto"
 
-import Calendario from "./views/calendar";
+import Calendario from "./views/calendario";
 
 const App = () => {
 
@@ -66,6 +68,8 @@ const App = () => {
           <Route path='/ativacao/:verificationToken' element={<AtivarConta />} />
           <Route path="/forgot-password" element={<RecoverAccount />} />
           <Route path="/recuperacao/:recoverToken" element={<ResetPassword />} />
+
+          <Route path="/reporting" element={<Reporting />} />
 
           <Route path="/homepage" element={<Homepage />} />
 

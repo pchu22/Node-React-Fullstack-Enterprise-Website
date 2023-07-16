@@ -73,7 +73,7 @@ const Sidebar = ({ sidebarOpen, closeSidebar }) => {
             </div>
             <div className='sidebar-link'>
               <span className='bi bi-bar-chart-line-fill' />
-              <a href='/'>Reporting</a>
+              <a href='/reporting'>Reporting</a>
             </div>
             <h2><br/></h2>
             <div className='sidebar-link'>
@@ -98,7 +98,7 @@ const Sidebar = ({ sidebarOpen, closeSidebar }) => {
             </div>
             <div className='sidebar-link'>
               <span className='bi bi-calendar2-week-fill' />
-              <a href='/'>Calendário</a>
+              <a href='/calendario'>Calendário</a>
             </div>
             <div className='sidebar-logout' onClick={logout}>
               <span className='bi bi-door-open-fill' />

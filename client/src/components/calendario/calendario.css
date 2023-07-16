@@ -1,0 +1,18 @@
+.main-calendario {
+    background: url('../../assets/bg-login.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.container-calendario {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    padding: 20px;
+}
+
+.calendario-bg {
+    background: #f3f4f6;
+}
