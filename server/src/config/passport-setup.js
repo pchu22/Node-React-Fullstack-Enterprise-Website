@@ -30,8 +30,10 @@ passport.use(new GoogleStrategy(
         clientID: keys.google.clientId,
         clientSecret: keys.google.clientSecret,
         scope: ['profile', 'email']
-    }, () => {}/*(accessToken, refreshToken, profile, done) => {
-        User.findOne({ where: { googleId: profile.id } }).then((currentUser) => {
+    }, (accessToken, refreshToken, profile, done) => {
+        console.log(profile);
+    }
+        /*User.findOne({ where: { googleId: profile.id } }).then((currentUser) => {
             if(currentUser) {
                 console.log("User is: ", currentUser)
             } else {
