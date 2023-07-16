@@ -143,7 +143,7 @@ controllers.login = async (req, res) => {
 controllers.googleLogin = async (req, res, next) => {
   const { googleId, email } = req.body;
 
-  Usuario.findOne({ where: { googleId: googleId } })
+  User.findOne({ where: { googleId: googleId } })
     .then(existingUser => {
       if (existingUser) {
         // Return the existing user
@@ -157,7 +157,7 @@ controllers.googleLogin = async (req, res, next) => {
         res.status(200).json({ message: "Bearer " + token, success: true });
       } else {
         // Check if there's an existing user with the same email address
-        Usuario.findOne({ where: { email: email } })
+        User.findOne({ where: { email: email } })
           .then(async userWithEmail => {
             if (userWithEmail && userWithEmail.googleId === null) {
               // An account with the same email exists and was not created with Google, don't create a new account
@@ -174,7 +174,7 @@ controllers.googleLogin = async (req, res, next) => {
                 const senhaAleatoria = await generateRandomPassword(12);
 
                 //veriricar se a url da foto é valida
-                const newUser = new Usuario({
+                const newUser = new User({
                   email: email,
                   googleId: googleId,
                   isAtivo: true,
