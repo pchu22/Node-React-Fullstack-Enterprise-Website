@@ -113,7 +113,7 @@ const LoginForm = () => {
 
   const googleLogin = (event) => {
     event.preventDefault();
-    const authUrl = baseURL + '/auth/google/redirect';
+    const authUrl = `${baseURL}/auth/google/redirect?prompt=select_account`;
 
     const authWindow = window.open(authUrl, "_blank", "width=500,height=600");
 
@@ -190,12 +190,21 @@ const LoginForm = () => {
               </div>
               <div className="btn-wrapper">
                 <div className="btn-group">
-                  <button type="submit" className="btn btn-outline-success" style={{ marginBottom: "10px" }}>
+                  <button
+                    type="submit"
+                    className="btn btn-outline-success"
+                    style={{ marginBottom: "10px" }}
+                  >
                     <span className="bi bi-check-lg"> Login</span>
                   </button>
                 </div>
                 <div className="btn-group">
-                  <button type="submit" className="btn btn-outline-warning" style={{ marginBottom: "10px" }}>
+                  <button
+                    type="submit"
+                    className="btn btn-outline-warning"
+                    style={{ marginBottom: "10px" }}
+                    onClick={googleLogin}
+                  >
                     <span className="bi bi-google"> Login com o Google</span>
                   </button>
                 </div>
@@ -203,8 +212,6 @@ const LoginForm = () => {
                   <button
                     type="submit"
                     className="btn btn-outline-primary"
-                    style={{ width: "48%" }}
-                    onClick={googleLogin}
                   >
                     <span className="bi bi-facebook"> Login com o Facebook</span>
                   </button>
