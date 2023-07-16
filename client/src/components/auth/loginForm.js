@@ -111,7 +111,7 @@ const LoginForm = () => {
     return <Link to="/homepage" />;
   }
 
-  const googleLogin = (event) => {
+  /*const googleLogin = (event) => {
     event.preventDefault();
     const authUrl = `${baseURL}/auth/google/redirect`;
   
@@ -153,9 +153,7 @@ const LoginForm = () => {
           console.error('Error:', error);
         });
     });
-  };
-  
-
+  };*/
 
   return (
     <div className="wrapper">
@@ -223,7 +221,7 @@ const LoginForm = () => {
                     <span className="bi bi-check-lg"> Login</span>
                   </button>
                 </div>
-                <div className="btn-group">
+                {/*<div className="btn-group">
                   <button
                     type="submit"
                     className="btn btn-outline-warning"
@@ -240,7 +238,7 @@ const LoginForm = () => {
                   >
                     <span className="bi bi-facebook"> Login com o Facebook</span>
                   </button>
-                </div>
+                </div>*/}
               </div>
               <div className="card-container">
                 <div className="card-footer border-0">
