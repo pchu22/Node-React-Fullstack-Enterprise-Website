@@ -62,8 +62,8 @@ passport.use(new GoogleStrategy(
                                         done(null, newUser, {
                                             message: {
                                                 userId: user.userId,
-                                                primeiroNome: primeiroNome,
-                                                ultimoNome: ultimoNome,
+                                                primeiroNome: user.primeiroNome,
+                                                ultimoNome: user.ultimoNome,
                                                 email: user.email,
                                                 cargoId: user.cargoId,
                                             }
