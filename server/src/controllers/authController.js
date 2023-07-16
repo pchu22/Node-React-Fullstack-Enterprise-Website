@@ -141,66 +141,85 @@ controllers.login = async (req, res) => {
 };
 
 controllers.googleLogin = async (req, res, next) => {
-  try {
-    const { googleId, email, primeiroNome, ultimoNome } = req.body;
-    console.log('googleId:', googleId); // Check the value of googleId
+  const { googleId, email } = req.body;
 
-    const existingUser = await User.findOne({ where: { googleId } });
-    console.log('existingUser:', existingUser); // Check the fetched existingUser
-
-    if (existingUser) {
-      if (existingUser.googleId) {
+  Usuario.findOne({ where: { googleId: googleId } })
+    .then(existingUser => {
+      if (existingUser) {
+        // Return the existing user
+        console.log("Google ID: " + IDGoogle);
+        console.log("Usuário já existe");
         const payload = {
           email: existingUser.email,
           userId: existingUser.userId
-        };
-        const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" });
-
-        console.log('Existing user with googleId:', googleId);
-        return res.status(200).json({
-          success: true,
-          accessToken: token,
-          user: existingUser,
-          userId: existingUser.userId,
-          message: 'Login c/Google efetuado com sucesso!',
-        });
+        }
+        const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" })
+        res.status(200).json({ message: "Bearer " + token, success: true });
       } else {
-        console.log('User exists, but does not have googleId:', googleId);
-        return res.status(401).json({
-          success: false,
-          message: 'Já existe uma conta não Google come este email... Impossível criar uma nova conta Softinsa!'
-        });
+        // Check if there's an existing user with the same email address
+        Usuario.findOne({ where: { email: email } })
+          .then(async userWithEmail => {
+            if (userWithEmail && userWithEmail.googleId === null) {
+              // An account with the same email exists and was not created with Google, don't create a new account
+              console.log("Já existe um usuário com este email");
+              res.status(401).json({ message: 'O email já está registado com uma conta não Google.', success: false });
+            } else {
+              if (!userWithEmail) {
+
+
+                // If the user doesn't exist, create a new user in your database
+                console.log("Criando novo utilizador...");
+
+                // Verify if the photo URL is valid
+                const senhaAleatoria = await generateRandomPassword(12);
+
+                //veriricar se a url da foto é valida
+                const newUser = new Usuario({
+                  email: email,
+                  googleId: googleId,
+                  isAtivo: true,
+                  cargoId: 5,
+                  password: senhaAleatoria,
+                });
+                newUser.save()
+                  .then(user => {
+                    // Return the new user
+                    const payload = {
+                      email: user.email,
+                      userId: user.userId
+                    }
+                    const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" })
+                    res.status(200).json({ message: "Bearer " + token, success: true })
+                  })
+                  .catch(err => {
+                    console.error(err);
+                    res.status(500).json({ message: 'Erro interno do servidor.', success: false });
+                  });
+
+              }
+              else {
+                res.status(401).send(
+                  {
+                    success: false,
+                    message: "O email já está registado: é impossível criar um novo."
+                  }
+                )
+              }
+
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Erro interno do servidor.', success: false });
+          });
       }
-    } else {
-      console.log('Creating new user with googleId:', googleId);
-      const newUser = new User({
-        primeiroNome,
-        ultimoNome,
-        email,
-        password: generateRandomPassword(12),
-        googleId,
-        isAtivo: true,
-        isPrimeiroLogin: false,
-        cargoId: 5
-      });
-
-      await newUser.save();
-
-      return res.status(201).json({
-        success: true,
-        message: 'User registered with Google successfully!',
-        data: newUser
-      });
-    }
-  } catch (err) {
-    console.log('Error:', err);
-    return res.status(500).json({
-      success: false,
-      message: 'Ocorreu um erro na criação da conta... Por favor, tente novamente mais tarde!',
-      error: err instanceof Error ? err.message : String(err)
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: 'Erro interno do servidor.', success: false });
     });
-  }
-};
+}
+
 
 controllers.signup = async (req, res) => {
   try {
