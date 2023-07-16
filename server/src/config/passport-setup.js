@@ -2,7 +2,6 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const keys = require('./secret');
 const User = require('../models/user');
-const crypto = require('crypto');
 
 function generateRandomPassword(length) {
     var pool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=";
@@ -27,12 +26,12 @@ passport.deserializeUser(function (user, done) {
 
 passport.use(new GoogleStrategy(
     {
-        // Options for the Google strategy
         callbackURL: 'http://softinsa-web-app-carreiras01.onrender.com/auth/google/redirect',
         clientID: keys.google.clientId,
         clientSecret: keys.google.clientSecret,
         scope: ['profile', 'email']
-    }, (accessToken, refreshToken, profile, done) => {
+    },
+    (accessToken, refreshToken, profile, done) => {
         console.log(profile);
         User.findOne({ where: { googleId: profile.id } })
             .then(existingUser => {
@@ -54,28 +53,37 @@ passport.use(new GoogleStrategy(
                                     ultimoNome: profile.familyName,
                                     email: profile.emails[0].value,
                                     password: randomPassword,
-                                    googleId: googleId,
                                     isAtivo: true,
                                     isPrimeiroLogin: false,
                                     cargoId: 5
                                 });
-                                newUser.save().then(user => {
-                                    done(null, newUser, {
-                                        message: {
-                                            userId: user.userId,
-                                            primeiroNome: primeiroNome,
-                                            ultimoNome: ultimoNome,
-                                            email: user.email,
-                                            cargoId: user.cargoId,
-                                        }
+                                newUser.save()
+                                    .then(user => {
+                                        done(null, newUser, {
+                                            message: {
+                                                userId: user.userId,
+                                                primeiroNome: primeiroNome,
+                                                ultimoNome: ultimoNome,
+                                                email: user.email,
+                                                cargoId: user.cargoId,
+                                            }
+                                        });
+                                    })
+                                    .catch(err => {
+                                        console.error('Error saving new user:', err);
+                                        done(err);
                                     });
-                                }).catch(err => done(err));
                             }
-                        }).catch(err => done(err));
+                        })
+                        .catch(err => {
+                            console.error('Error finding user with email:', err);
+                            done(err);
+                        });
                 }
-            }).catch(err => done(err));
-    })
-);
-
-
-
+            })
+            .catch(err => {
+                console.error('Error finding existing user:', err);
+                done(err);
+            });
+    }
+));
