@@ -142,7 +142,7 @@ controllers.login = async (req, res) => {
 
 controllers.googleLogin = async (req, res, next) => {
   try {
-    const { googleId, email, primeiroNome, ultimoNome } = req.body;
+    const { googleId, email, primeiroNome, ultimoNome } = req.query;
 
     const existingUser = await User.findOne({ where: { email } });
 
@@ -159,16 +159,16 @@ controllers.googleLogin = async (req, res, next) => {
           accessToken: token,
           user: existingUser,
           userId: existingUser.userId,
-          message: 'Login c/Google efetuado com sucesso!',
+          message: 'Login with Google successful!',
         });
       } else {
         return res.status(401).json({
           success: false,
-          message: 'Já existe uma conta não Google come este email... Impossível criar uma nova conta Softinsa!'
+          message: 'A non-Google account already exists with this email. Unable to create a new Softinsa account.',
         });
       }
     } else {
-      const newUser = new User({
+      const newUser = await User.create({
         primeiroNome,
         ultimoNome,
         email,
@@ -179,23 +179,22 @@ controllers.googleLogin = async (req, res, next) => {
         cargoId: 5
       });
 
-      await newUser.save();
-
       return res.status(201).json({
         success: true,
         message: 'User registered with Google successfully!',
-        data: newUser
+        data: newUser,
       });
     }
   } catch (err) {
     console.log('Error:', err);
     return res.status(500).json({
       success: false,
-      message: 'Ocorreu um erro na criação da conta... Por favor, tente novamente mais tarde!',
-      error: err instanceof Error ? err.message : String(err)
+      message: 'An error occurred during the account creation. Please try again later.',
+      error: err instanceof Error ? err.message : String(err),
     });
   }
 };
+
 
 controllers.signup = async (req, res) => {
   try {
