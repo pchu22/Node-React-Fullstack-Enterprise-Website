@@ -11,9 +11,7 @@ import logo from '../../assets/logo.png';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import './auth.css';
 
-function goBack() {
-  window.history.back();
-}
+const baseURL = "https://softinsa-web-app-carreiras01.onrender.com";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -113,6 +111,27 @@ const LoginForm = () => {
     return <Link to="/homepage" />;
   }
 
+  const googleLogin = (event) => {
+    event.preventDefault();
+    const authUrl = baseURL + '/auth/google/redirect';
+
+    const authWindow = window.open(authUrl, "_blank", "width=500,height=600");
+
+    let messageContent;
+
+    window.addEventListener("message", (event) => {
+      event.preventDefault();
+
+      if (event.data && event.data.accessToken) {
+        messageContent = event.data;
+
+        localStorage.setItem("token", messageContent.accessToken);
+
+        authWindow.close();
+      }
+    });
+  };
+
   return (
     <div className="wrapper">
       <div className="d-flex align-items-center justify-content-center" style={{ height: "100vh" }}>
@@ -171,17 +190,22 @@ const LoginForm = () => {
               </div>
               <div className="btn-wrapper">
                 <div className="btn-group">
-                  <button type="submit" className="btn btn-outline-success" style={{marginBottom: "10px"}}>
+                  <button type="submit" className="btn btn-outline-success" style={{ marginBottom: "10px" }}>
                     <span className="bi bi-check-lg"> Login</span>
                   </button>
                 </div>
                 <div className="btn-group">
-                  <button type="submit" className="btn btn-outline-warning" style={{marginBottom: "10px"}}>
+                  <button type="submit" className="btn btn-outline-warning" style={{ marginBottom: "10px" }}>
                     <span className="bi bi-google"> Login com o Google</span>
                   </button>
                 </div>
                 <div className="btn-group">
-                  <button type="submit" className="btn btn-outline-primary" style={{ width: "48%" }}>
+                  <button
+                    type="submit"
+                    className="btn btn-outline-primary"
+                    style={{ width: "48%" }}
+                    onClick={googleLogin}
+                  >
                     <span className="bi bi-facebook"> Login com o Facebook</span>
                   </button>
                 </div>
