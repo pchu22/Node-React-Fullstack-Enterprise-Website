@@ -127,6 +127,10 @@ const LoginForm = () => {
 
         localStorage.setItem("token", messageContent.accessToken);
 
+        setTimeout(() => {
+          navigate("/homepage");
+        }, 1000);
+
         authWindow.close();
       }
     });

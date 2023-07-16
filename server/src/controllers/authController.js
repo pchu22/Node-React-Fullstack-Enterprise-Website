@@ -143,73 +143,57 @@ controllers.login = async (req, res) => {
 controllers.googleLogin = async (req, res, next) => {
   try {
     const { googleId, email, primeiroNome, ultimoNome } = req.body;
-    console.log('Request body:', req.body);
 
-    const existingUser = await User.findOne({ where: { googleId: googleId } });
+    const existingUser = await User.findOne({ where: { email } });
 
     if (existingUser) {
-      console.log("Google ID:", googleId);
-      console.log("O utilizador já existe");
-      const payload = {
-        email: existingUser.email,
-        userId: existingUser.userId
-      };
-      const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" });
+      if (existingUser.googleId) {
+        const payload = {
+          email: existingUser.email,
+          userId: existingUser.userId
+        };
+        const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" });
 
-      res.status(200).json({
-        success: true,
-        accessToken: token,
-        message: 'Login c/ Google efetuado com sucesso!',
-      });
-    } else {
-      const userWithEmail = await User.findOne({ where: { email } });
-
-      if (userWithEmail && userWithEmail.googleId === null) {
-        console.log("Já existe um utilizador com este email...");
-        res.status(401).json({
-          success: false,
-          message: 'Já existe uma conta não Google com este email.'
+        return res.status(200).json({
+          success: true,
+          accessToken: token,
+          message: 'Login c/Google efetuado com sucesso!',
         });
       } else {
-        if (!userWithEmail) {
-          const randomPassword = generateRandomPassword(12);
-
-          const newUser = new User({
-            primeiroNome,
-            ultimoNome,
-            email,
-            password: randomPassword,
-            googleId,
-            isAtivo: true,
-            isPrimeiroLogin: false,
-            cargoId: 5
-          });
-
-          await newUser.save();
-
-          res.status(201).json({
-            success: true,
-            message: 'Utilizador Google registado com sucesso!',
-            data: newUser
-          });
-        } else {
-          res.status(401).json({
-            success: false,
-            message: "Já existe uma conta não Google com esse email... Impossível criar uma nova conta Softinsa."
-          });
-        }
+        return res.status(401).json({
+          success: false,
+          message: 'Já existe uma conta não Google come este email... Impossível criar uma nova conta Softinsa!'
+        });
       }
+    } else {
+      const newUser = new User({
+        primeiroNome,
+        ultimoNome,
+        email,
+        password: generateRandomPassword(12),
+        googleId,
+        isAtivo: true,
+        isPrimeiroLogin: false,
+        cargoId: 5
+      });
+
+      await newUser.save();
+
+      return res.status(201).json({
+        success: true,
+        message: 'User registered with Google successfully!',
+        data: newUser
+      });
     }
   } catch (err) {
     console.log('Error:', err);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Ocorreu um erro na criação da conta... Por favor, tente novamente mais tarde!',
       error: err instanceof Error ? err.message : String(err)
     });
   }
 };
-
 
 controllers.signup = async (req, res) => {
   try {
