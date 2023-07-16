@@ -1,5 +1,5 @@
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const keys = require('./secret');
 const User = require('../models/user');
 const { where } = require('sequelize');
@@ -17,13 +17,11 @@ function generateRandomPassword(length) {
 }
 
 passport.serializeUser(function (user, done) {
-    done(null, user.userId);
+    done(null, user);
 });
 
-passport.deserializeUser(function (userId, done) {
-    User.findOne({where:{userId:userId}}).then((user) => {
-        done(null, user);
-    }); 
+passport.deserializeUser(function (user, done) {
+    done(null, user);
 });
 
 
