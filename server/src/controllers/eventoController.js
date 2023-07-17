@@ -132,28 +132,28 @@ controllers.update = async (req, res) => {
 };
 
 controllers.delete = async (req, res) => {
-    const { eventoIds } = req.body;
+    const { eventoId } = req.body;
 
     try {
-        const del = await Evento.destroy({ where: { eventoId: eventoIds } });
+        const del = await Evento.destroy({ where: { eventoId: eventoId } });
 
         if (del > 0) {
             res.status(200).json({
                 success: true,
                 deleted: del,
-                message: 'Eventos removidos!'
+                message: 'Evento removido!'
             });
         } else {
             res.status(404).json({
                 success: false,
-                message: 'Nenhum evento encontrado com os IDs fornecidos!',
+                message: 'Nenhum evento encontrado com o ID fornecido!',
             });
         }
     } catch (err) {
         console.error(err);
         res.status(500).json({
             success: false,
-            message: 'Erro ao eliminar os eventos!'
+            message: 'Erro ao eliminar o evento!'
         });
     }
 };

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart } from 'recharts';
 import { TempusDominus, Namespace } from '@eonasdan/tempus-dominus';
 import '@eonasdan/tempus-dominus/dist/css/tempus-dominus.css';
+import '../components/area-administrativa/style.css';
 
 const baseURL = 'https://softinsa-web-app-carreiras01.onrender.com';
 
@@ -12,10 +13,24 @@ export default function MainReporting() {
   const [negocios, setNegocios] = useState([]);
   const [parcerias, setParcerias] = useState([]);
   const [projetos, setProjetos] = useState([]);
+  const [candidaturas, setCandidaturas] = useState([]);
+  const [vagas, setVagas] = useState([]);
   const [users, setUsers] = useState([])
   const [chartData, setChartData] = useState([])
+  const [chartDataVagas, setChartDataVagas] = useState([]);
+  const [chartDataCandidaturaVagasPie, setchartDataCandidaturaVagasPie] = useState([])
+  const [chartDataTiposUser, setchartDataTiposUser] = useState([])
   const [DataInicial, setDataInicial] = useState(null);
   const [DataFinal, setDataFinal] = useState(null);
+  const COLORS = ['#8884d8', '#82ca9d'];
+
+  const cargoNames = {
+    1: 'Administrador',
+    2: 'Gestor',
+    3: 'Colaborador',
+    4: 'Candidato',
+    5: 'Visitante',
+  };
 
   const loggedInUserId = localStorage.getItem('userId');
 
@@ -25,6 +40,8 @@ export default function MainReporting() {
     loadParcerias();
     loadProjetos();
     loadUsers();
+    loadCandidaturas();
+    loadVagas();;
 
   }, []);
 
@@ -33,11 +50,16 @@ export default function MainReporting() {
     const filteredNegocios = filterDataByDateRange(negocios);
     const filteredParcerias = filterDataByDateRange(parcerias);
     const filteredProjetos = filterDataByDateRange(projetos);
+    const filteredCandidaturas = filterDataByDateRange(candidaturas);
+    const filteredVagas = filterDataByDateRange(vagas);
 
     const countInvestimentos = filteredInvestimentos.length;
     const countNegocios = filteredNegocios.length;
     const countParcerias = filteredParcerias.length;
     const countProjetos = filteredProjetos.length;
+    const countCandidaturas = filteredCandidaturas.length;
+    const countVagas = filteredVagas.length
+    const countUser = users.length
 
     const chartData = [
       { nome: 'Investimentos', Numero: countInvestimentos },
@@ -46,7 +68,14 @@ export default function MainReporting() {
       { nome: 'Projetos', Numero: countProjetos },
     ];
 
+    const chartDataCandidaturaVagasPie = [
+      { nome: 'Candidaturas', Numero: countCandidaturas },
+      { nome: 'Vagas', Numero: countVagas },
+    ];
+
+
     setChartData(chartData);
+    setchartDataCandidaturaVagasPie(chartDataCandidaturaVagasPie);
 
     const initializeTempusDominus = () => {
       const linkedPicker1Element = document.getElementById('datetimepicker1');
@@ -118,6 +147,28 @@ export default function MainReporting() {
     }
 
     initializeTempusDominus();
+
+    const chartDataVagas = filteredVagas.map((vaga) => ({
+      nome: vaga.titulo,
+      Numero: candidaturas.filter((candidatura) => candidatura.vagaId === vaga.vagaId).length,
+    }));
+    setChartDataVagas(chartDataVagas);
+
+    const roleCount = {};
+    users.forEach((user) => {
+      if (roleCount[user.cargoId]) {
+        roleCount[user.cargoId]++;
+      } else {
+        roleCount[user.cargoId] = 1;
+      }
+    });
+
+    const chartDataTiposUser = [1, 2, 3, 4, 5].map((cargoId) => ({
+      nome: cargoNames[cargoId],
+      Numero: roleCount[cargoId] || 0,
+    }));
+
+    setchartDataTiposUser(chartDataTiposUser);
   }, [investimentos, negocios, parcerias, projetos]);
 
   const filterDataByDateRange = (data) => {
@@ -144,7 +195,7 @@ export default function MainReporting() {
       .then((res) => {
         if (res.data.success) {
           const data = res.data.data;
-          const filteredInvestimentos = filterDataByDateRange(data); // Filter the data
+          const filteredInvestimentos = filterDataByDateRange(data);
           setInvestimentos(filteredInvestimentos);
         } else {
           Swal.fire('Error Web Service', 'Lista de investimentos indisponível!', 'error');
@@ -241,6 +292,50 @@ export default function MainReporting() {
     setDataFinal(selectedDate);
   };
 
+
+  function loadCandidaturas() {
+    const url = baseURL + '/candidatura/list';
+
+    axios
+      .get(url)
+      .then((res) => {
+        if (res.data.success) {
+          const data = res.data.data;
+          const filteredCandidaturas = filterDataByDateRange(data);
+          setCandidaturas(filteredCandidaturas);
+        } else {
+          Swal.fire('Error Web Service', 'Lista de candidaturas indisponível!', 'error');
+        }
+      })
+      .catch((err) => {
+        alert('Error: ' + err.message);
+      });
+
+
+  }
+
+  function loadVagas() {
+    const url = baseURL + '/vaga/list';
+
+    axios
+      .get(url)
+      .then((res) => {
+        if (res.data.success) {
+          const data = res.data.data;
+          const filteredVagas = filterDataByDateRange(data);
+          setVagas(filteredVagas);
+
+        } else {
+          Swal.fire('Error Web Service', 'Lista de vagas indisponível!', 'error');
+        }
+      })
+      .catch((err) => {
+        alert('Error: ' + err.message);
+      });
+
+
+  }
+
   return (
     <main className="main-adm">
       <div className="container container-adm">
@@ -318,26 +413,89 @@ export default function MainReporting() {
               </ul>
             </div>
             <div className="card" style={{ width: '100%', height: '80%' }}>
-              <ResponsiveContainer width="100%" height="90%">
-                <BarChart
-                  width={500}
-                  height={300}
-                  data={chartData}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
+
+              <p>Número total de Oportunidades</p>
+              <BarChart
+                width={500}
+                height={300}
+                data={chartData}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="nome" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="Numero" fill="#8884d8" />
+              </BarChart>
+
+              <p>Relação número de Candidaturas/Vagas</p>
+
+              <PieChart width={500} height={300}>
+                <Pie
+                  data={chartDataCandidaturaVagasPie}
+                  dataKey="Numero"
+                  nameKey="nome"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  fill="#8884d8"
+                  label
+
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="nome" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="Numero" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
+                  {chartDataCandidaturaVagasPie.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+
+                </Pie>
+                <Tooltip />
+              </PieChart>
+
+              <p>Número de candidaturas por Vagas</p>
+
+              <BarChart
+                width={500}
+                height={300}
+                data={chartDataVagas}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="nome" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="Numero" fill="#8884d8" />
+              </BarChart>
+
+              <p>Número total de users por Cargo</p>
+              <BarChart
+                width={650}
+                height={300}
+                data={chartDataTiposUser}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="nome" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="Numero" fill="#8884d8" />
+              </BarChart>
             </div>
 
           </div>
