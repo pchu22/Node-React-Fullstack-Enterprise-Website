@@ -1,0 +1,22 @@
+.main-areas {
+    background: url('../../assets/bg-login.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.container-areas {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.areas-data {
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.th-areas:not(:first-child) {
+    text-align: center;
+}

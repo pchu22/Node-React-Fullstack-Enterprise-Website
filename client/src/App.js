@@ -19,6 +19,14 @@ import UpdateFilial from "./views/area-administrativa/filiais/updateFilial";
 import CreateDepartamento from "./views/area-administrativa/departamentos/createDepartamento";
 import UpdateDepartamento from "./views/area-administrativa/departamentos/updateDepartamento";
 
+import TipoProjeto from './views/tipos-projeto/listTipoProjeto';
+import CreateTipoProjeto from './views/tipos-projeto/createTipoProjeto';
+import UpdateTipoProjeto from './views/tipos-projeto/updateTipoProjeto';
+
+import AreaNegocio from './views/areas-negocio/listAreaNegocio';
+import CreateAreaNegocio from './views/areas-negocio/createAreaNegocio';
+import UpdateAreaNegocio from './views/areas-negocio/updateAreaNegocio';
+
 import Reporting from "./views/reporting";
 
 import Vagas from './views/vagas/listVaga'
@@ -82,6 +90,14 @@ const App = () => {
           <Route path='/filial/update/:filialId' element={<UpdateFilial />} />
           <Route path='/departamento/create' element={<CreateDepartamento />} />
           <Route path='/departamento/update/:departamentoId' element={<UpdateDepartamento />} />
+
+          <Route path='/tipo-projeto' element={<TipoProjeto />} />
+          <Route path='/tipo-projeto/create' element={<CreateTipoProjeto />} />
+          <Route path='/tipo-projeto/update/:tipoProjetoId' element={<UpdateTipoProjeto />} />
+
+          <Route path='/area-negocio' element={<AreaNegocio />} />
+          <Route path='/area-negocio/create' element={<CreateAreaNegocio />} />
+          <Route path='/area-negocio/update/:areaNegocioId' element={<UpdateAreaNegocio />} />
 
           <Route path='/vaga' element={<Vagas />} />
           <Route path='/vaga/create' element={<CreateVaga />} />

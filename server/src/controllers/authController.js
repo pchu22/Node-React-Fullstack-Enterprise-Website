@@ -220,6 +220,29 @@ controllers.googleLogin = async (req, res, next) => {
     });
 }
 
+controllers.googleRedirect = (req, res) => {
+  const user = req.user.message;
+  if (!user) {
+
+    return res.redirect('/auth/google');
+  }
+  console.log("User: " + JSON.stringify(user))
+  const payload =
+  {
+    email: user.email,
+    userId: user.userId
+  }
+  const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" })
+
+  console.log(token);
+
+
+  res.send(`<script>
+              window.opener.postMessage({accessToken: '${token}'}, '${website}');window.close();
+            </script>`
+          );
+
+};
 
 controllers.signup = async (req, res) => {
   try {

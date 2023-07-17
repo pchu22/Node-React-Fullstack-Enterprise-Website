@@ -1,0 +1,22 @@
+.main-tipos {
+    background: url('../../assets/bg-login.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.container-tipos {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.tipos-data {
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.th-tipos:not(:first-child) {
+    text-align: center;
+}

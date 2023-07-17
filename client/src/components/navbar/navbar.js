@@ -31,7 +31,7 @@ const Navbar = ({ sidebarOpen, openSidebar }) => {
                 <a href="/ideia" className={currentPage === 'ideia' ? 'active-link' : ''}>Ideias</a>
                 <a href="/beneficio" className={currentPage === 'beneficio' ? 'active-link' : ''}>Benefícios</a>
             </div>
-            <div className="navbar-right">
+            {/*<div className="navbar-right">
                 <a href="/">
                     <span className="bi bi-bell-fill" />
                 </a>
@@ -41,7 +41,7 @@ const Navbar = ({ sidebarOpen, openSidebar }) => {
                 <a href="/">
                     <img width="30" src="" alt="Avatar"></img>
                 </a>
-            </div>
+            </div*/}
         </nav>
     )
 }

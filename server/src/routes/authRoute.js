@@ -17,10 +17,6 @@ router.post('/ativacao/:verificationToken', AuthController.verificarEmail);
 router.post('/forgot-password', AuthController.forgotPassword);
 router.post('/reset-password/:recoverToken', AuthController.mudarPassword);
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/redirect', passport.authenticate('google', { prompt: 'select_account', session: false }),
-    (req, res) => {
-        res.redirect('/homepage');
-    }
-);
+router.get('/google/redirect', passport.authenticate('google', { prompt: 'select_account', session: false }), AuthController.googleRedirect);
 
 module.exports = router;

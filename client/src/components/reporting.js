@@ -423,7 +423,7 @@ export default function MainReporting() {
               <div className="col-md-12 mt-5">
                 <div className="card card-table" style={{ width: '100%' }}>
                   <div className="card-header">
-                    <h5 className="text-center">Total de Oportunidades</h5>
+                    <h5 className="text-center">Relação Oportunidades/Tipo de Oportunidade</h5>
                   </div>
                   <div className="card-body">
                     <BarChart
@@ -452,26 +452,28 @@ export default function MainReporting() {
               <div className="col-md-12 mt-5">
                 <div className="card card-table" style={{ width: '100%' }}>
                   <div className="card-header">
-                    <h5 className="text-center">Número de Candidaturas</h5>
+                    <h5 className="text-center">Número de Candidaturas/Número de Vagas</h5>
                   </div>
                   <div className="card-body">
-                    <PieChart width={500} height={300}>
-                      <Pie
-                        data={chartDataCandidaturaVagasPie}
-                        dataKey="Numero"
-                        nameKey="nome"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={80}
-                        fill="#8884d8"
-                        label
-                      >
-                        {chartDataCandidaturaVagasPie.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
+                    <ResponsiveContainer width="100%" height={400}>
+                      <PieChart>
+                        <Pie
+                          data={chartDataCandidaturaVagasPie}
+                          dataKey="Numero"
+                          nameKey="nome"
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={80}
+                          fill="#8884d8"
+                          label
+                        >
+                          {chartDataCandidaturaVagasPie.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
                   </div>
                 </div>
               </div>
@@ -509,40 +511,11 @@ export default function MainReporting() {
               <div className="col-md-12 mt-5">
                 <div className="card card-table" style={{ width: '100%' }}>
                   <div className="card-header">
-                    <h5 className="text-center">Número de Utilizadores por Cargo</h5>
-                  </div>
-                  <div className="card-body">
-                    <BarChart
-                      width={500}
-                      height={300}
-                      data={chartDataTiposUser}
-                      margin={{
-                        top: 5,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="nome" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="Numero" fill="#8884d8" />
-                    </BarChart>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-12 mt-5">
-                <div className="card card-table" style={{ width: '100%' }}>
-                  <div className="card-header">
-                    <h5 className="text-center">Relatório de Tipos de Utilizador</h5>
+                    <h5 className="text-center">Relação Utilizadores/Cargo</h5>
                   </div>
                   <div className="card-body">
                     <ResponsiveContainer width="100%" height={400}>
-                      <PieChart width={500} height={400}>
+                      <PieChart>
                         <Pie
                           data={chartDataTiposUser}
                           dataKey="Numero"
@@ -568,6 +541,6 @@ export default function MainReporting() {
           </div>
         </div>
       </div>
-    </main>
+    </main >
   );
 }

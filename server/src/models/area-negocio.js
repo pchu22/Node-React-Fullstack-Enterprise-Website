@@ -9,7 +9,8 @@ var AreaNegocio = sequelize.define('areas-negocio', {
     },
     areaNegocioNome: {
         type: DataType.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
 },
 {timestamps: false});

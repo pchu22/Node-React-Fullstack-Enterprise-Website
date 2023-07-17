@@ -65,11 +65,11 @@ const Sidebar = ({ sidebarOpen, closeSidebar }) => {
             </div>
             <div className='sidebar-link'>
               <span className='bi bi-folder2-open' />
-              <a href='/'>Adicionar Tipo de Projeto</a>
+              <a href='/tipo-projeto'>Adicionar Tipo de Projeto</a>
             </div>
             <div className='sidebar-link'>
               <span className='bi bi-building-fill-add' />
-              <a href='/'>Adicionar Área de Negócio</a>
+              <a href='/area-negocio'>Adicionar Área de Negócio</a>
             </div>
             <div className='sidebar-link'>
               <span className='bi bi-bar-chart-line-fill' />
@@ -139,7 +139,7 @@ const Sidebar = ({ sidebarOpen, closeSidebar }) => {
             </div>
             <div className='sidebar-link'>
               <span className='bi bi-calendar2-week-fill' />
-              <a href='/'>Calendário</a>
+              <a href='/calendario'>Calendário</a>
             </div>
             <div className='sidebar-logout' onClick={logout}>
               <span className='bi bi-door-open-fill' />
