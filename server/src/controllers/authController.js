@@ -235,17 +235,16 @@ controllers.googleRedirect = (req, res) => {
   }
   const token = jwt.sign(payload, config.jwtSecretGoogle, { expiresIn: "1d" })
 
-  console.log(token);
+  const message = {
+    accessToken: token,
+    user: user,
+    userId: user.userId
+  };
 
-
-  res.send(`
-            <script>
-              window.opener.postMessage({
-                accessToken: '${token}'}, 
-                '${website}');
-                window.close();
-            </script>
-          `);
+  res.send(`<script>
+              window.opener.postMessage(${JSON.stringify(message)}, '${website}');
+              window.close();
+            </script>`);
 };
 
 controllers.signup = async (req, res) => {

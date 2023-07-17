@@ -110,51 +110,42 @@ const LoginForm = () => {
   if (loggedIn) {
     return <Link to="/homepage" />;
   }
+
   const googleLogin = (event) => {
     event.preventDefault();
 
-    // Replace "baseURL" with the actual base URL for your application
     const authUrl = `${baseURL}/auth/google/redirect`;
-
-    // Open the authentication URL in a new window
     const authWindow = window.open(authUrl, "_blank", "width=500,height=600");
 
-    let messageContent;
-
-    // Listen for messages from the opened window
     const messageListener = (event) => {
       event.preventDefault();
 
       console.log("Received message from authentication window:", event.data);
 
-      // Check if the received message contains an accessToken
-      if (event.data && event.data.accessToken) {
-        messageContent = event.data;
+      if (event.data && event.data.accessToken && event.data.user && event.data.userId) {
+        const { accessToken, user, userId } = event.data;
 
-        // Store the accessToken in localStorage
-        localStorage.setItem("token", messageContent.accessToken);
+        localStorage.setItem("token", accessToken);
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("userId", userId);
 
-        console.log("Access token:", messageContent.accessToken);
-
-        // Redirect to the homepage after 1 second
-        setTimeout(() => {
-          console.log("Redirecting to homepage...");
-          window.location.href = "/homepage";
-        }, 1000);
-
-        // Close the authentication window
-        console.log("Closing authentication window...");
-        authWindow.close();
-
-        // Remove the event listener
-        window.removeEventListener("message", messageListener);
+        console.log("Access token:", accessToken);
+        console.log("User:", user);
+        console.log("User ID:", userId);
       }
     };
 
-    // Attach the message listener
     window.addEventListener("message", messageListener);
-  };
 
+    const checkWindowClosed = setInterval(() => {
+      if (authWindow.closed) {
+        clearInterval(checkWindowClosed);
+
+        console.log("Authentication window closed. Redirecting to homepage...");
+        window.location.href = "/homepage";
+      }
+    }, 1000);
+  };
 
 
   return (
