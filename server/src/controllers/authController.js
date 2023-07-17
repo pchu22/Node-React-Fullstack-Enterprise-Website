@@ -221,6 +221,7 @@ controllers.googleLogin = async (req, res, next) => {
 }
 
 controllers.googleRedirect = (req, res) => {
+  const website = "https://softinsa-web-app-carreiras01.onrender.com";
   const user = req.user.message;
   if (!user) {
 
@@ -237,11 +238,14 @@ controllers.googleRedirect = (req, res) => {
   console.log(token);
 
 
-  res.send(`<script>
-              window.opener.postMessage({accessToken: '${token}'}, '${website}');window.close();
-            </script>`
-          );
-
+  res.send(`
+              <script>
+                window.opener.postMessage({
+                  accessToken: '${token}'}, 
+                  '${website}');
+                  window.close();
+              </script>
+            `);
 };
 
 controllers.signup = async (req, res) => {

@@ -110,50 +110,52 @@ const LoginForm = () => {
   if (loggedIn) {
     return <Link to="/homepage" />;
   }
-
-  /*const googleLogin = (event) => {
+  const googleLogin = (event) => {
     event.preventDefault();
+
+    // Replace "baseURL" with the actual base URL for your application
     const authUrl = `${baseURL}/auth/google/redirect`;
-  
-    // Open Google Sign-In window
+
+    // Open the authentication URL in a new window
     const authWindow = window.open(authUrl, "_blank", "width=500,height=600");
-  
-    // Define the data object with necessary properties
-    const data = {
-      prompt: 'select_account',
-      googleId: '',
-      email: '',
-      primeiroNome: '',
-      ultimoNome: ''
-    };
-  
-    window.addEventListener("message", (event) => {
+
+    let messageContent;
+
+    // Listen for messages from the opened window
+    const messageListener = (event) => {
       event.preventDefault();
-  
-      data.googleId = event.data.googleId;
-      data.email = event.data.email;
-      data.primeiroNome = event.data.primeiroNome;
-      data.ultimoNome = event.data.ultimoNome;
-  
-      axios.post(authUrl, data)
-        .then((response) => {
-          const responseData = response.data;
-  
-          const { accessToken, user, userId, message } = responseData;
-  
-          localStorage.setItem("token", accessToken);
-          localStorage.setItem("user", JSON.stringify(user));
-          localStorage.setItem("userId", userId);
-  
-          setTimeout(() => {
-            navigate("/homepage");
-          }, 1000);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    });
-  };*/
+
+      console.log("Received message from authentication window:", event.data);
+
+      // Check if the received message contains an accessToken
+      if (event.data && event.data.accessToken) {
+        messageContent = event.data;
+
+        // Store the accessToken in localStorage
+        localStorage.setItem("token", messageContent.accessToken);
+
+        console.log("Access token:", messageContent.accessToken);
+
+        // Redirect to the homepage after 1 second
+        setTimeout(() => {
+          console.log("Redirecting to homepage...");
+          window.location.href = "/homepage";
+        }, 1000);
+
+        // Close the authentication window
+        console.log("Closing authentication window...");
+        authWindow.close();
+
+        // Remove the event listener
+        window.removeEventListener("message", messageListener);
+      }
+    };
+
+    // Attach the message listener
+    window.addEventListener("message", messageListener);
+  };
+
+
 
   return (
     <div className="wrapper">
@@ -221,7 +223,7 @@ const LoginForm = () => {
                     <span className="bi bi-check-lg"> Login</span>
                   </button>
                 </div>
-                {/*<div className="btn-group">
+                <div className="btn-group">
                   <button
                     type="submit"
                     className="btn btn-outline-warning"
@@ -231,7 +233,7 @@ const LoginForm = () => {
                     <span className="bi bi-google"> Login com o Google</span>
                   </button>
                 </div>
-                <div className="btn-group">
+                {/*<div className="btn-group">
                   <button
                     type="submit"
                     className="btn btn-outline-primary"
