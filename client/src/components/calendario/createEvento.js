@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import logo from '../../assets/logo.png'
-import Datetime from 'react-datetime';
 import './calendario.css'
 
 const baseURL = "https://softinsa-web-app-carreiras01.onrender.com";
