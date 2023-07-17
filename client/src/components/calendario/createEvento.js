@@ -100,7 +100,7 @@ export default function CreateEvento() {
                             <div className="textarea-container">
                                 <label htmlFor="inputDate" style={{ marginRight: '10px' }}>Início</label>
                                 <input
-                                    type="date"
+                                    type="datetime-local"
                                     className="form-control"
                                     id="inputDate"
                                     value={inicio}
@@ -110,7 +110,7 @@ export default function CreateEvento() {
                             <div className="textarea-container">
                                 <label htmlFor="inputDate" style={{ marginRight: '10px' }}>Fim</label>
                                 <input
-                                    type="date"
+                                    type="datetime-local"
                                     className="form-control"
                                     id="inputDate"
                                     value={fim}

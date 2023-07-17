@@ -1,4 +1,5 @@
-.main-adm {
+.main-adm,
+.main-reporting {
     background: url('../../assets/bg-login.png');
     background-size: cover;
     background-position: center;
@@ -8,6 +9,14 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .card-table {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
 }
 
 h1 {
@@ -30,7 +39,7 @@ h1 {
     white-space: nowrap;
 }
 
-.th-adm:not(:first-child){
+.th-adm:not(:first-child) {
     text-align: center;
 }
 

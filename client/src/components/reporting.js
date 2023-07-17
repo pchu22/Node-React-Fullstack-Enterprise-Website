@@ -15,14 +15,14 @@ export default function MainReporting() {
   const [projetos, setProjetos] = useState([]);
   const [candidaturas, setCandidaturas] = useState([]);
   const [vagas, setVagas] = useState([]);
-  const [users, setUsers] = useState([])
-  const [chartData, setChartData] = useState([])
+  const [users, setUsers] = useState([]);
+  const [chartData, setChartData] = useState([]);
   const [chartDataVagas, setChartDataVagas] = useState([]);
-  const [chartDataCandidaturaVagasPie, setchartDataCandidaturaVagasPie] = useState([])
-  const [chartDataTiposUser, setchartDataTiposUser] = useState([])
+  const [chartDataCandidaturaVagasPie, setchartDataCandidaturaVagasPie] = useState([]);
+  const [chartDataTiposUser, setchartDataTiposUser] = useState([]);
   const [DataInicial, setDataInicial] = useState(null);
   const [DataFinal, setDataFinal] = useState(null);
-  const COLORS = ['#8884d8', '#82ca9d'];
+  const COLORS = ['#8884d8', '#82ca9d', '#ffbb28', '#ff8042', '#0088FE'];
 
   const cargoNames = {
     1: 'Administrador',
@@ -32,6 +32,13 @@ export default function MainReporting() {
     5: 'Visitante',
   };
 
+  const cargoColors = {
+    1: '#8884d8', // Administrador
+    2: '#82ca9d', // Gestor
+    3: '#ffbb28', // Colaborador
+    4: '#ff8042', // Candidato
+    5: '#0088FE', // Visitante
+  };
   const loggedInUserId = localStorage.getItem('userId');
 
   useEffect(() => {
@@ -41,8 +48,7 @@ export default function MainReporting() {
     loadProjetos();
     loadUsers();
     loadCandidaturas();
-    loadVagas();;
-
+    loadVagas();
   }, []);
 
   useEffect(() => {
@@ -58,8 +64,8 @@ export default function MainReporting() {
     const countParcerias = filteredParcerias.length;
     const countProjetos = filteredProjetos.length;
     const countCandidaturas = filteredCandidaturas.length;
-    const countVagas = filteredVagas.length
-    const countUser = users.length
+    const countVagas = filteredVagas.length;
+    const countUser = users.length;
 
     const chartData = [
       { nome: 'Investimentos', Numero: countInvestimentos },
@@ -73,14 +79,12 @@ export default function MainReporting() {
       { nome: 'Vagas', Numero: countVagas },
     ];
 
-
     setChartData(chartData);
     setchartDataCandidaturaVagasPie(chartDataCandidaturaVagasPie);
 
     const initializeTempusDominus = () => {
       const linkedPicker1Element = document.getElementById('datetimepicker1');
       const linked1 = new TempusDominus(linkedPicker1Element, {
-
         display: {
           theme: 'light',
           placement: 'bottom',
@@ -94,14 +98,13 @@ export default function MainReporting() {
             next: 'bi bi-chevron-right',
             today: 'bi bi-calendar-check',
             clear: 'bi bi-trash',
-            close: 'bi bi-xmark'
+            close: 'bi bi-xmark',
           },
         },
         localization: {
           hourCycle: 'h23',
-          format: 'LLLL'
-        }
-
+          format: 'LLLL',
+        },
       });
       const linked2 = new TempusDominus(document.getElementById('datetimepicker2'), {
         useCurrent: false,
@@ -118,16 +121,15 @@ export default function MainReporting() {
             next: 'bi bi-chevron-right',
             today: 'bi bi-calendar-check',
             clear: 'bi bi-trash',
-            close: 'bi bi-xmark'
+            close: 'bi bi-xmark',
           },
         },
         localization: {
           hourCycle: 'h23',
-          format: 'LLLL'
-        }
+          format: 'LLLL',
+        },
       });
 
-      //using event listeners
       linkedPicker1Element.addEventListener(Namespace.events.change, (e) => {
         linked2.updateOptions({
           restrictions: {
@@ -136,7 +138,6 @@ export default function MainReporting() {
         });
       });
 
-      //using subscribe method
       const subscription = linked2.subscribe(Namespace.events.change, (e) => {
         linked1.updateOptions({
           restrictions: {
@@ -144,7 +145,7 @@ export default function MainReporting() {
           },
         });
       });
-    }
+    };
 
     initializeTempusDominus();
 
@@ -168,6 +169,8 @@ export default function MainReporting() {
       Numero: roleCount[cargoId] || 0,
     }));
 
+    const COLORS = chartDataTiposUser.map((entry) => cargoColors[entry.cargoId]);
+
     setchartDataTiposUser(chartDataTiposUser);
   }, [investimentos, negocios, parcerias, projetos]);
 
@@ -184,8 +187,6 @@ export default function MainReporting() {
       return data;
     }
   };
-
-
 
   function loadInvestimentos() {
     const url = baseURL + '/investimento/list';
@@ -204,8 +205,6 @@ export default function MainReporting() {
       .catch((err) => {
         alert('Error: ' + err.message);
       });
-
-
   }
 
   function loadNegocios() {
@@ -280,18 +279,15 @@ export default function MainReporting() {
       });
   }
 
-  const handleDataInicialChange = (event) => {
-    const selectedDate = event.target.value;
+  const handleDataInicialChange = (selectedDate) => {
     console.log('Selected Data Inicial:', selectedDate);
     setDataInicial(selectedDate);
   };
 
-  const handleDataFinalChange = (event) => {
-    const selectedDate = event.target.value;
+  const handleDataFinalChange = (selectedDate) => {
     console.log('Selected Data Final:', selectedDate);
     setDataFinal(selectedDate);
   };
-
 
   function loadCandidaturas() {
     const url = baseURL + '/candidatura/list';
@@ -310,8 +306,6 @@ export default function MainReporting() {
       .catch((err) => {
         alert('Error: ' + err.message);
       });
-
-
   }
 
   function loadVagas() {
@@ -324,7 +318,6 @@ export default function MainReporting() {
           const data = res.data.data;
           const filteredVagas = filterDataByDateRange(data);
           setVagas(filteredVagas);
-
         } else {
           Swal.fire('Error Web Service', 'Lista de vagas indisponível!', 'error');
         }
@@ -332,175 +325,249 @@ export default function MainReporting() {
       .catch((err) => {
         alert('Error: ' + err.message);
       });
-
-
   }
 
+  const loadData = () => {
+    loadInvestimentos();
+    loadNegocios();
+    loadParcerias();
+    loadProjetos();
+    loadUsers();
+    loadCandidaturas();
+    loadVagas();
+  };
+
   return (
-    <main className="main-adm">
-      <div className="container container-adm">
-        <h1 className="mt-5 mb-5"><br /></h1>
+    <main className="main-reporting">
+      <div className="container container-reporting">
         <div className="row">
           <div className="col-md-12">
-            <div class='row py-3'>
-              <div class="col-md-6 form-group pt-2 px-4">
-                <label for="datetimepicker1Input" class="form-label d-flex align-items-center justify-content-center pb-1"
-                >Data Inicial</label
-                >
-                <div
-                  class="input-group"
-                  id="datetimepicker1"
-                  data-td-target-input="nearest"
-                  data-td-target-toggle="nearest"
-                >
-                  <input
-                    id="datetimepicker1Input"
-                    type="text"
-                    class="form-control shadow-none"
-                    data-td-target="#datetimepicker1"
-                    placeholder='Escolha uma data inicial'
-                    value={DataInicial}
-                    onChange={handleDataInicialChange}
-
-                  />
-                  <span
-                    class="input-group-text"
-                    data-td-target="#datetimepicker1"
-                    data-td-toggle="datetimepicker"
-
-                  >
-                    <span class="bi bi-calendar"></span>
-                  </span>
+            <div className="row">
+              <div className="col-md-12 mt-5">
+                <div className="card card-table" style={{ width: '100%' }}>
+                  <div className="card-header">
+                    <h5 className="text-center">
+                      <br />
+                      Selecione o Período
+                    </h5>
+                  </div>
+                  <div className="card-body">
+                    <form>
+                      <div className="form-group row">
+                        <label htmlFor="datetimepicker1" className="col-sm-3 col-form-label">
+                          Data Inicial
+                        </label>
+                        <div
+                          className="input-group"
+                          id="datetimepicker1"
+                          data-td-target-input="nearest"
+                          data-td-target-toggle="nearest"
+                        >
+                          <input
+                            id="datetimepicker1Input"
+                            type="text"
+                            className="form-control shadow-none"
+                            data-td-target="#datetimepicker1"
+                            placeholder="Escolha uma data inicial"
+                            readOnly
+                          />
+                          <span
+                            className="input-group-text"
+                            data-td-target="#datetimepicker1"
+                            data-td-toggle="datetimepicker"
+                          >
+                            <span className="bi bi-calendar"></span>
+                          </span>
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label htmlFor="datetimepicker2" className="col-sm-3 col-form-label">
+                          Data Final
+                        </label>
+                        <div
+                          className="input-group"
+                          id="datetimepicker2"
+                          data-td-target-input="nearest"
+                          data-td-target-toggle="nearest"
+                        >
+                          <input
+                            id="datetimepicker2Input"
+                            type="text"
+                            className="form-control shadow-none"
+                            data-td-target="#datetimepicker2"
+                            placeholder="Escolha uma data final"
+                            readOnly
+                          />
+                          <span
+                            className="input-group-text"
+                            data-td-target="#datetimepicker2"
+                            data-td-toggle="datetimepicker"
+                          >
+                            <span className="bi bi-calendar"></span>
+                          </span>
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm-12 d-flex justify-content-center">
+                          <button type="button" className="btn btn-outline-success" onClick={loadData}>
+                            Aplicar Filtro
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
-              <div class="col-md-6 form-group pt-2 px-4">
-                <label for="datetimepicker2Input" class="form-label d-flex align-items-center justify-content-center pb-1"
-                >Data Final</label
-                >
-                <div
-                  class="input-group"
-                  id="datetimepicker2"
-                  data-td-target-input="nearest"
-                  data-td-target-toggle="nearest"
-                >
-                  <input
-                    id="datetimepicker2Input"
-                    type="text"
-                    class="form-control shadow-none"
-                    data-td-target="#datetimepicker2"
-                    placeholder='Escolha uma data final'
-                    value={DataFinal}
-                    onChange={handleDataFinalChange}
-                  />
-                  <span
-                    class="input-group-text"
-                    data-td-target="#datetimepicker2"
-                    data-td-toggle="datetimepicker"
-
-                  >
-                    <span class="bi bi-calendar"></span>
-                  </span>
+            </div>
+            <div className="row">
+              <div className="col-md-12 mt-5">
+                <div className="card card-table" style={{ width: '100%' }}>
+                  <div className="card-header">
+                    <h5 className="text-center">Total de Oportunidades</h5>
+                  </div>
+                  <div className="card-body">
+                    <BarChart
+                      width={500}
+                      height={300}
+                      data={chartData}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="nome" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="Numero" fill="#8884d8" />
+                    </BarChart>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div>
-              <h2>Dates from Investimentos</h2>
-              <ul>
-                {investimentos.map((investimento) => (
-                  <li key={investimento.id}>{investimento.dataRegisto}</li>
-                ))}
-              </ul>
+            <div className="row">
+              <div className="col-md-12 mt-5">
+                <div className="card card-table" style={{ width: '100%' }}>
+                  <div className="card-header">
+                    <h5 className="text-center">Número de Candidaturas</h5>
+                  </div>
+                  <div className="card-body">
+                    <PieChart width={500} height={300}>
+                      <Pie
+                        data={chartDataCandidaturaVagasPie}
+                        dataKey="Numero"
+                        nameKey="nome"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        fill="#8884d8"
+                        label
+                      >
+                        {chartDataCandidaturaVagasPie.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="card" style={{ width: '100%', height: '80%' }}>
-
-              <p>Número total de Oportunidades</p>
-              <BarChart
-                width={500}
-                height={300}
-                data={chartData}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="nome" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="Numero" fill="#8884d8" />
-              </BarChart>
-
-              <p>Relação número de Candidaturas/Vagas</p>
-
-              <PieChart width={500} height={300}>
-                <Pie
-                  data={chartDataCandidaturaVagasPie}
-                  dataKey="Numero"
-                  nameKey="nome"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  fill="#8884d8"
-                  label
-
-                >
-                  {chartDataCandidaturaVagasPie.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-
-                </Pie>
-                <Tooltip />
-              </PieChart>
-
-              <p>Número de candidaturas por Vagas</p>
-
-              <BarChart
-                width={500}
-                height={300}
-                data={chartDataVagas}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="nome" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="Numero" fill="#8884d8" />
-              </BarChart>
-
-              <p>Número total de users por Cargo</p>
-              <BarChart
-                width={650}
-                height={300}
-                data={chartDataTiposUser}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="nome" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="Numero" fill="#8884d8" />
-              </BarChart>
+            <div className="row">
+              <div className="col-md-12 mt-5">
+                <div className="card card-table" style={{ width: '100%' }}>
+                  <div className="card-header">
+                    <h5 className="text-center">Relação Candidaturas/Vagas</h5>
+                  </div>
+                  <div className="card-body">
+                    <BarChart
+                      width={500}
+                      height={300}
+                      data={chartDataVagas}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="nome" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="Numero" fill="#8884d8" />
+                    </BarChart>
+                  </div>
+                </div>
+              </div>
             </div>
-
+            <div className="row">
+              <div className="col-md-12 mt-5">
+                <div className="card card-table" style={{ width: '100%' }}>
+                  <div className="card-header">
+                    <h5 className="text-center">Número de Utilizadores por Cargo</h5>
+                  </div>
+                  <div className="card-body">
+                    <BarChart
+                      width={500}
+                      height={300}
+                      data={chartDataTiposUser}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="nome" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="Numero" fill="#8884d8" />
+                    </BarChart>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-12 mt-5">
+                <div className="card card-table" style={{ width: '100%' }}>
+                  <div className="card-header">
+                    <h5 className="text-center">Relatório de Tipos de Utilizador</h5>
+                  </div>
+                  <div className="card-body">
+                    <ResponsiveContainer width="100%" height={400}>
+                      <PieChart width={500} height={400}>
+                        <Pie
+                          data={chartDataTiposUser}
+                          dataKey="Numero"
+                          nameKey="nome"
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={80}
+                          fill="#8884d8"
+                          label
+                        >
+                          {chartDataTiposUser.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </main >
+    </main>
   );
 }
