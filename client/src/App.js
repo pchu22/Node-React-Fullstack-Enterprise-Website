@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import './App.css';
 
+import Welcome from './views/welcome'
+
 import Homepage from './views/homepage';
 
 import Login from './views/login';
@@ -69,7 +71,7 @@ const App = () => {
   return (
       <Router>
         <Routes>
-          {/*<Route path="/" element={<Welcome/>} />*/}
+          <Route path="/" element={<Welcome/>} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/primeiro-login/:userId" element={<PrimeiroLogin />} />
@@ -132,6 +134,7 @@ const App = () => {
 
           <Route path='/calendario' element={<Calendario />} />
           <Route path='/evento/create' element={<CreateEvento />} />
+          <Route path='/evento/update/:eventoId' element={<UpdateEvento />} />
 
         </Routes>
       </Router>

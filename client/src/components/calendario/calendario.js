@@ -16,6 +16,7 @@ export default function Calendario() {
     const [cargo, setCargo] = useState('');
     const [eventos, setEventos] = useState([]);
     const calendarRef = useRef(null);
+    const loggedInUser = localStorage.getItem('userId')
 
     useEffect(() => {
         loadUserCargo();
@@ -135,6 +136,9 @@ export default function Calendario() {
                         alert('Error: ' + err);
                     });
             },
+            footer: cargo === 1 || loggedInUser ? `
+                <a href="/evento/update/${event.extendedProps.eventoId}" class="btn btn-outline-warning">Editar</a>
+            ` : '',
         }).then((result) => {
             if (result.isConfirmed) {
                 event.remove();
