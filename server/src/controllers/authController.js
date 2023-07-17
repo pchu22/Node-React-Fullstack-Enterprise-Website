@@ -225,7 +225,7 @@ controllers.googleRedirect = (req, res) => {
   const user = req.user.message;
   if (!user) {
 
-    return res.redirect('/auth/google');
+    return res.redirect('/auth/login');
   }
   console.log("User: " + JSON.stringify(user))
   const payload =
