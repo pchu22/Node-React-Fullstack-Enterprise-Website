@@ -183,7 +183,7 @@ export default function ListBeneficios() {
             <table className="table table-striped mt-3">
               <thead>
                 <tr>
-                  <th className='th-beneficios'>
+                  <th className='th-beneficios' style={{width: "30px"}}>
                     {cargo === 1 ? (
                       <input
                         type="checkbox"

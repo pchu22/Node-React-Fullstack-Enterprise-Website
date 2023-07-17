@@ -1,4 +1,5 @@
 const Vaga = require('../models/vaga')
+const Candidatura = require('../models/candidatura');
 const sequelize = require('../models/database');
 
 const controllers = {}
@@ -136,6 +137,7 @@ controllers.delete = async (req, res) => {
     const { vagaIds } = req.body;
   
     try {
+        await Candidatura.destroy({where:{vagaId: vagaIds}});
         const del = await Vaga.destroy({where:{vagaId:vagaIds}});
   
         if (del > 0) {

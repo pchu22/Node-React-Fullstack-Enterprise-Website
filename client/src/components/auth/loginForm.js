@@ -107,46 +107,87 @@ const LoginForm = () => {
 
   const isPasswordInvalid = passwordSelected && !password;
 
-  if (loggedIn) {
-    return <Link to="/homepage" />;
-  }
-
   const googleLogin = (event) => {
     event.preventDefault();
-
+  
     const authUrl = `${baseURL}/auth/google/redirect`;
     const authWindow = window.open(authUrl, "_blank", "width=500,height=600");
-
+  
     const messageListener = (event) => {
       event.preventDefault();
-
+  
       console.log("Received message from authentication window:", event.data);
-
+  
       if (event.data && event.data.accessToken && event.data.user && event.data.userId) {
         const { accessToken, user, userId } = event.data;
+  
+        // Send message to main window to save data in localStorage
+        window.opener.postMessage(
+          {
+            type: "loginData",
+            accessToken: accessToken,
+            user: user,
+            userId: userId,
+          },
+          window.origin
+        );
+      }
+    };
+  
+    window.addEventListener("message", messageListener);
+  
+    const checkWindowClosed = setInterval(() => {
+      if (authWindow.closed) {
+        clearInterval(checkWindowClosed);
+  
+        console.log("Authentication window closed. Redirecting to homepage...");
+  
+        // Save the user data and userId to localStorage in the main window
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userId = localStorage.getItem("userId");
+  
+        if (user && userId) {
+          window.opener.postMessage(
+            {
+              type: "loginData",
+              user: user,
+              userId: userId,
+            },
+            window.origin
+          );
+        }
+  
+        // Redirect to homepage
+        window.location.href = "/homepage";
+      }
+    }, 1000);
+  };
+  
 
-        localStorage.setItem("token", accessToken);
+  useEffect(() => {
+    const messageListener = (event) => {
+      if (event.data && event.data.type === "loginData") {
+        const { user, userId } = event.data;
+
+        // Save data to localStorage
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("userId", userId);
 
-        console.log("Access token:", accessToken);
-        console.log("User:", user);
-        console.log("User ID:", userId);
+        // Redirect to homepage
+        navigate("/homepage");
       }
     };
 
     window.addEventListener("message", messageListener);
 
-    const checkWindowClosed = setInterval(() => {
-      if (authWindow.closed) {
-        clearInterval(checkWindowClosed);
+    return () => {
+      window.removeEventListener("message", messageListener);
+    };
+  }, [navigate]);
 
-        console.log("Authentication window closed. Redirecting to homepage...");
-        window.location.href = "/homepage";
-      }
-    }, 1000);
-  };
-
+  if (loggedIn) {
+    return <Link to="/homepage" />;
+  }
 
   return (
     <div className="wrapper">
