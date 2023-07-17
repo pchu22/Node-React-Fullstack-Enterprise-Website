@@ -123,21 +123,21 @@ export default function Candidatar() {
                 />
               </div>
               <div className="btn-wrapper">
-                                <div className="btn-group">
-                                    <button
-                                        type="submit"
-                                        className="btn btn-outline-success">
-                                        <span className="bi bi-check" />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-danger cancel-btn"
-                                        onClick={() => navigate('/vaga')}
-                                        style={{ marginLeft: '10px' }}>
-                                        <span className="bi bi-x-octagon-fill" />
-                                    </button>
-                                </div>
-                            </div>
+                <div className="btn-group">
+                  <button
+                    type="submit"
+                    className="btn btn-outline-success">
+                    <span className="bi bi-check" />
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger cancel-btn"
+                    onClick={() => navigate('/vaga')}
+                    style={{ marginLeft: '10px' }}>
+                    <span className="bi bi-x-octagon-fill" />
+                  </button>
+                </div>
+              </div>
             </form>
           </div>
         </div>

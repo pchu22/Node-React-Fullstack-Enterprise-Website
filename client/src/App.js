@@ -52,7 +52,9 @@ import UpdateParceria from "./views/oportunidades/parcerias/updateParceria"
 import CreateProjeto from "./views/oportunidades/projetos/createProjeto"
 import UpdateProjeto from "./views/oportunidades/projetos/updateProjeto"
 
-import Calendario from "./views/calendario";
+import Calendario from "./views/calendario/calendario";
+import CreateEvento from "./views/calendario/createEvento";
+import UpdateEvento from "./views/calendario/updateEvento";
 
 const App = () => {
 
@@ -113,6 +115,7 @@ const App = () => {
           <Route path='/oportunidade/projeto/update/:projetoId' element={<UpdateProjeto />} />
 
           <Route path='/calendario' element={<Calendario />} />
+          <Route path='/evento/create' element={<CreateEvento />} />
 
         </Routes>
       </Router>

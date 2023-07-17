@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import CalendarioComponent from "../components/calendario/calendario";
-import Sidebar from '../components/sidebar/sidebar';
-import Navbar from '../components/navbar/navbar';
+import CalendarioComponent from "../../components/calendario/calendario";
+import Sidebar from '../../components/sidebar/sidebar';
+import Navbar from '../../components/navbar/navbar';
 
 const Calendario = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

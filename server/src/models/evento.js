@@ -44,10 +44,6 @@ var Evento = sequelize.define('eventos', {
             key: "userId"
         },
     },
-    participantes: {
-        type: DataType.ARRAY(DataType.INTEGER),
-        allowNull: false
-    },
     notas: {
         type: DataType.STRING
     }

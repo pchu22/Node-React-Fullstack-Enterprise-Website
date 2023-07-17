@@ -51,9 +51,7 @@ controllers.create = async (req, res) => {
         tipo,
         dataInicio,
         dataFim,
-        estadoId,
-        userId,
-        participantes
+        userId
     } = req.body;
 
     try {
@@ -65,7 +63,6 @@ controllers.create = async (req, res) => {
             dataFim,
             estadoId: 12,
             userId,
-            participantes
         });
 
         res.status(200).json({
@@ -89,7 +86,6 @@ controllers.update = async (req, res) => {
         dataFim,
         estadoId: estado,
         userId: user,
-        participantes,
         notas
     } = req.body;
     try {
@@ -109,7 +105,6 @@ controllers.update = async (req, res) => {
             dataFim: dataFim,
             estadoId: estado,
             userId: user,
-            participantes: participantes,
             notas: notas
         }, { where: { eventoId } });
 
