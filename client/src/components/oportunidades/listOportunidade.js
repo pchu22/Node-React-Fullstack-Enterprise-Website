@@ -397,6 +397,30 @@ export default function ListOportunidades() {
     })
   }
 
+  function showParceriaInfo(parceria) {
+    Swal.fire({
+      title: parceria.nomeParceiro,
+      html: `
+          <strong>Email</strong>: ${parceria.email}<br/>
+          <strong>Telemóvel</strong>: ${parceria.telemovel}
+        `,
+      showCancelButton: false,
+      focusConfirm: false
+    })
+  }
+  function showProjetoInfo(projeto) {
+    Swal.fire({
+      title: projeto.projetoNome,
+      html: `
+          <strong>Descrição</strong>: ${projeto.descricao}<br/>
+          <strong>Orçamento</strong>: ${projeto.orcamento} €<br/>
+          <strong>Prioridade</strong>: ${projeto.prioridade}<br/>
+        `,
+      showCancelButton: false,
+      focusConfirm: false
+    })
+  }
+
   function convertDate(date) {
     const datetimeParts = date.split(' ');
     const datePortion = datetimeParts[0];
@@ -693,9 +717,9 @@ export default function ListOportunidades() {
                                   />
                                 </td>
                               ) : null}
-                              <td className='parcerias-data'>{parceria.nomeParceiro}</td>
-                              <td className='parcerias-data'>{parceria.email}</td>
-                              <td className='parcerias-data'>{parceria.telemovel}</td>
+                              <td className='parcerias-data' onClick={() => showParceriaInfo(parceria)}>{parceria.nomeParceiro}</td>
+                              <td className='parcerias-data' onClick={() => showParceriaInfo(parceria)}>{parceria.email}</td>
+                              <td className='parcerias-data' onClick={() => showParceriaInfo(parceria)}>{parceria.telemovel}</td>
                               <td className='parcerias-data'>
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                                   <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -779,10 +803,10 @@ export default function ListOportunidades() {
                                   />
                                 </td>
                               ) : null}
-                              <td className='projetos-data'>{getUserName(projeto.userId)}</td>
-                              <td className='projetos-data'>{projeto.projetoNome}</td>
-                              <td className='projetos-data'>{projeto.descricao}</td>
-                              <td className='projetos-data'>{projeto.orcamento} €</td>
+                              <td className='projetos-data' onClick={() => showProjetoInfo(projeto)}>{getUserName(projeto.userId)}</td>
+                              <td className='projetos-data' onClick={() => showProjetoInfo(projeto)}>{projeto.projetoNome}</td>
+                              <td className='projetos-data' onClick={() => showProjetoInfo(projeto)}>{projeto.descricao}</td>
+                              <td className='projetos-data' onClick={() => showProjetoInfo(projeto)}>{projeto.orcamento} €</td>
                               <td className='projetos-data'>
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                                   <div style={{ display: 'flex', flexDirection: 'row' }}>
