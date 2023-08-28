@@ -14,6 +14,7 @@ const baseURL = 'https://softinsa-web-app-carreiras01.onrender.com';
 
 export default function Calendario() {
     const [cargo, setCargo] = useState('');
+    const [dataSelecionada, setDataSelecionada]  = useState('');
     const [eventos, setEventos] = useState([]);
     const calendarRef = useRef(null);
     const loggedInUser = localStorage.getItem('userId')
@@ -225,7 +226,7 @@ export default function Calendario() {
                     >
                         {cargo === 1 ? (
                             <Link
-                                to="/evento/create"
+                            to={`/evento/create/${encodeURIComponent(dataSelecionada)}`}
                                 className="btn btn-outline-success"
                                 style={{ marginBottom: "10px" }}
                             >
@@ -252,6 +253,12 @@ export default function Calendario() {
                                 dayMaxEventRows={3}
                                 height={650}
                                 ref={calendarRef}
+                                selectable
+                                
+                                select={(info) => {
+                                    setDataSelecionada(info.startStr)
+                                  }}
+
                             />
                         </div>
                     </div>

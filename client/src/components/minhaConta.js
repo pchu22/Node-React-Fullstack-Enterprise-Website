@@ -1,18 +1,163 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState, React } from "react";
-import Swal from "sweetalert2"
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+
+import axios from 'axios';
+import React, { useEffect,useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 
-const emailRegex = /^\S+@\S+\.\S+$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const baseURL = "https://softinsa-web-app-carreiras01.onrender.com";
 
 
 const FormMinhaConta = () => {
-
+    const loggedInUserId = localStorage.getItem('userId');
+    const [Nome, setNome] = useState("");
     const [Email, setEmail] = useState("");
     const [Telefone, setTelefone] = useState("");
+    const [Password, setPassword] = useState("");
     const [Morada, setMorada] = useState("");
-    const [Localidade, setLocalidade] = useState("");
+    const navigate = useNavigate();
+useEffect(() => {
+    loadUserData();
+  }, []);
+
+  function loadUserData() {
+    const url = baseURL + '/user/get/' + loggedInUserId;
+
+    axios
+      .get(url)
+      .then((res) => {
+        if (res.data.success) {
+          const user = res.data.data;
+          setNome(user.primeiroNome + " " + user.ultimoNome)
+          setEmail(user.email)
+          setTelefone(user.telemovel)
+          setMorada(user.morada)
+
+
+        } else {
+          Swal.fire('Error Web Service', 'Utilizador indisponível!', 'error');
+        }
+      })
+      .catch((err) => {
+        alert('Error: ' + err.message);
+      });
+  }
+
+  async function updateUser() {
+    try {
+      const url = baseURL + "/user/update/" + loggedInUserId;
+      const datapost = {
+        email: Email,
+        telemovel: Telefone,
+        morada: Morada,
+      };
+  
+      const response = await axios.put(url, datapost);
+  
+      if (response.data.success) {
+        Swal.fire({
+          icon: "success",
+          title: 'Alterações aplicadas com sucesso!',
+          timer: 2500,
+          timerProgressBar: true,
+          confirmButtonColor: '#00B8E0',
+        });
+      } else {
+        Swal.fire({
+          title: "Erro!",
+          text: response.data.message, // Display the error message from the server
+          icon: "error",
+        });
+      }
+    } catch (err) {
+    console.log(err);
+    console.log(err.response);
+      Swal.fire({
+        title: err,
+        text: "Ocorreu um erro ao atualizar os dados.",
+        icon: "error",
+      });
+    }
+  }
+
+  async function updatePassword() {
+    try {
+      const url = baseURL + "/user/update/" + loggedInUserId;
+      const datapost = {
+        password: Password,
+      };
+  
+      const response = await axios.put(url, datapost);
+  
+      if (response.data.success) {
+        Swal.fire({
+          icon: "success",
+          title: 'Password alterada com sucesso!',
+          timer: 2500,
+          timerProgressBar: true,
+          confirmButtonColor: '#00B8E0',
+        });
+      } else {
+        Swal.fire({
+          title: "Erro!",
+          text: response.data.message, // Display the error message from the server
+          icon: "error",
+        });
+      }
+    } catch (err) {
+    console.log(err);
+    console.log(err.response);
+      Swal.fire({
+        title: err,
+        text: "Ocorreu um erro ao atualizar os dados.",
+        icon: "error",
+      });
+    }
+  }
+
+  async function deleteUser() {
+    try {
+      const url = baseURL + "/user/delete";
+      const datapost = {
+        userIds: loggedInUserId,
+      };
+  
+      const response = await axios.post(url, datapost);
+  
+      if (response.data.success) {
+        Swal.fire({
+          icon: "success",
+          title: 'A sua conta foi eliminada com sucesso!',
+          timer: 2500,
+          timerProgressBar: true,
+          confirmButtonColor: '#00B8E0',
+        }).then(() => {
+                try {
+                  localStorage.removeItem('user');
+                  localStorage.removeItem('userId');
+                  console.log("Logout efetuado com sucesso!");
+                } catch (error) {
+                  console.error("Erro enquanto tentava efetuar o logout: ", error);
+                }
+            navigate("/");
+        });;
+      } else {
+        Swal.fire({
+          title: "Erro!",
+          text: response.data.message, 
+          icon: "error",
+        });
+      }
+    } catch (err) {
+      Swal.fire({
+        title: err,
+        text: "Ocorreu um erro ao atualizar os dados.",
+        icon: "error",
+      });
+    }
+  }
 
     const Send = () => {
         if (Email === "") {
@@ -24,12 +169,6 @@ const FormMinhaConta = () => {
         } else if (Telefone === "") {
             Swal.fire({
                 title: "Tem que inserir um Nº de telemóvel!",
-                confirmButtonColor: '#00B8E0',
-                icon: "warning",
-            });
-        } else if (Morada === "") {
-            Swal.fire({
-                title: "Tem que inserir uma morada!",
                 confirmButtonColor: '#00B8E0',
                 icon: "warning",
             });
@@ -47,17 +186,8 @@ const FormMinhaConta = () => {
 
             }).then((result) => {
                 if (result.value) {
-                    //Adicionar código de alterações da conta
-                    Swal.fire({
-                        icon: "success",
-                        title: 'Alterações aplicadas com sucesso!',
-                        html: 'Será redirecionado para a mesma página',
-                        timer: 5000,
-                        timerProgressBar: true,
-                        confirmButtonColor: '#00B8E0',
-                    }).then(() => {
-                        window.location.href = window.location.href;
-                    })
+                    updateUser()
+                    
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     Swal.fire({ title: "Cancelado", text: "As alterações não foram aplicadas!", icon: "error", confirmButtonColor: '#00B8E0', });
                 }
@@ -83,15 +213,15 @@ const FormMinhaConta = () => {
                     (!passwordNova) {
                     Swal.showValidationMessage(`Introduza a sua password nova!`)
                 }
-                return { passwordAntinga: passwordAntinga, passwordNova: passwordNova }
+                setPassword(passwordNova)
 
             }
         }).then((result) => {
-            //Efetuar alteração na BD, está só a mostrar a passagem dos dados
-            Swal.fire(`
-              Antiga: ${result.value.passwordAntinga}
-              Nova: ${result.value.passwordNova}
-            `.trim())
+            if (result.value) {
+                updatePassword()
+            }
+            
+            
         })
     }
     const Eliminar = () => {
@@ -117,7 +247,7 @@ const FormMinhaConta = () => {
                     focusConfirm: false,
                     preConfirm: () => {
                         const confirmacao = Swal.getPopup().querySelector('#confirmacao').value
-                        if (!confirmacao || confirmacao != "CONFIRMO") {
+                        if (!confirmacao || confirmacao !== "CONFIRMO") {
                             Swal.showValidationMessage(`Tem que introduzir a palavra corretamente`)
                         }
                         return { confirmacao: confirmacao }
@@ -125,8 +255,7 @@ const FormMinhaConta = () => {
                     }
                 }).then((result) => {
                     if (result.value) {
-                        //Efetuar alteração na BD
-
+                        deleteUser();
                     }
 
                     else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -141,59 +270,106 @@ const FormMinhaConta = () => {
     }
 
     return (
-        <div>
-            <div className="container-fluid d-flex align-items-center justify-content-center py-5" style={{ backgroundColor: '#D9D9D9', }}>
-                <div className="rounded p-4 bg-light my-3" style={{ width: '85%' }}>
-                    <div class='row pt-3'>
-                        <div class="col-md-6 form-group pt-2 px-5">
-                            <label class="d-flex align-items-center justify-content-center pb-1" for="inputNome">Primeiro e Último Nome</label>
-                            <input class="form-control shadow-none " id="inputNome" placeholder="O seu nome" disabled></input>
-                        </div>
-                        <div class="col-md-6 form-group pt-2 px-5">
-                            <label class="d-flex align-items-center justify-content-center pb-1" for="inputData">Data de Nascimento</label>
-                            <input class="form-control shadow-none " id="inputData" placeholder="A sua data de nascimento" disabled></input>
-                        </div>
-                        <div class="col-md-6 form-group pt-4 px-5">
-                            <label class="d-flex align-items-center justify-content-center pb-1" for="inputData">Email</label>
-                            <input class="form-control shadow-none " id="inputEmail" placeholder="O seu email" value={Email}
-                                onChange={(event) => setEmail(event.target.value)}></input>
-                        </div>
-                        <div class="col-md-6 form-group pt-4 px-5">
-                            <label class="d-flex align-items-center justify-content-center pb-1" for="inputData">Telemóvel</label>
-                            <input class="form-control shadow-none " id="inputTelemovel" placeholder="O seu Nº de Telemóvel" value={Telefone}
-                                onChange={(event) => setTelefone(event.target.value)}></input>
-                        </div>
-                        <div class="col-md-6 form-group pt-4 px-5">
-                            <label class="d-flex align-items-center justify-content-center pb-1" for="inputData">Morada</label>
-                            <input class="form-control shadow-none " id="inputTelemovel" placeholder="A sua Morada" value={Morada}
-                                onChange={(event) => setMorada(event.target.value)}></input>
-                        </div>
-                        <div class="col-md-6 form-group pt-4 px-5">
-                            <label class="d-flex align-items-center justify-content-center pb-1" for="inputLocalidade">Localidade</label>
-                            <select id="inputLocalidade" class="form-select shadow-none " value={Localidade}
-                                onChange={(event) => setLocalidade(event.target.value)}>
-                                    //TO-DO: Ir buscar as localidades de forma dinamica
-                                <option value="Web">Viseu</option>
-                                <option value="Cloud">Lisboa</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class='row pt-3'>
-                        <div class="py-3 px-5 text-center d-flex justify-content-center">
-                            <div className='col '>
-                                <button type="submit" class="btn btn-success btn-block btn-lg text-white px-5 py-3" onClick={Send}>Confirmar Alterações</button>
-                            </div>
-                            <div className='col '>
-                                <button type="button" class="btn btn-secondary btn-block btn-lg text-white px-5 py-3" onClick={Alterar}>Alterar Password</button>
-                            </div>
-                            <div className='col '>
-                                <button type="button" class="btn btn-danger btn-lg btn-block text-white px-5 py-3" onClick={Eliminar}>Eliminar a minha Conta</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div className='wrapper'>
+      <div className="d-flex align-items-center justify-content-center" style={{ height: "100vh" }}>
+        <div className="card">
+          <div className="card-body">
+          <div className="container">
+    <div className="row">
+        <div className="col-10">
+            <h2>Os seus dados</h2>
         </div>
+        <div className="col-2 d-flex justify-content-end">
+            <button
+                className="btn btn-outline-primary"
+                onClick={() => {
+                    window.history.back();
+                }}
+                
+            >
+                <span className="bi bi-arrow-left" />
+            </button>
+        </div>
+    </div>
+</div>
+          
+          <p></p>
+            <form onSubmit={Send}>
+            <div class="textarea-container">
+                <label htmlFor="inputNome">Nome</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Nome"
+                  id="inputNome"
+                  value={Nome}
+                  disabled
+                />
+              </div>
+              <div class="textarea-container">
+                <label htmlFor="inputEmail">Email</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="Email"
+                  id="inputEmail"
+                  value={Email}
+                  onChange={(e) => setEmail(e.target.value)} 
+                />
+              </div>
+
+              <div class="textarea-container">
+                <label htmlFor="inputTelemove">Nº de Telemóvel</label>
+                <input
+                  type="tel"
+                  className="form-control"
+                  placeholder="Telemóvel"
+                  id="inputTelemovel"
+                  value={Telefone}
+                  onChange={(e) => setTelefone(e.target.value)} 
+                />
+              </div>
+
+              <div class="textarea-container">
+                <label htmlFor="inputMorada">Morada</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Morada"
+                  id="inputMorada"
+                  value={Morada}
+                  onChange={(e) => setMorada(e.target.value)} 
+                />
+              </div>
+              <div className="btn-wrapper">
+                <div class="col-md-10 mb-2">
+                  <button
+                   type="button"
+                   onClick={Send}
+                    className="btn btn-outline-success">
+                    <span className="bi bi-check-lg" />
+                  Confirmar Alterações</button>
+                  </div>
+                  <div class="col-md-10 mb-2">
+                  <button
+                    type="button"
+                    onClick={Alterar}
+                    className="btn btn-outline-warning">
+                    <span className="bi bi-shield-lock" />
+                  Alterar Password</button></div>
+                  <div class="col-md-10">
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger"
+                    onClick={Eliminar}>
+                    <span className="bi bi-trash" />
+                  Eliminar a minha Conta</button></div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     );
 
 

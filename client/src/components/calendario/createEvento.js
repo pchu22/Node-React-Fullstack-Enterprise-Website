@@ -1,25 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import logo from '../../assets/logo.png'
-import './calendario.css'
+import SelectSearch from 'react-select-search';
+import './select.css'
+
 
 const baseURL = "https://softinsa-web-app-carreiras01.onrender.com";
 
 export default function CreateEvento() {
+    const loggedInUserId = localStorage.getItem('userId');
     const [titulo, setTitulo] = useState("");
+    const [users, setUsers] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]);
     const [descricao, setDescricao] = useState("");
+    const [idCriador, setIdCriador] = useState("");
     const [tipo, setTipo] = useState("");
     const [inicio, setInicio] = useState("");
     const [fim, setFim] = useState("");
     const navigate = useNavigate();
+    const [Nome, setNome] = useState("");
+    const { dataSelecionada } = useParams();
+    const { userIdCriador } = useParams();
+
+    function loadUserData() {
+        const url = baseURL + '/user/get/' + loggedInUserId;
+    
+        axios
+          .get(url)
+          .then((res) => {
+            if (res.data.success) {
+              const user = res.data.data;
+              setNome(user.primeiroNome + " " + user.ultimoNome)
+    
+    
+            } else {
+              Swal.fire('Error Web Service', 'Utilizador indisponível!', 'error');
+            }
+          })
+          .catch((err) => {
+            alert('Error: ' + err.message);
+          });
+      }
+
+    function loadUsers() {
+        const url = baseURL + '/user/list';
+
+        axios
+            .get(url)
+            .then((res) => {
+                if (res.data.success) {
+                    const data = res.data.data;
+                    setUsers(data);
+
+                } else {
+                    Swal.fire('Error Web Service', 'Lista de utilizadores indisponível!', 'error');
+                }
+            })
+            .catch((err) => {
+                alert('Error: ' + err.message);
+            });
+    }
+
+    useEffect(() => {
+        loadUsers();
+        loadUserData();
+
+        if (dataSelecionada !== undefined) {
+            // Converter data
+            const formattedDate = `${dataSelecionada}T00:00`;
+            setInicio(formattedDate);
+        }
+
+        if (userIdCriador !== undefined) {
+            // Converter data
+            setIdCriador(userIdCriador);
+        }
+    }, [dataSelecionada, userIdCriador]);
 
     function SendSave(event) {
         event.preventDefault();
 
         const url = baseURL + "/evento/create";
         const userId = localStorage.getItem('userId');
+
+
         const datapost = {
             titulo: titulo,
             descricao: descricao,
@@ -33,6 +99,29 @@ export default function CreateEvento() {
             .then(res => {
                 console.log(res.data);
                 if (res.data.success) {
+                    const url = baseURL + "/eventoUser/create";
+                    selectedUsers.forEach(user => {
+                        const datapostUser = {
+                            eventoId: res.data.eventoId,
+                            userId: user.userId,
+                            titulo: titulo,
+                            descricao: descricao,
+                            tipo: tipo,
+                            dataInicio: inicio,
+                            dataFim: fim,
+                            email:user.email,
+                            nome: Nome
+                        }
+
+                        axios.post(url, datapostUser)
+                            .then(userRes => {
+                                console.log("User adicionado ao evento:", user.userId);
+                            })
+                            .catch(userErr => {
+                                console.log("Erro a adicionar o user ao evento: ", user.userErr);
+                            });
+                    });
+
                     Swal.fire({
                         icon: 'success',
                         title: res.data.message,
@@ -49,6 +138,7 @@ export default function CreateEvento() {
                 alert("Error 34: " + err);
             });
     }
+
 
     return (
         <div className='wrapper'>
@@ -117,6 +207,22 @@ export default function CreateEvento() {
                                     onChange={(event) => setFim(event.target.value)}
                                 />
                             </div>
+
+                            <div className="textarea-container">
+                                <label htmlFor="inputUsers">Escolha os Utilizadores a participar</label>
+                                <SelectSearch
+                                    options={users.map(user => ({
+                                        name: `${user.primeiroNome} ${user.ultimoNome}`,
+                                        value: user
+                                    }))}
+                                    multiple //ESTA MERDA EM MULTIPLE ESTÁ SEMPRE ABERTO O DROPDOWN
+                                    search
+                                    closeOnSelect
+                                    value={selectedUsers}
+                                    onChange={(selectedValue) => setSelectedUsers(selectedValue)}
+                                    placeholder="Procurar utilizadores"
+                                />
+                            </div>
                             <div className="btn-wrapper">
                                 <div className="btn-group">
                                     <button
@@ -127,7 +233,7 @@ export default function CreateEvento() {
                                     <button
                                         type="button"
                                         className="btn btn-outline-danger cancel-btn"
-                                        onClick={() => navigate('/calendario')}
+                                        onClick={() => { window.history.back(); }}
                                         style={{ marginLeft: '10px' }}>
                                         <span className="bi bi-x-octagon-fill" />
                                     </button>

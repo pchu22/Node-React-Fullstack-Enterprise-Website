@@ -12,6 +12,7 @@ import Signup from './views/signup';
 import AtivarConta from "./components/auth/verificarEmail";
 import RecoverAccount from "./views/recoverAccount";
 import ResetPassword from "./views/resetPassword";
+import Perfil from "./views/perfil";
 
 import AreaAdministrativa from './views/area-administrativa/list'
 import UpdateUser from './views/area-administrativa/users/updateUser'
@@ -80,6 +81,7 @@ const App = () => {
           <Route path='/ativacao/:verificationToken' element={<AtivarConta />} />
           <Route path="/forgot-password" element={<RecoverAccount />} />
           <Route path="/recuperacao/:recoverToken" element={<ResetPassword />} />
+          <Route path="/perfil" element={<Perfil/>} />
 
           <Route path="/reporting" element={<Reporting />} />
 
@@ -133,7 +135,7 @@ const App = () => {
           <Route path='/oportunidade/projeto/update/:projetoId' element={<UpdateProjeto />} />
 
           <Route path='/calendario' element={<Calendario />} />
-          <Route path='/evento/create' element={<CreateEvento />} />
+          <Route path='/evento/create/:dataSelecionada?/:userIdCriador?' element={<CreateEvento />} />
           <Route path='/evento/update/:eventoId' element={<UpdateEvento />} />
 
         </Routes>

@@ -40,6 +40,7 @@ const tipoProjetoRoute = require('./src/routes/tipo-projetoRoute');
 const projetoRoute = require('./src/routes/projetoRoute');
 const estadoRoute = require('./src/routes/estadoRoute');
 const eventoRoute = require('./src/routes/eventoRoute');
+const eventoUserRoute = require('./src/routes/eventoUserRoute');
 
 app.use('/user', userRoute);
 app.use('/auth', authRoute);
@@ -58,6 +59,7 @@ app.use('/tipo-projeto', tipoProjetoRoute)
 app.use('/projeto', projetoRoute)
 app.use('/estado', estadoRoute);
 app.use('/evento', eventoRoute);
+app.use('/eventoUserRoute', eventoUserRoute);
 
 app.use('/',(req,res)=>{
     res.send("Hello World!");
