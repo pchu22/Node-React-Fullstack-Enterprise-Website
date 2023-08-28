@@ -1,11 +1,11 @@
 var Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(
-    'dbsofinsa_s8rz',
-    'dbsofinsa_user',
-    'VkGAYoe3EZpgkFtJ1ftRkkHb2KMYZiLX',
+    'softinsa_db',
+    'softinsa_db_user',
+    'no9TvSqQFhh82xaYYBKjpIThLxC1YWg',
     {
-        host: 'dpg-chqtc3m4dad3eom8b02g-a',
+        host: 'dpg-cjmcgpvjbvhs73ccr120-a',
         port: '5432',
         dialect: 'postgres'
     }
