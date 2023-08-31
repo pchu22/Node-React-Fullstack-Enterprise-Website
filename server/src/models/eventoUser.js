@@ -1,5 +1,7 @@
 const DataType = require('sequelize');
 const sequelize = require('./database');
+const Evento = require('./evento'); 
+const User = require('./user'); 
 
 var EventoUser = sequelize.define('eventoUser', {
 
@@ -16,5 +18,8 @@ var EventoUser = sequelize.define('eventoUser', {
 
 },
     { timestamps: false });
+
+EventoUser.belongsTo(Evento, { foreignKey: 'eventoId', onDelete: 'CASCADE' });
+EventoUser.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
 
 module.exports = EventoUser;
