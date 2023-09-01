@@ -213,7 +213,7 @@ async function sendEventoEmailAviso(email, titulo, tipo, dataInicio, dataFim, no
 function scheduleEmailBeforeEvent(sendTime, email, titulo, descricao, tipo, dataInicio, dataFim, nome) {
     schedule.scheduleJob(sendTime, async () => {
         try {
-            await sendEventoEmailAviso(email, titulo, descricao, tipo, dataInicio, dataFim, nome);
+            await sendEventoEmailAviso(email, titulo, tipo, dataInicio, dataFim, nome);
         } catch (error) {
             console.error('Erro ao enviar o email do evento: ', error);
         }
