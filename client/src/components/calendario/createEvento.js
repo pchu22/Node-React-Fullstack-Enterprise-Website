@@ -26,23 +26,23 @@ export default function CreateEvento() {
 
     function loadUserData() {
         const url = baseURL + '/user/get/' + loggedInUserId;
-    
+
         axios
-          .get(url)
-          .then((res) => {
-            if (res.data.success) {
-              const user = res.data.data;
-              setNome(user.primeiroNome + " " + user.ultimoNome)
-    
-    
-            } else {
-              Swal.fire('Error Web Service', 'Utilizador indisponível!', 'error');
-            }
-          })
-          .catch((err) => {
-            alert('Error: ' + err.message);
-          });
-      }
+            .get(url)
+            .then((res) => {
+                if (res.data.success) {
+                    const user = res.data.data;
+                    setNome(user.primeiroNome + " " + user.ultimoNome)
+
+
+                } else {
+                    Swal.fire('Error Web Service', 'Utilizador indisponível!', 'error');
+                }
+            })
+            .catch((err) => {
+                alert('Error: ' + err.message);
+            });
+    }
 
     function loadUsers() {
         const url = baseURL + '/user/list';
@@ -101,15 +101,24 @@ export default function CreateEvento() {
                 if (res.data.success) {
                     const url = baseURL + "/eventouser/create";
                     selectedUsers.forEach(user => {
+                        console.log("eventoId: " + res.data.data.eventoId);
+                        console.log("userId: " + user.userId);
+                        console.log("titulo: " + titulo);
+                        console.log("descricao: " + descricao);
+                        console.log("tipo: " + tipo);
+                        console.log("dataInicio: " + inicio);
+                        console.log("dataFim: " + fim);
+                        console.log("email: " + user.email);
+                        console.log("nome: " + Nome);
                         const datapostUser = {
-                            eventoId: res.data.eventoId,
+                            eventoId: res.data.data.eventoId,
                             userId: user.userId,
                             titulo: titulo,
                             descricao: descricao,
                             tipo: tipo,
                             dataInicio: inicio,
                             dataFim: fim,
-                            email:user.email,
+                            email: user.email,
                             nome: Nome
                         }
 
@@ -118,7 +127,7 @@ export default function CreateEvento() {
                                 console.log("User adicionado ao evento:", user.userId);
                             })
                             .catch(userErr => {
-                                console.log("Erro a adicionar o user ao evento: ", user.userErr);
+                                console.log("Erro a adicionar o user ao evento: ", userErr);
                             });
                     });
 
@@ -173,10 +182,9 @@ export default function CreateEvento() {
                             </div>
                             <div className="textarea-container">
                                 <label htmlFor="inputTipo">Tipo</label>
-                                <select
+                                <select defaultValue="Reunião"
                                     type="text"
                                     className="form-control"
-                                    placeholder="Tipo de Ideia"
                                     id="inputTipo"
                                     value={tipo}
                                     onChange={(event) => setTipo(event.target.value)}

@@ -65,10 +65,28 @@ controllers.create = async (req, res) => {
             eventoId,
             userId,
         });
+        
+
         await sendEventoEmail(email, titulo, descricao, tipo, dataInicio, dataFim, nome)
         const eventStartTime = new Date(dataInicio); // Assuming dataInicio is a string datetime
         const emailSendTime = new Date(eventStartTime.getTime() - 3600 * 1000); // 1 hour before
-        scheduleEmailBeforeEvent(emailSendTime, email, titulo, descricao, tipo, dataInicio, dataFim, nome);    
+
+        const dataInicioFormatada = dataInicio.toLocaleString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+
+        const dataFimFormatada = dataFim.toLocaleString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+        scheduleEmailBeforeEvent(emailSendTime, email, titulo, descricao, tipo, dataInicioFormatada, dataFimFormatada, nome);    
 
         res.status(200).json({
             success: true,
