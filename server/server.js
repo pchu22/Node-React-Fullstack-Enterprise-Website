@@ -59,7 +59,7 @@ app.use('/tipo-projeto', tipoProjetoRoute)
 app.use('/projeto', projetoRoute)
 app.use('/estado', estadoRoute);
 app.use('/evento', eventoRoute);
-app.use('/eventoUserRoute', eventoUserRoute);
+app.use('/eventouser', eventoUserRoute);
 
 app.use('/',(req,res)=>{
     res.send("Hello World!");

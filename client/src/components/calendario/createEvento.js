@@ -99,7 +99,7 @@ export default function CreateEvento() {
             .then(res => {
                 console.log(res.data);
                 if (res.data.success) {
-                    const url = baseURL + "/eventoUser/create";
+                    const url = baseURL + "/eventouser/create";
                     selectedUsers.forEach(user => {
                         const datapostUser = {
                             eventoId: res.data.eventoId,
