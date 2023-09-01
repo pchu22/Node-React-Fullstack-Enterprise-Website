@@ -225,7 +225,6 @@ export default function CreateEvento() {
                                     }))}
                                     multiple //ESTA MERDA EM MULTIPLE ESTÁ SEMPRE ABERTO O DROPDOWN
                                     search
-                                    closeOnSelect
                                     value={selectedUsers}
                                     onChange={(selectedValue) => setSelectedUsers(selectedValue)}
                                     placeholder="Procurar utilizadores"
