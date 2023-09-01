@@ -69,7 +69,7 @@ controllers.create = async (req, res) => {
 
         await sendEventoEmail(email, titulo, descricao, tipo, dataInicio, dataFim, nome)
         const eventStartTime = new Date(dataInicio); // Assuming dataInicio is a string datetime
-        const emailSendTime = new Date(eventStartTime.getTime() - 3600 * 1000); // 1 hour before
+        const emailSendTime = new Date(eventStartTime.getTime() + 3600 * 1000); // 1 hour before
 
         const dataInicioFormatada = dataInicio.toLocaleString('en-GB', {
             hour: '2-digit',
