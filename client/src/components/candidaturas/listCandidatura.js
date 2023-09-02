@@ -3,6 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import './candidaturas.css';
+import CalendarioComponent from "../../components/calendario/calendario";
 
 const baseURL = 'https://softinsa-web-app-carreiras01.onrender.com';
 
@@ -12,6 +13,7 @@ export default function ListCandidatura() {
     const [vagas, setVagas] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedCandidatura, setSelectedCandidatura] = useState([]);
+    const [showCalendario, setShowCalendario] = useState(false);
     const [cargo, setCargo] = useState("");
     const loggedInUser = localStorage.getItem('userId');
 
@@ -53,6 +55,7 @@ export default function ListCandidatura() {
                 alert('Error: ' + err.message);
             });
     }
+    
 
     function loadVagas() {
         const url = baseURL + '/vaga/list';
@@ -165,8 +168,8 @@ export default function ListCandidatura() {
                         </td>
                     ) : <td />}
                     {/*<td className='candidaturas-data'>button that allows to download cv</td>*/}
-                    <td className='candidaturas-data'>{getUserName(candidatura.userId)}</td>
-                    <td className='candidaturas-data'>{getVagaTitle(candidatura.vagaId)}</td>
+                    <td className='candidaturas-data' onClick={() => showCandidaturaInfo(candidatura)}>{getUserName(candidatura.userId)}</td>
+                    <td className='candidaturas-data' onClick={() => showCandidaturaInfo(candidatura)}>{getVagaTitle(candidatura.vagaId)}</td>
                     {canEdit ? (
                         <td className='candidaturas-data'>
                             <Link className="btn btn-outline-warning" role="button" aria-pressed="true" to={`/candidatura/update/${candidatura.candidaturaId}`}>
@@ -179,8 +182,29 @@ export default function ListCandidatura() {
         });
     }
 
+    function showCandidaturaInfo(candidatura) {
+    Swal.fire({
+      title: null,
+      html: `
+          <strong>Nome</strong>: ${getUserName(candidatura.userId)}<br/>
+          <strong>Vaga:</strong>: ${getVagaTitle(candidatura.vagaId)}<br/>
+        `,
+        showCancelButton: true,
+        cancelButtonText: 'Agendar Reunião',
+        focusConfirm: false
+      }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          setShowCalendario(true);
+        }
+      })
+  }
+
     return (
-        <main className='main-candidaturas'>
+        <main className='main-oportunidades'>
+      {showCalendario ?(
+      <CalendarioComponent />
+    ) : (
+        <div className='main-candidaturas'>
             <div className="container container-candidaturas">
                 <h1 className="mt-5 mb-5"><br /></h1>
                 <div className="row-candidaturas">
@@ -216,6 +240,8 @@ export default function ListCandidatura() {
                     </div>
                 </div>
             </div>
-        </main >
+        </div >
+    )}
+    </main>
     );
 }

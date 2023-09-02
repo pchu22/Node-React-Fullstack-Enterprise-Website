@@ -3,6 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import './oportunidades.css'
+import CalendarioComponent from "../../components/calendario/calendario";
 
 const baseURL = 'https://softinsa-web-app-carreiras01.onrender.com';
 
@@ -24,6 +25,7 @@ export default function ListOportunidades() {
   const [selectAllNegocio, setSelectAllNegocio] = useState(false);
   const [selectAllParceria, setSelectAllParceria] = useState(false);
   const [selectAllProjeto, setSelectAllProjeto] = useState(false);
+  const [showCalendario, setShowCalendario] = useState(false);
 
   const [selectAll, setSelectAll] = useState(false);
   const [cargo, setCargo] = useState('');
@@ -377,9 +379,14 @@ export default function ListOportunidades() {
           <strong>Data de Proposta</strong>: ${convertDate(investimento.dataRegisto)}<br/>
           <strong>Data de Aceitação</strong>: ${investimento.dataInvestimento ? convertDate(investimento.dataInvestimento) : 'Investimento em análise'}
         `,
-      showCancelButton: false,
-      focusConfirm: false
-    })
+        showCancelButton: true,
+        cancelButtonText: 'Agendar Reunião',
+        focusConfirm: false
+      }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          setShowCalendario(true);
+        }
+      })
   }
 
   function showNegocioInfo(negocio) {
@@ -392,9 +399,14 @@ export default function ListOportunidades() {
           <strong>Data de Proposta</strong>: ${convertDate(negocio.dataRegisto)}<br/>
           <strong>Data de Aceitação</strong>: ${getEstadoName(negocio.estadoId)}
         `,
-      showCancelButton: false,
-      focusConfirm: false
-    })
+        showCancelButton: true,
+        cancelButtonText: 'Agendar Reunião',
+        focusConfirm: false
+      }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          setShowCalendario(true);
+        }
+      })
   }
 
   function showParceriaInfo(parceria) {
@@ -404,10 +416,20 @@ export default function ListOportunidades() {
           <strong>Email</strong>: ${parceria.email}<br/>
           <strong>Telemóvel</strong>: ${parceria.telemovel}
         `,
-      showCancelButton: false,
+      showCancelButton: true,
+      cancelButtonText: 'Agendar Reunião',
       focusConfirm: false
+    }).then((result) => {
+      if (result.dismiss === Swal.DismissReason.cancel) {
+        setShowCalendario(true);
+      }
     })
+
+    
   }
+
+  
+
   function showProjetoInfo(projeto) {
     Swal.fire({
       title: projeto.projetoNome,
@@ -416,9 +438,14 @@ export default function ListOportunidades() {
           <strong>Orçamento</strong>: ${projeto.orcamento} €<br/>
           <strong>Prioridade</strong>: ${projeto.prioridade}<br/>
         `,
-      showCancelButton: false,
-      focusConfirm: false
-    })
+        showCancelButton: true,
+        cancelButtonText: 'Agendar Reunião',
+        focusConfirm: false
+      }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          setShowCalendario(true);
+        }
+      })
   }
 
   function convertDate(date) {
@@ -435,7 +462,11 @@ export default function ListOportunidades() {
   }
 
   return (
+    
     <main className='main-oportunidades'>
+      {showCalendario ?(
+      <CalendarioComponent />
+    ) : (
       <div className="container container-oportunidades">
         <h1 className="mt-5 mb-5"><br/></h1>
         <div className="row">
@@ -839,6 +870,8 @@ export default function ListOportunidades() {
           </div>
         </div>
       </div>
+      )}
     </main>
+
   );
 }
